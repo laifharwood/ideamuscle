@@ -7,14 +7,238 @@
 //
 
 import UIKit
+import Parse
 
-class ComposeTopicViewController: UIViewController {
+var shouldDismissCompose = false
+var activeComposeTopic = ""
+var activeComposeTopicObject = PFObject(className: "topic")
+
+class ComposeTopicViewController: UIViewController, UITextViewDelegate {
+    
+    var textView = UITextView()
+    var isPublic = true
+    let grayCheckmarkImage = UIImage(named: "checkmarkGray.png")
+    let redCheckmarkImage = UIImage(named: "checkmarkRed.png")
+    var checkmarkButton = UIButton()
+    var submitButton = UIButton()
+    var characterCount = 0
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        textView.delegate = self
+        
+        textView.becomeFirstResponder()
+        
+        self.view.backgroundColor = UIColor.whiteColor()
+        
+        // MARK: - Top Bar Config
+        var topBar = UIView()
+        topBar.frame = CGRectMake(0, 0, self.view.frame.width, 64)
+        topBar.backgroundColor = seventySevenGrayColor
+        self.view.addSubview(topBar)
+        
+        // MARK: - Compose Title
+        var title = UILabel()
+        title.text = "New Topic"
+        title.font = UIFont(name: "HelveticaNeue-Light", size: 15)
+        title.textColor = UIColor.whiteColor()
+        title.frame = CGRectMake(topBar.frame.width/2 - 60, topBar.frame.height/2, 120, 16)
+        topBar.addSubview(title)
+        title.textAlignment = NSTextAlignment.Center
+        
+        //MARK: - Cancel Button
+        var cancelButton = UIButton()
+        cancelButton.frame = CGRectMake(0, topBar.frame.height/2, 60, 16)
+        cancelButton.setTitle("Cancel", forState: .Normal)
+        cancelButton.titleLabel!.font = UIFont(name: "HelveticaNeue", size: 12)
+        cancelButton.setTitleColor(redColor, forState: .Normal)
+        cancelButton.addTarget(nil, action: "cancelExit:", forControlEvents: .TouchUpInside)
+        topBar.addSubview(cancelButton)
+        
+        //MARK: - Small Logo Right
+        var logoView = UIImageView(image: smallLogo)
+        logoView.frame = CGRectMake(topBar.frame.width - 40, topBar.frame.height/2 - 7.5, 35, 35)
+        topBar.addSubview(logoView)
+        
+        //MARK: - Text View container
+        var textViewContainer = UIView()
+        textViewContainer.frame = CGRectMake(0, topBar.frame.maxY + 5, self.view.frame.width, 80)
+        textViewContainer.backgroundColor = seventySevenGrayColor
+        self.view.addSubview(textViewContainer)
+        
+            //MARK: - Description Label
+            var descriptionLabel = UILabel()
+            descriptionLabel.frame = CGRectMake(5, 5, self.view.frame.width - 10, 20)
+            descriptionLabel.text = "Enter your topic."
+            descriptionLabel.textColor = UIColor.whiteColor()
+            descriptionLabel.font = UIFont(name: "HelveticaNeue-Light", size: 12)
+            descriptionLabel.textAlignment = .Center
+            textViewContainer.addSubview(descriptionLabel)
+        
+            //MARK: - Text View
+            textView.frame = CGRectMake(5, 30, self.view.frame.width - 70, 40)
+            textView.backgroundColor = UIColor.whiteColor()
+            textView.layer.cornerRadius = 3
+            textView.layer.masksToBounds = true
+            textView.textColor = fiftyGrayColor
+            textView.font = UIFont(name: "HelveticaNeue-Light", size: 10)
+            textView.returnKeyType = UIReturnKeyType.Done
+            textView.tintColor = redColor
+            textViewContainer.addSubview(textView)
+        
+            //MARK: - Make Public Label
+            var mPLabelX = CGFloat()
+            mPLabelX = textView.frame.maxX + (self.view.frame.width - textView.frame.maxX)/2 - 25
+        
+            let makePublicLabel = UILabel(frame: CGRectMake(mPLabelX,textView.frame.minY, 70, 10))
+            makePublicLabel.text = "Make Public?"
+            makePublicLabel.textColor = UIColor.whiteColor()
+            makePublicLabel.font = UIFont(name: "HelveticaNeue-Light", size: 9)
+            textViewContainer.addSubview(makePublicLabel)
+        
+        
+            //MARK: - Checkmark Button
+        
+            checkmarkButton = UIButton(frame: CGRectMake(mPLabelX + 8.75, makePublicLabel.frame.maxY + 2.5, 35, 27.8))
+            checkmarkButton.setImage(redCheckmarkImage, forState: .Normal)
+            checkmarkButton.addTarget(self, action: "makeTopicPublic:", forControlEvents: .TouchUpInside)
+        
+            textViewContainer.addSubview(checkmarkButton)
+        
+        //MARK: - Submit Button
+        
+        submitButton.frame = CGRectMake(self.view.frame.width/2 - 75, textViewContainer.frame.maxY + 5, 150, 50)
+        submitButton.setTitle("Submit", forState: .Normal)
+        submitButton.setTitleColor(twoHundredGrayColor, forState: .Disabled)
+        submitButton.setTitleColor(redColor, forState: .Normal)
+        submitButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 15)
+        submitButton.backgroundColor = fiftyGrayColor
+        submitButton.layer.cornerRadius = 2
+        submitButton.enabled = false
+        submitButton.alpha = 0.2
+        submitButton.addTarget(self, action: "submit:", forControlEvents: .TouchUpInside)
+        self.view.addSubview(submitButton)
+        
 
         // Do any additional setup after loading the view.
     }
+    
+    func cancelExit(sender: UIButton!){
+        
+        shouldDismissCompose = true
+        self.dismissViewControllerAnimated(true, completion: nil)
+        
+        
+        
+    }
+    
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        
+        
+        
+        
+        if text == "\n"{
+            textView.resignFirstResponder()
+            return false
+        }else if text == "" {
+            
+            
+            
+            if characterCount > 0{
+                
+            --characterCount
+                
+            if characterCount == 0{
+                submitButton.enabled = false
+                submitButton.alpha = 0.2
+            }
+            return true
+            }else{
+                
+                
+                return false
+            }
+            
+            
+        }else{
+            
+            ++characterCount
+            submitButton.enabled = true
+            submitButton.alpha = 1
+            return true
+        }
+    }
+    
+    func makeTopicPublic(sender: UIButton!){
+        
+        if isPublic == false{
+            checkmarkButton.setImage(redCheckmarkImage, forState: .Normal)
+            isPublic = true
+            
+        }else{
+            
+            checkmarkButton.setImage(grayCheckmarkImage, forState: .Normal)
+            isPublic = false
+        }
+        
+        
+        
+    }
+    
+    func submit(sender: UIButton!){
+        
+        isNewTopic = false
+        shouldDismissCompose = false
+        activeComposeTopic = textView.text
+        
+        var newTopic = PFObject(className: "topic")
+        var creator = PFUser.currentUser()
+        newTopic["title"] = textView.text
+        newTopic["creator"] = creator
+        
+        if isPublic == true{
+            
+            let publicAcl = PFACL()
+            
+            publicAcl.setPublicReadAccess(true)
+            publicAcl.setPublicWriteAccess(false)
+            publicAcl.setWriteAccess(true, forUser: creator!)
+            newTopic["ACL"] = publicAcl
+            
+            
+        }else{
+            
+            let privateAcl = PFACL()
+            privateAcl.setPublicWriteAccess(false)
+            privateAcl.setPublicReadAccess(false)
+            privateAcl.setReadAccess(true, forUser: creator!)
+            privateAcl.setWriteAccess(true, forUser: creator!)
+            newTopic["ACL"] = privateAcl
+        }
+        
+        newTopic.saveInBackgroundWithBlock { (success, error) -> Void in
+            if success{
+                
+                println("Topic Saved Successfully")
+                activeComposeTopicObject = newTopic
+                
+                
+            }else{
+                
+                println("error")
+            }
+        }
+        
+        
+        
+        self.dismissViewControllerAnimated(true, completion: nil)
+        
+        
+    }
+    
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

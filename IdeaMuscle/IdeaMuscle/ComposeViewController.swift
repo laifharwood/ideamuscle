@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDataSource, UITableViewDelegate{
     
@@ -15,6 +16,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     let grayCheckmarkImage = UIImage(named: "checkmarkGray.png")
     let redCheckmarkImage = UIImage(named: "checkmarkRed.png")
     var publicBoolArray = [false, false, false, false, false, false, false, false, false, false]
+    var topicLabel = UILabel()
     
     //MARK: - UIViews for text views
     var frameOne = UIView()
@@ -47,10 +49,41 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     
     var submitButton = UIButton()
     
+    
+    
+   
+    override func viewDidAppear(animated: Bool) {
+        
+        topicLabel.text = activeComposeTopic
+        
+        if shouldDismissCompose == true{
+            
+            shouldDismissCompose == false
+            self.dismissViewControllerAnimated(true, completion: nil)
+            
+            
+            
+        }
+        
+        if isNewTopic == true{
+            
+            let composeTopicVC = ComposeTopicViewController()
+            self.presentViewController(composeTopicVC, animated: true, completion: nil)
+            
+            
+        }else{
+            
+            textViewOne.becomeFirstResponder()
+        }
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        textViewOne.becomeFirstResponder()
+        
+        
+        
         
         self.view.backgroundColor = twoHundredGrayColor
         
@@ -101,8 +134,8 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         self.view.addSubview(topicTitleBar)
         
             //MARK: - Topic Title Label
-            var topicLabel = UILabel(frame: CGRectMake(2.5, 2.5, topicTitleBar.frame.width - 5, topicTitleBar.frame.height - 5))
-            topicLabel.text = "This is a test topic. In real life this would be the topic that people would come up with their 10 ideas for. One, Two, Three, Four, Five, Six, Seven"
+            topicLabel = UILabel(frame: CGRectMake(2.5, 2.5, topicTitleBar.frame.width - 5, topicTitleBar.frame.height - 5))
+            topicLabel.text = activeComposeTopic
             topicLabel.textColor = UIColor.blackColor()
             topicLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 13)
             topicLabel.numberOfLines = 3
@@ -230,7 +263,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             submitButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 15)
             submitButton.backgroundColor = fiftyGrayColor
             submitButton.layer.cornerRadius = 2
-            submitButton.addTarget(self, action: "Submit:", forControlEvents: .TouchUpInside)
+            submitButton.addTarget(self, action: "submit:", forControlEvents: .TouchUpInside)
             checkForSumbitActive()
             
             
@@ -292,14 +325,117 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             }
             return false
         }else{
+            
         
         return true
+        
         }
+        
+        
+    }
+    
+    func textViewDidChange(textView: UITextView) {
+        checkForSumbitActive()
     }
     
     func submit(sender: UIButton!){
         
-        //Submit validation
+        
+        
+        
+        
+        
+        if let user = PFUser.currentUser(){
+        
+            var counter = 0
+            var publicAlreadyEncountered = false
+        
+            for textV in textViewArray{
+                var ideaObject = PFObject(className: "idea")
+                ideaObject["content"] = textV.text
+                ideaObject["topicPointer"] = activeComposeTopicObject
+                ideaObject["owner"] = user
+            
+            
+                if publicBoolArray[counter] == true{
+                    
+                    let publicACL = PFACL()
+                    publicACL.setPublicReadAccess(true)
+                    publicACL.setWriteAccess(true, forUser: user)
+                    
+                    ideaObject["ACL"] = publicACL
+                    
+                    ideaObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                        if success{
+                            println("Saved Idea Publically")
+                        }else{
+                            println("Could Not Save Idea Publically")
+                        }
+                    })
+                    
+                    if publicAlreadyEncountered == false{
+                        
+                        let publicACLTopic = PFACL()
+                        
+                        publicACLTopic.setPublicReadAccess(true)
+                        publicACLTopic.setPublicWriteAccess(false)
+                        publicACLTopic.setWriteAccess(true, forUser: user)
+                        activeComposeTopicObject["ACL"] = publicACLTopic
+                        activeComposeTopicObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                            if success{
+                                println("Topic Saved Publically")
+                            }else{
+                                println("Topic Could not be saved publically")
+                            }
+                            
+                            publicAlreadyEncountered = true
+                        })
+                    }
+                
+                    
+                
+                
+                }else{
+                    
+                    let privateACL = PFACL()
+                    privateACL.setPublicReadAccess(false)
+                    privateACL.setPublicWriteAccess(false)
+                    privateACL.setWriteAccess(true, forUser: user)
+                    privateACL.setReadAccess(true, forUser: user)
+                    
+                    ideaObject["ACL"] = privateACL
+                    
+                    ideaObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                        if success{
+                            println("Idea Saved Privately")
+                        }else{
+                            println("Idea Could not be saved privately")
+                        }
+                    })
+                
+                
+                
+                }
+                
+                ++counter
+                
+//                ideaObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+//                    if success{
+//                        println("Idea saved Successfully")
+//                    }else{
+//                        
+//                        println("error saving idea")
+//                    }
+//                })
+            
+            }
+        
+        }
+        
+        
+        
+        activeComposeTopic = ""
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func makePublic(sender: UIButton){
@@ -319,6 +455,8 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     
     func cancel(sender: UIButton!){
         
+        
+        activeComposeTopic = ""
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     

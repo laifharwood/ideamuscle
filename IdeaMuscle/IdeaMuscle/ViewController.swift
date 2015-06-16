@@ -76,7 +76,7 @@ class ViewController: UIViewController{
                 
             }else if !(user != nil) {
             
-            println("User Cancelled")
+            //User Cancelled
             
             
             }else{
@@ -90,7 +90,8 @@ class ViewController: UIViewController{
                     PFUser.currentUser()?.saveEventually(nil)
                     
                     //Perform Segue
-                    goToTabBar()
+                    self.getAvatar()
+                    self.goToTabBar()
                     
                     
                 }else{
@@ -117,6 +118,8 @@ class ViewController: UIViewController{
             }
         }
     }
+    
+    
     func proceedWithoutAccount(sender: UIButton!){
         
         goToTabBar()
@@ -129,6 +132,7 @@ class ViewController: UIViewController{
             
         }else{
             
+           getAvatar()
            goToTabBar()
         }
   
@@ -142,9 +146,9 @@ class ViewController: UIViewController{
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-}
 
-func goToTabBar(){
+
+    func goToTabBar(){
     
     let tabBarController = UITabBarController()
     
@@ -199,6 +203,110 @@ func goToTabBar(){
     
     //ViewController.presentViewController(tabBarController, animated: true, completion: nil)
     
+    
+    
+}
+
+func getAvatar(){
+    
+    if PFTwitterUtils.isLinkedWithUser(PFUser.currentUser()) {
+        
+        println("linked")
+        
+        let screenName = PFTwitterUtils.twitter()?.screenName!
+        
+        let requestString = ("https://api.twitter.com/1.1/users/show.json?screen_name=" + screenName!)
+        
+        let verify: NSURL = NSURL(string: requestString)!
+        
+        let request: NSMutableURLRequest = NSMutableURLRequest(URL: verify)
+        
+        PFTwitterUtils.twitter()?.signRequest(request)
+        
+        var response: NSURLResponse?
+        var error: NSError?
+        
+        let data: NSData = NSURLConnection.sendSynchronousRequest(request, returningResponse: &response, error: &error)!
+        
+        if error == nil {
+            
+            println("No Error In request from Twitter")
+            
+            let result: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &error)
+            
+            
+//            let names: String! = result?.objectForKey("name") as! String
+//            
+//            let separatedNames: [String] = names.componentsSeparatedByString(" ")
+//            
+//            self.firstName = separatedNames.first!
+//            self.lastName = separatedNames.last!
+            
+            
+            let urlString = result?.objectForKey("profile_image_url_https") as! String
+            
+            let hiResUrlString = urlString.stringByReplacingOccurrencesOfString("_normal", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
+            
+            
+            let twitterPhotoUrl = NSURL(string: hiResUrlString)
+            let imageData = NSData(contentsOfURL: twitterPhotoUrl!)
+            let twitterImage: UIImage! = UIImage(data:imageData!)
+            
+            let cgImage = twitterImage.CGImage
+            
+            let bitsPerComponent = CGImageGetBitsPerComponent(cgImage)
+            let bytesPerRow = CGImageGetBytesPerRow(cgImage)
+            let colorSpace = CGImageGetColorSpace(cgImage)
+            let bitmapInfo = CGImageGetBitmapInfo(cgImage)
+            
+            let context = CGBitmapContextCreate(nil, 300, 300, bitsPerComponent, bytesPerRow, colorSpace, bitmapInfo)
+            
+            CGContextSetInterpolationQuality(context, kCGInterpolationHigh)
+            
+            CGContextDrawImage(context, CGRect(origin: CGPointZero, size: CGSize(width: CGFloat(300), height: CGFloat(300))), cgImage)
+            
+            let scaledImage = UIImage(CGImage: CGBitmapContextCreateImage(context))
+            
+            let imageUIImage = UIImagePNGRepresentation(scaledImage)
+            
+            let imageFile: PFFile = PFFile(name: (PFUser.currentUser()!.objectId! + "profileImage.png"), data:imageUIImage)
+            
+            imageFile.save()
+            
+            let user = PFUser.currentUser()
+        
+            user?.setObject(imageFile, forKey: "avatar")
+            
+            user?.saveInBackgroundWithBlock({ (success, error) -> Void in
+                if error != nil{
+                    //Handle Error
+                    println("could not save image")
+                    
+                    
+                }else{
+                    //Handle Success
+                    
+                    println("Saved")
+                    
+                    
+                    
+                }
+            })
+            
+        }else{
+            
+            println("could not get profile pic")
+        }
+    
+    
+    
+    
+    }else{
+        println("not Linked")
+    }
+    
+    
+}
     
     
 }

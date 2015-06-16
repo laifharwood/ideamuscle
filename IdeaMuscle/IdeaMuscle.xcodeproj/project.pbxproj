@@ -22,6 +22,7 @@
 		81BA817F1A49E0F000E65899 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 81BA817E1A49E0F000E65899 /* libstdc++.6.dylib */; };
 		81BA81811A49E10C00E65899 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81BA81801A49E10C00E65899 /* ParseUI.framework */; };
 		EE3A79B01B261B2500300018 /* ComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3A79AF1B261B2500300018 /* ComposeViewController.swift */; };
+		EE5B25C91B2F4B05006829C7 /* ComposeTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B25C81B2F4B05006829C7 /* ComposeTopicViewController.swift */; };
 		EE8084F81B191A6E00BFC07C /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8084F71B191A6E00BFC07C /* Social.framework */; };
 		EE8084FA1B191A7500BFC07C /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8084F91B191A7500BFC07C /* Accounts.framework */; };
 		EE8084FC1B191C8600BFC07C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8084FB1B191C8600BFC07C /* CFNetwork.framework */; };
@@ -73,6 +74,7 @@
 		81BA81801A49E10C00E65899 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
 		81BA81821A49E27F00E65899 /* ParseStarterProject-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ParseStarterProject-Bridging-Header.h"; sourceTree = "<group>"; };
 		EE3A79AF1B261B2500300018 /* ComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeViewController.swift; sourceTree = "<group>"; };
+		EE5B25C81B2F4B05006829C7 /* ComposeTopicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeTopicViewController.swift; sourceTree = "<group>"; };
 		EE8084F71B191A6E00BFC07C /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		EE8084F91B191A7500BFC07C /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		EE8084FB1B191C8600BFC07C /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -162,6 +164,7 @@
 				EE8EE4A11B226C6D0093A62A /* TopicsDetailViewController.swift */,
 				81BA814C1A49DA1800E65899 /* ViewController.swift */,
 				EE3A79AF1B261B2500300018 /* ComposeViewController.swift */,
+				EE5B25C81B2F4B05006829C7 /* ComposeTopicViewController.swift */,
 				EE8EE4A31B228E260093A62A /* FeedViewController.swift */,
 				EE8EE4A51B228EAC0093A62A /* LeaderboardViewController.swift */,
 				EE8EE4A71B228EF30093A62A /* MoreViewController.swift */,
@@ -341,6 +344,7 @@
 			files = (
 				EE3A79B01B261B2500300018 /* ComposeViewController.swift in Sources */,
 				EE8EE4A61B228EAC0093A62A /* LeaderboardViewController.swift in Sources */,
+				EE5B25C91B2F4B05006829C7 /* ComposeTopicViewController.swift in Sources */,
 				EE8085111B1CC9DC00BFC07C /* TopicsTableViewController.swift in Sources */,
 				EE8EE4A21B226C6D0093A62A /* TopicsDetailViewController.swift in Sources */,
 				EE8085211B1E1AE300BFC07C /* SharedCode.swift in Sources */,

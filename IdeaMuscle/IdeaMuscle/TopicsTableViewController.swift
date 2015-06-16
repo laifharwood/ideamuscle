@@ -7,31 +7,127 @@
 //
 
 import UIKit
+import Parse
+import Bolts
+
+var isNewTopic = false
 
 class TopicsTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UINavigationBarDelegate{
     
+    var profileImage = UIImage()
+    
     var tableView: UITableView = UITableView()
-    var tableViewTwo: UITableView = UITableView()
+    var tableViewIdea: UITableView = UITableView()
+    
+    // MARK: - Topics Table Data Arrays
+    var topicTopicTableArrayToday = [String]()
+    var topicTopicTableArraySeven = [String]()
+    var topicTopicTableArrayThirty = [String]()
+    var topicTopicTableArrayAll = [String]()
+    
+    var profilePicTopicTableArrayToday = [UIImage]()
+    var profilePicTopicTableArraySeven = [UIImage]()
+    var profilePicTopicTableArrayThirty = [UIImage]()
+    var profilePicTopicTableArrayAll = [UIImage]()
+    
+    var usernameTopicTableArrayToday = [String]()
+    var usernameTopicTableArraySeven = [String]()
+    var usernameTopicTableArrayThirty = [String]()
+    var usernameTopicTableArrayAll = [String]()
+    
+    var totalIdeasTopicTableArrayToday = [Int]()
+    var totalIdeasTopicTableArraySeven = [Int]()
+    var totalIdeasTopicTableArrayThirty = [Int]()
+    var totalIdeasTopicTableArrayAll = [Int]()
+    
+    var timeStampTopicTableArrayToday = [NSDate]()
+    var timeStampTopicTableArraySeven = [NSDate]()
+    var timeStampTopicTableArrayThirty = [NSDate]()
+    var timeStampTopicTableArrayAll = [NSDate]()
+    
+    var topicObjectIdTopicTableArrayToday = [PFObject(className: "topic")]
+    var topicObjectIdTopicTableArraySeven = [PFObject(className: "topic")]
+    var topicObjectIdTopicTableArrayThirty = [PFObject(className: "topic")]
+    var topicObjectIdTopicTableArrayAll = [PFObject(className: "topic")]
+    
+    var userObjectIdTopicTableArrayToday = [PFObject(className: "User")]
+    var userObjectIdTopicTableArraySeven = [PFObject(className: "User")]
+    var userObjectIdTopicTableArrayThirty = [PFObject(className: "User")]
+    var userObjectIdTopicTableArrayAll = [PFObject(className: "User")]
+    
+    
+    // MARK: - Idea Table Data Arrays
+    var ideaIdeaTableArrayToday = [String]()
+    var ideaIdeaTableArraySeven = [String]()
+    var ideaIdeaTableArrayThirty = [String]()
+    var ideaIdeaTableArrayAll = [String]()
+
+    var topicIdeaTableArrayToday = [String]()
+    var topicIdeaTableArraySeven = [String]()
+    var topicIdeaTableArrayThirty = [String]()
+    var topicIdeaTableArrayAll = [String]()
+    
+    var profilePicIdeaTableArrayToday = [UIImage]()
+    var profilePicIdeaTableArraySeven = [UIImage]()
+    var profilePicIdeaTableArrayThirty = [UIImage]()
+    var profilePicIdeaTableArrayAll = [UIImage]()
+    
+    var usernameIdeaTableArrayToday = [String]()
+    var usernameIdeaTableArraySeven = [String]()
+    var usernameIdeaTableArrayThirty = [String]()
+    var usernameIdeaTableArrayAll = [String]()
+    
+    var totalUpvotesIdeaTableArrayToday = [Int]()
+    var totalUpvotesIdeaTableArraySeven = [Int]()
+    var totalUpvotesIdeaTableArrayThirty = [Int]()
+    var totalUpvotesIdeaTableArrayAll = [Int]()
+    
+    var timeStampIdeaTableArrayToday = [NSDate]()
+    var timeStampIdeaTableArraySeven = [NSDate]()
+    var timeStampIdeaTableArrayThirty = [NSDate]()
+    var timeStampIdeaTableArrayAll = [NSDate]()
+    
+    var topicObjectIdIdeaTableArrayToday = [PFObject(className: "topic")]
+    var topicObjectIdIdeaTableArraySeven = [PFObject(className: "topic")]
+    var topicObjectIdIdeaTableArrayThirty = [PFObject(className: "topic")]
+    var topicObjectIdIdeaTableArrayAll = [PFObject(className: "topic")]
+    
+    var userObjectIdIdeaTableArrayToday = [PFObject(className: "topic")]
+    var userObjectIdIdeaTableArraySeven = [PFObject(className: "topic")]
+    var userObjectIdIdeaTableArrayThirty = [PFObject(className: "topic")]
+    var userObjectIdIdeaTableArrayAll = [PFObject(className: "topic")]
+    
+    
+    
+    
+    
+    
+    
+    
     var profilePicArray = [UIImage()]
     var ideaTotalsArray = [1230, 554, 65]
     var ideaTopicArray = ["This is topic one", "This is long topic two, it is longer than usual isn't it, do you agree? Or don't you agree that is the question that you need to answer right now, hey, hey, hey. what's up? Okay a little longer now to see what happens on the ipad. hope it's good.", "This is topic three"]
     var usernameArray = ["@bennett","@bennett","@bennett"]
+    
+    
+    let periodSC = UISegmentedControl()
+    let tableSelectionSC = UISegmentedControl()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //self.hidesBottomBarWhenPushed = true
+        
+        
+        
+        
+        
+        
         
         self.view.backgroundColor = UIColor.whiteColor()
+
         
-        
-//        var navBar = UINavigationBar()
-//        
-//        navBar.frame.origin.y = -30
-//        self.view.addSubview(navBar)
-        
-        
-        self.title = "Topics"
+        self.title = "Top Ideas"
         
         //Right Compose Button
         let composeOriginalButton = UIButton()
@@ -49,36 +145,72 @@ class TopicsTableViewController: UIViewController, UITableViewDataSource, UITabl
         let leftBarButtonItem: UIBarButtonItem = UIBarButtonItem(customView: leftLogoView)
         self.navigationItem.setLeftBarButtonItem(leftBarButtonItem, animated: false)
         
-        //MARK: - Top Bar Config
-        let topBarView = UIView()
-        topBarView.frame = CGRectMake(0, navigationController!.navigationBar.frame.maxY, self.view.frame.width, 30)
-        topBarView.backgroundColor = oneFiftyGrayColor
-        self.view.addSubview(topBarView)
+        //MARK: - Table Selection Frame Config
+        let tableSelectionFrame = UIView()
+        tableSelectionFrame.frame = CGRectMake(0, navigationController!.navigationBar.frame.maxY, self.view.frame.width, 30)
+        tableSelectionFrame.backgroundColor = oneFiftyGrayColor
+        self.view.addSubview(tableSelectionFrame)
         
-        // MARK: - Table View Configuration
+            //Table Selection Segmented Control
+            tableSelectionSC.insertSegmentWithTitle("Ideas", atIndex: 0, animated: false)
+            tableSelectionSC.insertSegmentWithTitle("Topics", atIndex: 1, animated: false)
+            tableSelectionSC.selectedSegmentIndex = 0
+            tableSelectionSC.frame = CGRectMake(5, 5, tableSelectionFrame.frame.width - 10, 20)
+            tableSelectionSC.tintColor = UIColor.whiteColor()
+            tableSelectionSC.backgroundColor = seventySevenGrayColor
+            tableSelectionSC.layer.borderColor = UIColor.whiteColor().CGColor
+            tableSelectionSC.layer.cornerRadius = 4
+            //customSC.layer.masksToBounds = true
+            tableSelectionSC.addTarget(self, action: "changeTableSelection:", forControlEvents: .ValueChanged)
+            tableSelectionFrame.addSubview(tableSelectionSC)
+        
+        //MARK: - Period Frame Config
+        let periodFrame = UIView()
+        periodFrame.frame = CGRectMake(0, tableSelectionFrame.frame.maxY, self.view.frame.width, 30)
+        periodFrame.backgroundColor = oneFiftyGrayColor
+        self.view.addSubview(periodFrame)
+        
+            //Period Segmented Control
+            periodSC.insertSegmentWithTitle("Today", atIndex: 0, animated: false)
+            periodSC.insertSegmentWithTitle("7", atIndex: 1, animated: false)
+            periodSC.insertSegmentWithTitle("30", atIndex: 2, animated: false)
+            periodSC.insertSegmentWithTitle("All", atIndex: 3, animated: false)
+            periodSC.selectedSegmentIndex = 0
+            periodSC.frame = CGRectMake(5, 5, periodFrame.frame.width - 10, 20)
+            periodSC.tintColor = UIColor.whiteColor()
+            periodSC.backgroundColor = seventySevenGrayColor
+            periodSC.layer.borderColor = UIColor.whiteColor().CGColor
+            periodSC.layer.cornerRadius = 4
+            //customSC.layer.masksToBounds = true
+            periodSC.addTarget(self, action: "changePeriodView:", forControlEvents: .ValueChanged)
+            periodFrame.addSubview(periodSC)
+        
+        // MARK: - Table View Topic Configuration
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.frame = CGRectMake(0, topBarView.frame.maxY, self.view.frame.width, self.view.frame.height - 113)
+        tableView.frame = CGRectMake(0, periodFrame.frame.maxY, self.view.frame.width, self.view.frame.height - 143)
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.rowHeight = 100
+        
+        tableView.hidden = true
         //tableView.contentInset = UIEdgeInsetsMake(10, 0, 0, 0)
+        
         self.view.addSubview(tableView)
+        
+        // MARK: - Table View Idea Config
+        tableViewIdea.delegate = self
+        tableViewIdea.dataSource = self
+        tableViewIdea.frame = CGRectMake(0, periodFrame.frame.maxY, self.view.frame.width, self.view.frame.height - 143)
+        tableViewIdea.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableViewIdea.rowHeight = 100
+        
+        self.view.addSubview(tableViewIdea)
+        
         
         
     
         
-            //Segmented Control
-            let items = ["Today", "7", "30", "All"]
-            let customSC = UISegmentedControl(items: items)
-            customSC.selectedSegmentIndex = 0
-            customSC.frame = CGRectMake(5, 5, topBarView.frame.width - 10, 20)
-            customSC.tintColor = UIColor.whiteColor()
-            customSC.backgroundColor = seventySevenGrayColor
-            customSC.layer.borderColor = UIColor.whiteColor().CGColor
-            customSC.layer.cornerRadius = 4
-            //customSC.layer.masksToBounds = true
-            customSC.addTarget(self, action: "changeView:", forControlEvents: .ValueChanged)
-            topBarView.addSubview(customSC)
+        
         
         
         
@@ -96,6 +228,21 @@ class TopicsTableViewController: UIViewController, UITableViewDataSource, UITabl
     override func viewWillAppear(animated: Bool) {
         
         self.tabBarController!.tabBar.hidden = false
+        
+        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        //tableView.frame.origin = CGPoint(x: 1000, y: tableView.frame.origin.y)
+        //tableViewIdea.frame.origin = CGPoint(x: -1000, y: tableViewIdea.frame.origin.y)
+        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        
+    }
+    
+    override func viewWillLayoutSubviews() {
         
     }
 
@@ -124,47 +271,94 @@ class TopicsTableViewController: UIViewController, UITableViewDataSource, UITabl
 
         // Configure the cell...
         
-        //MARK: - Profile Button Config
-        var profileImage = UIImage(named: "IMG_1398.jpg") as UIImage!
-        profileImage = cropToSquare(image: profileImage)
-        profileImage = profileImage.convertToGrayScale()
+        if tableView == self.tableView{
         
-        var profileButton = UIButton()
+        //MARK: - Profile Button Config
+            
+            var profileButton = UIButton()
+       
+            if let user = PFUser.currentUser(){
+                let imageFile = user.objectForKey("avatar") as! PFFile
+                imageFile.getDataInBackgroundWithBlock({ (imgData: NSData?, error) -> Void in
+                    if error != nil{
+                        
+                        println("error getting profile image")
+                        
+                    }else{
+                        
+                        if let data = imgData{
+                            
+                            if let img = UIImage(data: data){
+                                
+                                
+                                
+                                self.profileImage = img
+                                self.profileImage = self.cropToSquare(image: self.profileImage)
+                                self.profileImage = self.profileImage.convertToGrayScale()
+                                
+                                //profileImage = UIImage(named: "IMG_1398.jpg")!
+                                
+                                
+                                profileButton.layer.cornerRadius = profileButton.frame.width/2
+                                //profileButton.layer.borderColor = UIColor.grayColor().CGColor
+                                //profileButton.layer.borderWidth = 2
+                                if indexPath.row == 1{
+                                    profileButton.layer.borderColor = redColor.CGColor
+                                    profileButton.layer.borderWidth = 2
+                                }
+                                profileButton.layer.masksToBounds = true
+                                profileButton.setImage(self.profileImage, forState: .Normal)
+                                profileButton.tag = indexPath.row
+                                profileButton.addTarget(self, action: "profileTapped:", forControlEvents: .TouchUpInside)
+                                
+                                
+                                
+                            }
+                        }
+                    }
+                })
+                
+            }
+
+            
         profileButton.frame = CGRectMake(10, 55, 40, 40)
-        profileButton.layer.cornerRadius = profileButton.frame.width/2
-        //profileButton.layer.borderColor = UIColor.grayColor().CGColor
-        //profileButton.layer.borderWidth = 2
-        if indexPath.row == 1{
-            profileButton.layer.borderColor = redColor.CGColor
-            profileButton.layer.borderWidth = 2
-        }
-        profileButton.layer.masksToBounds = true
-        profileButton.setImage(profileImage, forState: .Normal)
-        profileButton.tag = indexPath.row
-        profileButton.addTarget(self, action: "profileTapped:", forControlEvents: .TouchUpInside)
         cell.addSubview(profileButton)
+        
+            
+            
+        
         
         //MARK: - Idea Total Button Config
         var ideaTotalButton = UIButton()
         var ideaTotalButtonWidth = CGFloat()
         if ideaTotalsArray[indexPath.row] < 1000{
-            ideaTotalButtonWidth = 30
+            ideaTotalButtonWidth = 40
         }else if ideaTotalsArray[indexPath.row] > 999 && ideaTotalsArray[indexPath.row] < 10000{
             ideaTotalButtonWidth = 40
         }else if ideaTotalsArray[indexPath.row] > 9999 && ideaTotalsArray[indexPath.row] < 100000{
             ideaTotalButtonWidth = 50
         }
         ideaTotalButton.frame =  CGRectMake(cell.frame.maxX - (ideaTotalButtonWidth + 10), 20, ideaTotalButtonWidth, cell.frame.height - 40)
-        //ideaTotalButton.layer.cornerRadius = 2.0
-        //ideaTotalButton.layer.borderColor = customGrayColor.CGColor
-        ideaTotalButton.backgroundColor = UIColor.whiteColor()
-        //ideaTotalButton.layer.borderWidth = 1
+        ideaTotalButton.layer.cornerRadius = 3.0
+        ideaTotalButton.layer.borderColor = oneFiftyGrayColor.CGColor
+        ideaTotalButton.backgroundColor = oneFiftyGrayColor
+        ideaTotalButton.layer.borderWidth = 1
         ideaTotalButton.setTitle("\(ideaTotalsArray[indexPath.row])", forState: .Normal)
-        ideaTotalButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        ideaTotalButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         ideaTotalButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 15)
         ideaTotalButton.addTarget(self, action: "viewIdeas:", forControlEvents: .TouchUpInside)
         ideaTotalButton.tag = indexPath.row
         cell.addSubview(ideaTotalButton)
+            
+        
+            
+        //MARK: - Idea Label
+        let ideaLabel = UILabel(frame: CGRectMake(ideaTotalButton.frame.minX + 2, ideaTotalButton.frame.maxY - 20, 38, 15))
+        ideaLabel.text = "Ideas"
+        ideaLabel.font = UIFont(name: "HelveticaNeue-Light", size: 10)
+        ideaLabel.textColor = UIColor.whiteColor()
+        ideaLabel.textAlignment = .Center
+        cell.addSubview(ideaLabel)
         
         
         //MARK: - Compose Button Config
@@ -204,6 +398,9 @@ class TopicsTableViewController: UIViewController, UITableViewDataSource, UITabl
         usernameLabel.text = usernameArray[indexPath.row]
         cell.addSubview(usernameLabel)
         
+        }
+        
+        //cell.backgroundColor = UIColor.blackColor()
         
         return cell
     }
@@ -295,6 +492,8 @@ class TopicsTableViewController: UIViewController, UITableViewDataSource, UITabl
     func profileTapped(sender: UIButton!){
         println(sender.tag)
         
+        
+        
     }
     func viewIdeas(sender: UIButton!){
         println(sender.tag)
@@ -307,14 +506,38 @@ class TopicsTableViewController: UIViewController, UITableViewDataSource, UITabl
     }
     func composeOriginal(sender: UIButton!){
         
+        isNewTopic = true
+        
         let composeVC = ComposeViewController()
         
         self.presentViewController(composeVC, animated: true, completion: nil)
         
     }
-    func changeView(sender: UISegmentedControl){
+    func changePeriodView(sender: UISegmentedControl){
         
         println(sender.selectedSegmentIndex)
+    }
+    
+    func changeTableSelection(sender: UISegmentedControl){
+        
+        
+        
+        if sender.selectedSegmentIndex == 0{
+            
+           self.title = "Top Ideas"
+          
+            tableView.hidden = true
+            tableViewIdea.hidden = false
+            
+            
+        }else{
+            
+           self.title = "Top Topics"
+           
+            tableViewIdea.hidden = true
+            tableView.hidden = false
+            
+        }
     }
     
 
