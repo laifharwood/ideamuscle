@@ -9,6 +9,8 @@
 import UIKit
 import Parse
 
+var publicAlreadyEncountered = false
+
 class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDataSource, UITableViewDelegate{
     
     var tableView: UITableView = UITableView()
@@ -17,6 +19,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     let redCheckmarkImage = UIImage(named: "checkmarkRed.png")
     var publicBoolArray = [false, false, false, false, false, false, false, false, false, false]
     var topicLabel = UILabel()
+    
     
     //MARK: - UIViews for text views
     var frameOne = UIView()
@@ -56,34 +59,30 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         
         topicLabel.text = activeComposeTopic
         
-        if shouldDismissCompose == true{
-            
-            shouldDismissCompose == false
-            self.dismissViewControllerAnimated(true, completion: nil)
-            
-            
-            
-        }
+//        if shouldDismissCompose == true{
+//            
+//            shouldDismissCompose == false
+//            self.dismissViewControllerAnimated(true, completion: nil)
+//            
+//            
+//            
+//        }
+//        
+//        if isNewTopic == true{
+//            
+//            let composeTopicVC = ComposeTopicViewController()
+//            self.presentViewController(composeTopicVC, animated: true, completion: nil)
+//            
+//            
+//        }else{
         
-        if isNewTopic == true{
-            
-            let composeTopicVC = ComposeTopicViewController()
-            self.presentViewController(composeTopicVC, animated: true, completion: nil)
-            
-            
-        }else{
-            
             textViewOne.becomeFirstResponder()
-        }
-    }
+//        }
+   }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
-        
         
         self.view.backgroundColor = twoHundredGrayColor
         
@@ -242,7 +241,12 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         
         //MARK: - Checkmark Button
         let checkmarkButton = UIButton(frame: CGRectMake(mPLabelX + 8.75, makePublicLabel.frame.maxY + 2.5, 35, 27.8))
+            if publicBoolArray[indexPath.row] == false{
         checkmarkButton.setImage(grayCheckmarkImage, forState: .Normal)
+            }else{
+                checkmarkButton.setImage(redCheckmarkImage, forState: .Normal)
+            }
+            
         //checkmarkButton.setImage(redCheckmarkImage, forState: .Selected)
         checkmarkButton.tag = indexPath.row
         checkmarkButton.addTarget(self, action: "makePublic:", forControlEvents: .TouchUpInside)
@@ -340,34 +344,43 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     
     func submit(sender: UIButton!){
         
-        
-        
-        
-        
-        
         if let user = PFUser.currentUser(){
         
             var counter = 0
-            var publicAlreadyEncountered = false
+            
         
             for textV in textViewArray{
-                var ideaObject = PFObject(className: "idea")
-                ideaObject["content"] = textV.text
-                ideaObject["topicPointer"] = activeComposeTopicObject
-                ideaObject["owner"] = user
-            
+                
+                
             
                 if publicBoolArray[counter] == true{
                     
+                    var ideaObject = PFObject(className: "Idea")
+                    ideaObject["content"] = textV.text
+                    ideaObject["topicPointer"] = activeComposeTopicObject
+                    ideaObject["owner"] = user
+                    ideaObject["isPublic"] = true
+                    
                     let publicACL = PFACL()
                     publicACL.setPublicReadAccess(true)
-                    publicACL.setWriteAccess(true, forUser: user)
+                    publicACL.setPublicWriteAccess(true)
                     
                     ideaObject["ACL"] = publicACL
                     
                     ideaObject.saveInBackgroundWithBlock({ (success, error) -> Void in
                         if success{
                             println("Saved Idea Publically")
+                            
+                            activeComposeTopicObject.incrementKey("numberOfIdeas")
+                            
+                            activeComposeTopicObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                                if success{
+                                    println("numberOfIdeas Updated Successfully")
+                                }else{
+                                    println("Could not save number of ideas")
+                                }
+                            })
+                            
                         }else{
                             println("Could Not Save Idea Publically")
                         }
@@ -378,9 +391,11 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                         let publicACLTopic = PFACL()
                         
                         publicACLTopic.setPublicReadAccess(true)
-                        publicACLTopic.setPublicWriteAccess(false)
+                        publicACLTopic.setPublicWriteAccess(true)
                         publicACLTopic.setWriteAccess(true, forUser: user)
                         activeComposeTopicObject["ACL"] = publicACLTopic
+                        activeComposeTopicObject["isPublic"] = true
+                        
                         activeComposeTopicObject.saveInBackgroundWithBlock({ (success, error) -> Void in
                             if success{
                                 println("Topic Saved Publically")
@@ -396,6 +411,12 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                 
                 
                 }else{
+                    
+                    var ideaObject = PFObject(className: "Idea")
+                    ideaObject["content"] = textV.text
+                    ideaObject["topicPointer"] = activeComposeTopicObject
+                    ideaObject["owner"] = user
+                    ideaObject["isPublic"] = false
                     
                     let privateACL = PFACL()
                     privateACL.setPublicReadAccess(false)
@@ -413,28 +434,18 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                         }
                     })
                 
-                
-                
                 }
                 
                 ++counter
-                
-//                ideaObject.saveInBackgroundWithBlock({ (success, error) -> Void in
-//                    if success{
-//                        println("Idea saved Successfully")
-//                    }else{
-//                        
-//                        println("error saving idea")
-//                    }
-//                })
             
             }
-        
+            publicAlreadyEncountered = false
         }
         
         
         
         activeComposeTopic = ""
+        shouldDismissCompose = true
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -458,6 +469,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         
         activeComposeTopic = ""
         self.dismissViewControllerAnimated(true, completion: nil)
+        shouldDismissCompose = true
     }
     
     

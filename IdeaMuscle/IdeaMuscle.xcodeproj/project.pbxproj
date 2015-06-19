@@ -23,6 +23,9 @@
 		81BA81811A49E10C00E65899 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81BA81801A49E10C00E65899 /* ParseUI.framework */; };
 		EE3A79B01B261B2500300018 /* ComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3A79AF1B261B2500300018 /* ComposeViewController.swift */; };
 		EE5B25C91B2F4B05006829C7 /* ComposeTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B25C81B2F4B05006829C7 /* ComposeTopicViewController.swift */; };
+		EE5B25CD1B30B5ED006829C7 /* TopicAndIdeaContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B25CC1B30B5ED006829C7 /* TopicAndIdeaContainerViewController.swift */; };
+		EE5B25CF1B30B64A006829C7 /* TopicTodayTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B25CE1B30B64A006829C7 /* TopicTodayTableViewController.swift */; };
+		EE5B25D11B30B660006829C7 /* IdeaTodayTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B25D01B30B660006829C7 /* IdeaTodayTableViewController.swift */; };
 		EE8084F81B191A6E00BFC07C /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8084F71B191A6E00BFC07C /* Social.framework */; };
 		EE8084FA1B191A7500BFC07C /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8084F91B191A7500BFC07C /* Accounts.framework */; };
 		EE8084FC1B191C8600BFC07C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8084FB1B191C8600BFC07C /* CFNetwork.framework */; };
@@ -53,6 +56,7 @@
 		EE8EE4B61B23B14C0093A62A /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4B31B23B14C0093A62A /* more.png */; };
 		EEF821201B279B7D00454579 /* checkmarkGray.png in Resources */ = {isa = PBXBuildFile; fileRef = EEF8211E1B279B7D00454579 /* checkmarkGray.png */; };
 		EEF821211B279B7D00454579 /* checkmarkRed.png in Resources */ = {isa = PBXBuildFile; fileRef = EEF8211F1B279B7D00454579 /* checkmarkRed.png */; };
+		EEFCB7121B335AC9009CB923 /* TopicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFCB7111B335AC9009CB923 /* TopicTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,6 +79,9 @@
 		81BA81821A49E27F00E65899 /* ParseStarterProject-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ParseStarterProject-Bridging-Header.h"; sourceTree = "<group>"; };
 		EE3A79AF1B261B2500300018 /* ComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeViewController.swift; sourceTree = "<group>"; };
 		EE5B25C81B2F4B05006829C7 /* ComposeTopicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeTopicViewController.swift; sourceTree = "<group>"; };
+		EE5B25CC1B30B5ED006829C7 /* TopicAndIdeaContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicAndIdeaContainerViewController.swift; sourceTree = "<group>"; };
+		EE5B25CE1B30B64A006829C7 /* TopicTodayTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicTodayTableViewController.swift; sourceTree = "<group>"; };
+		EE5B25D01B30B660006829C7 /* IdeaTodayTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaTodayTableViewController.swift; sourceTree = "<group>"; };
 		EE8084F71B191A6E00BFC07C /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		EE8084F91B191A7500BFC07C /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		EE8084FB1B191C8600BFC07C /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -105,6 +112,7 @@
 		EE8EE4B31B23B14C0093A62A /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = more.png; path = "../../../../Desktop/Idea Muscle/more.png"; sourceTree = "<group>"; };
 		EEF8211E1B279B7D00454579 /* checkmarkGray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = checkmarkGray.png; path = "../../../../Desktop/Idea Muscle/checkmarkGray.png"; sourceTree = "<group>"; };
 		EEF8211F1B279B7D00454579 /* checkmarkRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = checkmarkRed.png; path = "../../../../Desktop/Idea Muscle/checkmarkRed.png"; sourceTree = "<group>"; };
+		EEFCB7111B335AC9009CB923 /* TopicTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +169,10 @@
 				EE80850B1B1A720100BFC07C /* Images */,
 				81BA814A1A49DA1800E65899 /* AppDelegate.swift */,
 				EE8085101B1CC9DC00BFC07C /* TopicsTableViewController.swift */,
+				EE5B25CE1B30B64A006829C7 /* TopicTodayTableViewController.swift */,
+				EEFCB7111B335AC9009CB923 /* TopicTableViewCell.swift */,
+				EE5B25CC1B30B5ED006829C7 /* TopicAndIdeaContainerViewController.swift */,
+				EE5B25D01B30B660006829C7 /* IdeaTodayTableViewController.swift */,
 				EE8EE4A11B226C6D0093A62A /* TopicsDetailViewController.swift */,
 				81BA814C1A49DA1800E65899 /* ViewController.swift */,
 				EE3A79AF1B261B2500300018 /* ComposeViewController.swift */,
@@ -345,13 +357,17 @@
 				EE3A79B01B261B2500300018 /* ComposeViewController.swift in Sources */,
 				EE8EE4A61B228EAC0093A62A /* LeaderboardViewController.swift in Sources */,
 				EE5B25C91B2F4B05006829C7 /* ComposeTopicViewController.swift in Sources */,
+				EEFCB7121B335AC9009CB923 /* TopicTableViewCell.swift in Sources */,
 				EE8085111B1CC9DC00BFC07C /* TopicsTableViewController.swift in Sources */,
 				EE8EE4A21B226C6D0093A62A /* TopicsDetailViewController.swift in Sources */,
+				EE5B25CF1B30B64A006829C7 /* TopicTodayTableViewController.swift in Sources */,
 				EE8085211B1E1AE300BFC07C /* SharedCode.swift in Sources */,
 				81BA814D1A49DA1800E65899 /* ViewController.swift in Sources */,
 				EE8EE4A81B228EF30093A62A /* MoreViewController.swift in Sources */,
 				EE8EE4A41B228E260093A62A /* FeedViewController.swift in Sources */,
 				81BA814B1A49DA1800E65899 /* AppDelegate.swift in Sources */,
+				EE5B25D11B30B660006829C7 /* IdeaTodayTableViewController.swift in Sources */,
+				EE5B25CD1B30B5ED006829C7 /* TopicAndIdeaContainerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

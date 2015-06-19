@@ -9,10 +9,13 @@
 import UIKit
 import Parse
 import Bolts
+import ParseUI
 
 var isNewTopic = false
 
 class TopicsTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UINavigationBarDelegate{
+
+    
     
     var profileImage = UIImage()
     
@@ -491,9 +494,6 @@ class TopicsTableViewController: UIViewController, UITableViewDataSource, UITabl
     // MARK: - Button Tap Actions
     func profileTapped(sender: UIButton!){
         println(sender.tag)
-        
-        
-        
     }
     func viewIdeas(sender: UIButton!){
         println(sender.tag)

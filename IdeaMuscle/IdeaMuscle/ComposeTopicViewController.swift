@@ -11,7 +11,8 @@ import Parse
 
 var shouldDismissCompose = false
 var activeComposeTopic = ""
-var activeComposeTopicObject = PFObject(className: "topic")
+var activeComposeTopicObject = PFObject(className: "Topic")
+
 
 class ComposeTopicViewController: UIViewController, UITextViewDelegate {
     
@@ -127,7 +128,7 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
     
     func cancelExit(sender: UIButton!){
         
-        shouldDismissCompose = true
+        
         self.dismissViewControllerAnimated(true, completion: nil)
         
         
@@ -182,9 +183,14 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
             checkmarkButton.setImage(grayCheckmarkImage, forState: .Normal)
             isPublic = false
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
         
-        
-        
+        if shouldDismissCompose == true{
+            self.dismissViewControllerAnimated(true, completion: nil)
+            shouldDismissCompose = false
+        }
     }
     
     func submit(sender: UIButton!){
@@ -193,22 +199,44 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
         shouldDismissCompose = false
         activeComposeTopic = textView.text
         
-        var newTopic = PFObject(className: "topic")
-        var creator = PFUser.currentUser()
-        newTopic["title"] = textView.text
-        newTopic["creator"] = creator
+        
         
         if isPublic == true{
             
-            let publicAcl = PFACL()
+            var newTopic = PFObject(className: "Topic")
+            var creator = PFUser.currentUser()
+            newTopic["title"] = textView.text
+            newTopic["creator"] = creator
+            newTopic["isPublic"] = true
             
+            let publicAcl = PFACL()
             publicAcl.setPublicReadAccess(true)
-            publicAcl.setPublicWriteAccess(false)
+            publicAcl.setPublicWriteAccess(true)
             publicAcl.setWriteAccess(true, forUser: creator!)
             newTopic["ACL"] = publicAcl
             
+            newTopic.saveInBackgroundWithBlock { (success, error) -> Void in
+                if success{
+                    
+                    println("Topic Saved Publically Successfully")
+                    publicAlreadyEncountered = true
+                    activeComposeTopicObject = newTopic
+                    
+                    
+                }else{
+                    
+                    println("error Public Save")
+                }
+            }
+            
             
         }else{
+            
+            var newTopic = PFObject(className: "Topic")
+            var creator = PFUser.currentUser()
+            newTopic["title"] = textView.text
+            newTopic["creator"] = creator
+            newTopic["isPublic"] = false
             
             let privateAcl = PFACL()
             privateAcl.setPublicWriteAccess(false)
@@ -216,24 +244,29 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
             privateAcl.setReadAccess(true, forUser: creator!)
             privateAcl.setWriteAccess(true, forUser: creator!)
             newTopic["ACL"] = privateAcl
-        }
-        
-        newTopic.saveInBackgroundWithBlock { (success, error) -> Void in
-            if success{
-                
-                println("Topic Saved Successfully")
-                activeComposeTopicObject = newTopic
-                
-                
-            }else{
-                
-                println("error")
+            
+            newTopic.saveInBackgroundWithBlock { (success, error) -> Void in
+                if success{
+                    
+                    println("Topic Saved Privately Successfully")
+                    activeComposeTopicObject = newTopic
+                    
+                    
+                }else{
+                    
+                    println("error Private Save")
+                }
             }
         }
         
         
         
-        self.dismissViewControllerAnimated(true, completion: nil)
+        
+        
+        //self.dismissViewControllerAnimated(true, completion: nil)
+        
+        let composeVC = ComposeViewController()
+        self.presentViewController(composeVC, animated: true, completion: nil)
         
         
     }

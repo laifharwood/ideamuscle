@@ -13,6 +13,7 @@ class ViewController: UIViewController{
     var twitterLoginButton = UIButton()
     var proceedWithoutLoginButton = UIButton()
     var logo = UIImage()
+    var activityIndicator = UIActivityIndicatorView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,6 +59,13 @@ class ViewController: UIViewController{
     
     func login(sender: UIButton!){
         
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        activityIndicator.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
+        self.view.addSubview(activityIndicator)
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.startAnimating()
+        UIApplication.sharedApplication().beginIgnoringInteractionEvents()
+        
         PFTwitterUtils.logInWithBlock { (user, error) -> Void in
             
             if (error != nil){
@@ -91,6 +99,8 @@ class ViewController: UIViewController{
                     
                     //Perform Segue
                     self.getAvatar()
+                    self.activityIndicator.stopAnimating()
+                    UIApplication.sharedApplication().endIgnoringInteractionEvents()
                     self.goToTabBar()
                     
                     
@@ -122,7 +132,7 @@ class ViewController: UIViewController{
     
     func proceedWithoutAccount(sender: UIButton!){
         
-        goToTabBar()
+        //goToTabBar()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -157,7 +167,7 @@ class ViewController: UIViewController{
     
 
     
-    let topicsController = TopicsTableViewController()
+    let topicsController = TopicAndIdeaContainerViewController()
     let topicsNav = UINavigationController(rootViewController: topicsController)
     
     let feedController = FeedViewController()
@@ -235,13 +245,6 @@ func getAvatar(){
             let result: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &error)
             
             
-//            let names: String! = result?.objectForKey("name") as! String
-//            
-//            let separatedNames: [String] = names.componentsSeparatedByString(" ")
-//            
-//            self.firstName = separatedNames.first!
-//            self.lastName = separatedNames.last!
-            
             
             let urlString = result?.objectForKey("profile_image_url_https") as! String
             
@@ -250,26 +253,31 @@ func getAvatar(){
             
             let twitterPhotoUrl = NSURL(string: hiResUrlString)
             let imageData = NSData(contentsOfURL: twitterPhotoUrl!)
-            let twitterImage: UIImage! = UIImage(data:imageData!)
             
-            let cgImage = twitterImage.CGImage
+            //let twitterImage: UIImage! = UIImage(data:imageData!)
             
-            let bitsPerComponent = CGImageGetBitsPerComponent(cgImage)
-            let bytesPerRow = CGImageGetBytesPerRow(cgImage)
-            let colorSpace = CGImageGetColorSpace(cgImage)
-            let bitmapInfo = CGImageGetBitmapInfo(cgImage)
+            let imageFile: PFFile = PFFile(name: (PFUser.currentUser()!.objectId! + "profileImage.png"), data: imageData!)
             
-            let context = CGBitmapContextCreate(nil, 300, 300, bitsPerComponent, bytesPerRow, colorSpace, bitmapInfo)
+//            let cgImage = twitterImage.CGImage
+//            
+//            let bitsPerComponent = CGImageGetBitsPerComponent(cgImage)
+//            let bytesPerRow = CGImageGetBytesPerRow(cgImage)
+//            let colorSpace = CGImageGetColorSpace(cgImage)
+//            let bitmapInfo = CGImageGetBitmapInfo(cgImage)
+//            
+//            let context = CGBitmapContextCreate(nil, 300, 300, bitsPerComponent, bytesPerRow, colorSpace, bitmapInfo)
+//            
+//            CGContextSetInterpolationQuality(context, kCGInterpolationHigh)
+//            
+//            CGContextDrawImage(context, CGRect(origin: CGPointZero, size: CGSize(width: CGFloat(300), height: CGFloat(300))), cgImage)
+//            
+//            let scaledImage = UIImage(CGImage: CGBitmapContextCreateImage(context))
+//            
+//            let imageUIImage = UIImagePNGRepresentation(scaledImage)
+//            
+//            let imageFile: PFFile = PFFile(name: (PFUser.currentUser()!.objectId! + "profileImage.png"), data:imageUIImage)
             
-            CGContextSetInterpolationQuality(context, kCGInterpolationHigh)
             
-            CGContextDrawImage(context, CGRect(origin: CGPointZero, size: CGSize(width: CGFloat(300), height: CGFloat(300))), cgImage)
-            
-            let scaledImage = UIImage(CGImage: CGBitmapContextCreateImage(context))
-            
-            let imageUIImage = UIImagePNGRepresentation(scaledImage)
-            
-            let imageFile: PFFile = PFFile(name: (PFUser.currentUser()!.objectId! + "profileImage.png"), data:imageUIImage)
             
             imageFile.save()
             
