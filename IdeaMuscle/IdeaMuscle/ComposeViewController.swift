@@ -366,11 +366,21 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                     publicACL.setPublicWriteAccess(true)
                     
                     ideaObject["ACL"] = publicACL
+                    ideaObject.incrementKey("numberOfUpvotes")
+                    ideaObject.addObject(user, forKey: "usersWhoUpvoted")
+                    
+                    
+                    
                     
                     ideaObject.saveInBackgroundWithBlock({ (success, error) -> Void in
                         if success{
                             println("Saved Idea Publically")
                             
+                            var upvoteObject = PFObject(className: "Upvote")
+                            upvoteObject["userWhoUpvoted"] = user
+                            upvoteObject["ideaUpvoted"] = ideaObject
+                            upvoteObject.saveInBackground()
+                        
                             activeComposeTopicObject.incrementKey("numberOfIdeas")
                             
                             activeComposeTopicObject.saveInBackgroundWithBlock({ (success, error) -> Void in

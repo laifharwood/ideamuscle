@@ -54,6 +54,8 @@
 		EE8EE4B41B23B14C0093A62A /* bulb.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4B11B23B14C0093A62A /* bulb.png */; };
 		EE8EE4B51B23B14C0093A62A /* feed.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4B21B23B14C0093A62A /* feed.png */; };
 		EE8EE4B61B23B14C0093A62A /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4B31B23B14C0093A62A /* more.png */; };
+		EED08A1F1B34C22A002FAE19 /* upvoteArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = EED08A1E1B34C22A002FAE19 /* upvoteArrow.png */; };
+		EED8C4581B34727E008981D1 /* IdeaTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED8C4571B34727E008981D1 /* IdeaTableViewCell.swift */; };
 		EEF821201B279B7D00454579 /* checkmarkGray.png in Resources */ = {isa = PBXBuildFile; fileRef = EEF8211E1B279B7D00454579 /* checkmarkGray.png */; };
 		EEF821211B279B7D00454579 /* checkmarkRed.png in Resources */ = {isa = PBXBuildFile; fileRef = EEF8211F1B279B7D00454579 /* checkmarkRed.png */; };
 		EEFCB7121B335AC9009CB923 /* TopicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFCB7111B335AC9009CB923 /* TopicTableViewCell.swift */; };
@@ -110,6 +112,8 @@
 		EE8EE4B11B23B14C0093A62A /* bulb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bulb.png; path = "../../../../Desktop/Idea Muscle/bulb.png"; sourceTree = "<group>"; };
 		EE8EE4B21B23B14C0093A62A /* feed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = feed.png; path = "../../../../Desktop/Idea Muscle/feed.png"; sourceTree = "<group>"; };
 		EE8EE4B31B23B14C0093A62A /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = more.png; path = "../../../../Desktop/Idea Muscle/more.png"; sourceTree = "<group>"; };
+		EED08A1E1B34C22A002FAE19 /* upvoteArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = upvoteArrow.png; path = "../../../../Desktop/Idea Muscle/upvoteArrow.png"; sourceTree = "<group>"; };
+		EED8C4571B34727E008981D1 /* IdeaTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaTableViewCell.swift; sourceTree = "<group>"; };
 		EEF8211E1B279B7D00454579 /* checkmarkGray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = checkmarkGray.png; path = "../../../../Desktop/Idea Muscle/checkmarkGray.png"; sourceTree = "<group>"; };
 		EEF8211F1B279B7D00454579 /* checkmarkRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = checkmarkRed.png; path = "../../../../Desktop/Idea Muscle/checkmarkRed.png"; sourceTree = "<group>"; };
 		EEFCB7111B335AC9009CB923 /* TopicTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicTableViewCell.swift; sourceTree = "<group>"; };
@@ -168,19 +172,13 @@
 			children = (
 				EE80850B1B1A720100BFC07C /* Images */,
 				81BA814A1A49DA1800E65899 /* AppDelegate.swift */,
-				EE8085101B1CC9DC00BFC07C /* TopicsTableViewController.swift */,
-				EE5B25CE1B30B64A006829C7 /* TopicTodayTableViewController.swift */,
-				EEFCB7111B335AC9009CB923 /* TopicTableViewCell.swift */,
-				EE5B25CC1B30B5ED006829C7 /* TopicAndIdeaContainerViewController.swift */,
-				EE5B25D01B30B660006829C7 /* IdeaTodayTableViewController.swift */,
-				EE8EE4A11B226C6D0093A62A /* TopicsDetailViewController.swift */,
 				81BA814C1A49DA1800E65899 /* ViewController.swift */,
-				EE3A79AF1B261B2500300018 /* ComposeViewController.swift */,
-				EE5B25C81B2F4B05006829C7 /* ComposeTopicViewController.swift */,
-				EE8EE4A31B228E260093A62A /* FeedViewController.swift */,
-				EE8EE4A51B228EAC0093A62A /* LeaderboardViewController.swift */,
-				EE8EE4A71B228EF30093A62A /* MoreViewController.swift */,
 				EE8085201B1E1AE300BFC07C /* SharedCode.swift */,
+				EE8085101B1CC9DC00BFC07C /* TopicsTableViewController.swift */,
+				EED8C4551B3471B1008981D1 /* Topic Controllers */,
+				EED8C4561B3471C6008981D1 /* Idea Controllers */,
+				EED8C4541B34719F008981D1 /* Compose Controllers */,
+				EED8C4531B347171008981D1 /* Tab Bar Controllers */,
 				81BA814E1A49DA1800E65899 /* Main.storyboard */,
 				81BA81511A49DA1800E65899 /* Images.xcassets */,
 				81BA81481A49DA1800E65899 /* Supporting Files */,
@@ -235,6 +233,7 @@
 		EE80850B1B1A720100BFC07C /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				EED08A1E1B34C22A002FAE19 /* upvoteArrow.png */,
 				EEF8211E1B279B7D00454579 /* checkmarkGray.png */,
 				EEF8211F1B279B7D00454579 /* checkmarkRed.png */,
 				EE8EE4B11B23B14C0093A62A /* bulb.png */,
@@ -251,6 +250,45 @@
 				EE8085141B1D017000BFC07C /* path5.png */,
 			);
 			name = Images;
+			sourceTree = "<group>";
+		};
+		EED8C4531B347171008981D1 /* Tab Bar Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				EE5B25CC1B30B5ED006829C7 /* TopicAndIdeaContainerViewController.swift */,
+				EE8EE4A31B228E260093A62A /* FeedViewController.swift */,
+				EE8EE4A51B228EAC0093A62A /* LeaderboardViewController.swift */,
+				EE8EE4A71B228EF30093A62A /* MoreViewController.swift */,
+			);
+			name = "Tab Bar Controllers";
+			sourceTree = "<group>";
+		};
+		EED8C4541B34719F008981D1 /* Compose Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				EE3A79AF1B261B2500300018 /* ComposeViewController.swift */,
+				EE5B25C81B2F4B05006829C7 /* ComposeTopicViewController.swift */,
+			);
+			name = "Compose Controllers";
+			sourceTree = "<group>";
+		};
+		EED8C4551B3471B1008981D1 /* Topic Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				EE8EE4A11B226C6D0093A62A /* TopicsDetailViewController.swift */,
+				EEFCB7111B335AC9009CB923 /* TopicTableViewCell.swift */,
+				EE5B25CE1B30B64A006829C7 /* TopicTodayTableViewController.swift */,
+			);
+			name = "Topic Controllers";
+			sourceTree = "<group>";
+		};
+		EED8C4561B3471C6008981D1 /* Idea Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				EE5B25D01B30B660006829C7 /* IdeaTodayTableViewController.swift */,
+				EED8C4571B34727E008981D1 /* IdeaTableViewCell.swift */,
+			);
+			name = "Idea Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -319,6 +357,7 @@
 				81BA81521A49DA1800E65899 /* Images.xcassets in Resources */,
 				EE8085151B1D017000BFC07C /* path5.png in Resources */,
 				EEF821211B279B7D00454579 /* checkmarkRed.png in Resources */,
+				EED08A1F1B34C22A002FAE19 /* upvoteArrow.png in Resources */,
 				EE8EE49C1B224DFC0093A62A /* smallLogo.png in Resources */,
 				EE80851F1B1E14B300BFC07C /* whiteTwitterLogo.png in Resources */,
 				EE8EE4B41B23B14C0093A62A /* bulb.png in Resources */,
@@ -361,6 +400,7 @@
 				EE8085111B1CC9DC00BFC07C /* TopicsTableViewController.swift in Sources */,
 				EE8EE4A21B226C6D0093A62A /* TopicsDetailViewController.swift in Sources */,
 				EE5B25CF1B30B64A006829C7 /* TopicTodayTableViewController.swift in Sources */,
+				EED8C4581B34727E008981D1 /* IdeaTableViewCell.swift in Sources */,
 				EE8085211B1E1AE300BFC07C /* SharedCode.swift in Sources */,
 				81BA814D1A49DA1800E65899 /* ViewController.swift in Sources */,
 				EE8EE4A81B228EF30093A62A /* MoreViewController.swift in Sources */,

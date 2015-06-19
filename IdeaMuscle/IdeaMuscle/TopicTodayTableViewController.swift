@@ -34,7 +34,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
         let components = NSDateComponents()
         components.day = -1
         let oneDayAgo = calendar.dateByAddingComponents(components, toDate: now, options: nil)
-        //query.whereKey("createdAt", greaterThanOrEqualTo: oneDayAgo!)
+        query.whereKey("createdAt", greaterThanOrEqualTo: oneDayAgo!)
         query.findObjectsInBackgroundWithTarget(self, selector: "topicSelector:error:")
     }
     
@@ -59,6 +59,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
         super.viewDidLoad()
         
         self.tableView.rowHeight = 100
+        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 30, 0)
         tableView.registerClass(TopicTableViewCell.self, forCellReuseIdentifier: "Cell")
         self.tableView.dataSource = self
         self.tableView.delegate = self
@@ -158,7 +159,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
             
             pfFile.getDataInBackgroundWithBlock({ (data, error) -> Void in
                 if error != nil{
-                    cell.profileImage = UIImage(named: "smallLogo.png")!
+                    //cell.profileImage = UIImage(named: "smallLogo.png")!
                 }else{
                     
                     cell.profileImage = UIImage(data: data!)!
