@@ -51,7 +51,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
 
     override func viewWillAppear(animated: Bool) {
         
-        
+        self.tabBarController!.tabBar.hidden = false
         
     }
     
@@ -66,7 +66,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
         startActivityIndicator()
         queryForTopicObjects()
         
-        self.refreshTable.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        self.refreshTable.attributedTitle = NSAttributedString(string: "")
         self.refreshTable.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
         self.tableView.addSubview(refreshTable)
     }
@@ -131,7 +131,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
         //MARK: - Idea Topic Label Config
         var labelWidth = cell.frame.width - cell.ideaTotalButton.frame.width - 25
         cell.ideaTopicLabel.frame = CGRectMake(10, 10, labelWidth, 40)
-        cell.ideaTopicLabel.font = UIFont(name: "HelveticaNeue", size: 15)
+        cell.ideaTopicLabel.font = UIFont(name: "Avenir", size: 13)
         cell.ideaTopicLabel.numberOfLines = 2
         cell.ideaTopicLabel.textColor = UIColor.blackColor()
         
@@ -199,29 +199,45 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
         }
         cell.usernameLabel.tag = indexPath.row + 400
         
+        //MARK: - Time Stamp
+        var createdAt = NSDate()
         
-        //MARK: - Share Button Config
-        var shareImage = UIImage(named: "ideaShare.png") as UIImage!
-        let shareButtonX = cell.ideaTotalButton.frame.minX - 90
-        cell.shareButton.frame = CGRectMake(shareButtonX, 60, 20, 25)
-        cell.shareButton.setImage(shareImage, forState: .Normal)
-        cell.shareButton.addTarget(self, action: "shareTopic:", forControlEvents: .TouchUpInside)
-        cell.shareButton.tag = indexPath.row + 500
+        if topicObjects[indexPath.row].createdAt != nil{
+            createdAt = topicObjects[indexPath.row].createdAt!
+            cell.timeStamp.text = createdAt.timeAgoSimple
+        }
+        cell.timeStamp.frame = CGRectMake(cell.frame.maxX - 30, cell.ideaTotalButton.frame.maxY + 3, 20, 20)
+        cell.timeStamp.font = UIFont(name: "Avenir", size: 10)
+        cell.timeStamp.textColor = oneFiftyGrayColor
+        cell.timeStamp.textAlignment = NSTextAlignment.Right
         
         
-        
-        //MARK: - Compose Button Config
-        var composeImage = UIImage(named: "ideaCompose.png") as UIImage!
-        cell.composeButton.frame = CGRectMake(cell.shareButton.frame.maxX + 15, 60, 20, 25)
-        cell.composeButton.setImage(composeImage, forState: .Normal)
-        cell.composeButton.addTarget(self, action: "composeForTopic:", forControlEvents: .TouchUpInside)
-        cell.composeButton.tag = indexPath.row + 600
+//        //MARK: - Share Button Config
+//        var shareImage = UIImage(named: "ideaShare.png") as UIImage!
+//        let shareButtonX = cell.ideaTotalButton.frame.minX - 90
+//        cell.shareButton.frame = CGRectMake(shareButtonX, 60, 20, 25)
+//        cell.shareButton.setImage(shareImage, forState: .Normal)
+//        cell.shareButton.addTarget(self, action: "shareTopic:", forControlEvents: .TouchUpInside)
+//        cell.shareButton.tag = indexPath.row + 500
+//        
+//        
+//        
+//        //MARK: - Compose Button Config
+//        var composeImage = UIImage(named: "ideaCompose.png") as UIImage!
+//        cell.composeButton.frame = CGRectMake(cell.shareButton.frame.maxX + 15, 60, 20, 25)
+//        cell.composeButton.setImage(composeImage, forState: .Normal)
+//        cell.composeButton.addTarget(self, action: "composeForTopic:", forControlEvents: .TouchUpInside)
+//        cell.composeButton.tag = indexPath.row + 600
         
         return cell
         
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        let topicDetailVC = TopicsDetailViewController()
+        self.navigationController?.pushViewController(topicDetailVC, animated: true)
         
     }
     

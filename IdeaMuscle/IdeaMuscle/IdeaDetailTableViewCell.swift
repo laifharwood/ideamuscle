@@ -1,38 +1,26 @@
 //
-//  TopicTableViewCell.swift
+//  IdeaDetailTableViewCell.swift
 //  IdeaMuscle
 //
-//  Created by Laif Harwood on 6/18/15.
+//  Created by Laif Harwood on 6/23/15.
 //  Copyright (c) 2015 Parse. All rights reserved.
 //
 
 import UIKit
 import ParseUI
 
-class IdeaTableViewCell: UITableViewCell {
-    
+class IdeaDetailTableViewCell: UITableViewCell {
+
     var usernameLabel = UILabel()
-    var numberOfUpvotesButton = UIButton()
-    var ideaLabel = UILabel()
-    var topicLabel = UILabel()
-    var profileButton = PFImageView()
-    var profileImage = UIImage()
-    var shareButton = UIButton()
-    var composeButton = UIButton()
-    var timeStamp = UILabel()
+    var commentLabel = UILabel()
+    var timeAgoStampLabel = UILabel()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.contentView.addSubview(usernameLabel)
-        self.contentView.addSubview(ideaLabel)
-        self.contentView.addSubview(numberOfUpvotesButton)
-        self.contentView.addSubview(profileButton)
-        self.contentView.addSubview(shareButton)
-        self.contentView.addSubview(composeButton)
-        self.contentView.addSubview(topicLabel)
-        self.contentView.addSubview(timeStamp)
-        
+        self.contentView.addSubview(commentLabel)
+        self.contentView.addSubview(timeAgoStampLabel)
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -51,4 +39,5 @@ class IdeaTableViewCell: UITableViewCell {
     }
     
 }
+
 

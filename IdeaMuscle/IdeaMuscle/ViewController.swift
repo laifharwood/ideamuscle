@@ -59,18 +59,15 @@ class ViewController: UIViewController{
     
     func login(sender: UIButton!){
         
-        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        activityIndicator.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
-        self.view.addSubview(activityIndicator)
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.startAnimating()
-        UIApplication.sharedApplication().beginIgnoringInteractionEvents()
+        startActivityIndicator()
         
         PFTwitterUtils.logInWithBlock { (user, error) -> Void in
             
             if (error != nil){
                 
               //No Twitter Account Setup On Phone. Show Alert
+                
+                self.stopActivityIndicator()
                 
                 let noTwitterAccountController: UIAlertController = UIAlertController(title: "No Twitter Account Linked", message: "You must have a twitter account setup on your phone. Go to your Settings App/Twitter/Sign In or Create New Account", preferredStyle: .Alert)
                 //Create and add the Cancel action
@@ -95,12 +92,10 @@ class ViewController: UIViewController{
                     //Linked User SuccessFully.
                     var twitterUsername = PFTwitterUtils.twitter()?.screenName
                     PFUser.currentUser()?.username = twitterUsername
-                    PFUser.currentUser()?.saveEventually(nil)
+                    PFUser.currentUser()?.saveInBackground()
                     
                     //Perform Segue
                     self.getAvatar()
-                    self.activityIndicator.stopAnimating()
-                    UIApplication.sharedApplication().endIgnoringInteractionEvents()
                     self.goToTabBar()
                     
                     
@@ -129,7 +124,6 @@ class ViewController: UIViewController{
         }
     }
     
-    
     func proceedWithoutAccount(sender: UIButton!){
         
         //goToTabBar()
@@ -142,6 +136,7 @@ class ViewController: UIViewController{
             
         }else{
             
+           startActivityIndicator()
            getAvatar()
            goToTabBar()
         }
@@ -165,8 +160,6 @@ class ViewController: UIViewController{
     UITabBar.appearance().barTintColor = fiftyGrayColor
     UITabBar.appearance().tintColor = redColor
     
-
-    
     let topicsController = TopicAndIdeaContainerViewController()
     let topicsNav = UINavigationController(rootViewController: topicsController)
     
@@ -183,31 +176,36 @@ class ViewController: UIViewController{
     tabBarController.viewControllers = controllers
     
     
-    let offset = UIOffsetMake(0, 50)
+    let offset = UIOffsetMake(0, 1)
     
-    let bulb = UIImage(named: "bulb.png")
+    let bulb = UIImage(named: "bulb")
     topicsController.tabBarItem = UITabBarItem(title: nil, image: bulb, tag: 1)
     topicsController.tabBarItem.imageInsets = UIEdgeInsetsMake(5.5, 0, -5.5, 0)
     topicsController.tabBarItem.setTitlePositionAdjustment(offset)
+    topicsController.tabBarItem.title = "Ideas"
     
-    let feed = UIImage(named: "feed.png")
+    
+    let feed = UIImage(named: "feed")
     feedController.tabBarItem = UITabBarItem(title: nil, image: feed, tag: 2)
     feedController.tabBarItem.imageInsets = UIEdgeInsetsMake(5.5, 0, -5.5, 0)
     feedController.tabBarItem.setTitlePositionAdjustment(offset)
+    feedController.tabBarItem.title = "Feed"
     
-    let crown = UIImage(named: "crown.png")
+    let crown = UIImage(named: "crown")
     leaderboardController.tabBarItem = UITabBarItem(title: nil, image: crown, tag: 3)
     leaderboardController.tabBarItem.imageInsets = UIEdgeInsetsMake(5.5, 0, -5.5, 0)
     leaderboardController.tabBarItem.setTitlePositionAdjustment(offset)
+    leaderboardController.tabBarItem.title = "Leaderboard"
     
-    let more = UIImage(named: "more.png")
+    let more = UIImage(named: "more")
     moreController.tabBarItem = UITabBarItem(title: nil, image: more, tag: 4)
     moreController.tabBarItem.imageInsets = UIEdgeInsetsMake(5.5, 0, -5.5, 0)
     moreController.tabBarItem.setTitlePositionAdjustment(offset)
+    moreController.tabBarItem.title = "More"
     
     
     
-    
+    stopActivityIndicator()
     let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     appDelegate.window?.rootViewController = tabBarController
     
@@ -217,7 +215,7 @@ class ViewController: UIViewController{
     
 }
 
-func getAvatar(){
+    func getAvatar(){
     
     if PFTwitterUtils.isLinkedWithUser(PFUser.currentUser()) {
         
@@ -279,7 +277,7 @@ func getAvatar(){
             
             
             
-            imageFile.save()
+            imageFile.saveInBackground()
             
             let user = PFUser.currentUser()
         
@@ -315,6 +313,23 @@ func getAvatar(){
     
     
 }
+    
+    func startActivityIndicator(){
+        
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        activityIndicator.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
+        activityIndicator.backgroundColor = UIColor.whiteColor()
+        self.view.addSubview(activityIndicator)
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.startAnimating()
+        UIApplication.sharedApplication().beginIgnoringInteractionEvents()
+        
+    }
+    
+    func stopActivityIndicator(){
+        self.activityIndicator.stopAnimating()
+        UIApplication.sharedApplication().endIgnoringInteractionEvents()
+    }
     
     
 }

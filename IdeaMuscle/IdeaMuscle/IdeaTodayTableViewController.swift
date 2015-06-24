@@ -17,6 +17,7 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
     let activityIndicatorContainer = UIView()
     let refreshTable = UIRefreshControl()
     var hasUpvoted = [Bool](count: 100, repeatedValue: false)
+    var shouldReloadTable = false
     
     
     func queryForTopicObjects(){
@@ -52,9 +53,12 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
     }
     
     override func viewWillAppear(animated: Bool) {
+       self.tabBarController!.tabBar.hidden = false
         
-        
-        
+        if shouldReloadTable == true{
+            tableView.reloadData()
+            shouldReloadTable == false
+        }
     }
     
     override func viewDidLoad() {
@@ -68,7 +72,7 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
         startActivityIndicator()
         queryForTopicObjects()
         
-        self.refreshTable.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        self.refreshTable.attributedTitle = NSAttributedString(string: "")
         self.refreshTable.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
         self.tableView.addSubview(refreshTable)
     }
@@ -87,79 +91,50 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
         var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! IdeaTableViewCell
         
         cell.frame = CGRectMake(0, 0, self.view.frame.width, 150)
-        
-        
-        
+    
         //MARK: - Number Of Upvotes Button Config
         var numberOfUpvotesButtonWidth = CGFloat()
         var numberOfUpvotes = Int()
-        
+        cell.numberOfUpvotesButton.tintColor = UIColor.whiteColor()
         if ideaObjects[indexPath.row]["numberOfUpvotes"] != nil{
             numberOfUpvotes = ideaObjects[indexPath.row]["numberOfUpvotes"] as! Int
-            if numberOfUpvotes < 1000{
-                numberOfUpvotesButtonWidth = 45
-            }else if numberOfUpvotes > 999 && numberOfUpvotes < 10000{
-                numberOfUpvotesButtonWidth = 45
-            }else if numberOfUpvotes > 9999 && numberOfUpvotes < 100000{
-                numberOfUpvotesButtonWidth = 55
-            }
-            cell.numberOfUpvotesButton.setTitle("\(numberOfUpvotes)", forState: .Normal)
-            
+            let numberString = abbreviateNumber(numberOfUpvotes)
+            cell.numberOfUpvotesButton.setTitle(numberString as String, forState: .Normal)
             if let currentUser = PFUser.currentUser(){
-                
                 let ideaObject = ideaObjects[indexPath.row]
-                    
                 if ideaObject.objectForKey("usersWhoUpvoted")?.containsObject(currentUser) == true{
-                    
                     cell.numberOfUpvotesButton.setTitleColor(redColor, forState: .Normal)
                     cell.numberOfUpvotesButton.tintColor = redColor
-                    cell.numberOfUpvotesButton.layer.borderColor = redColor.CGColor
                     hasUpvoted[indexPath.row] = true
-                    
-                    
-                    
                 }else{
-                    
-                    cell.numberOfUpvotesButton.setTitleColor(oneFiftyGrayColor, forState: .Normal)
-                    cell.numberOfUpvotesButton.tintColor = oneFiftyGrayColor
-                    cell.numberOfUpvotesButton.layer.borderColor = oneFiftyGrayColor.CGColor
+                    cell.numberOfUpvotesButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+                    cell.numberOfUpvotesButton.tintColor = UIColor.whiteColor()
                     hasUpvoted[indexPath.row] = false
                 }
-                
-                
             }
         }else{
-            numberOfUpvotesButtonWidth = 45
             cell.numberOfUpvotesButton.setTitle("0", forState: .Normal)
-            cell.numberOfUpvotesButton.setTitleColor(oneFiftyGrayColor, forState: .Normal)
+            cell.numberOfUpvotesButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         }
-        
-        cell.numberOfUpvotesButton.frame =  CGRectMake(cell.frame.maxX - (numberOfUpvotesButtonWidth) - 5, cell.frame.height/2 - 35, numberOfUpvotesButtonWidth, 70)
+        numberOfUpvotesButtonWidth = 40
+        cell.numberOfUpvotesButton.frame =  CGRectMake(cell.frame.maxX - (40) - 10, cell.frame.height/2 - 30, 40, 60)
         let image = UIImage(named: "upvoteArrow")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-        cell.numberOfUpvotesButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 18)
+        cell.numberOfUpvotesButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 10)
         cell.numberOfUpvotesButton.setImage(image, forState: .Normal)
-        
         let spacing = CGFloat(20)
-        
-        let imageSize = cell.numberOfUpvotesButton.imageView!.frame.size
+        let imageSize = cell.numberOfUpvotesButton.imageView!.image!.size
         let titleSize = cell.numberOfUpvotesButton.titleLabel!.frame.size
-        
-        cell.numberOfUpvotesButton.titleEdgeInsets = UIEdgeInsetsMake(0, -20, 0, 0)
+        cell.numberOfUpvotesButton.titleEdgeInsets = UIEdgeInsetsMake(0, -imageSize.width, 0, 0)
         cell.numberOfUpvotesButton.imageEdgeInsets = UIEdgeInsetsMake(-45, 0.0, 0.0, -titleSize.width)
-        
         cell.numberOfUpvotesButton.layer.cornerRadius = 3
-        cell.numberOfUpvotesButton.layer.borderWidth = 1
-        
-        
+        cell.numberOfUpvotesButton.backgroundColor = oneFiftyGrayColor
         cell.numberOfUpvotesButton.addTarget(self, action: "upvote:", forControlEvents: .TouchUpInside)
         cell.numberOfUpvotesButton.tag = indexPath.row
-        
-        
         
         //MARK: - Topic Label Config
         var labelWidth = cell.frame.width - cell.numberOfUpvotesButton.frame.width - 25
         cell.topicLabel.frame = CGRectMake(10, 5, labelWidth, 20)
-        cell.topicLabel.font = UIFont(name: "HelveticaNeue", size: 15)
+        cell.topicLabel.font = UIFont(name: "Avenir-Bold", size: 13)
         cell.topicLabel.numberOfLines = 1
         cell.topicLabel.textColor = oneFiftyGrayColor
         
@@ -174,9 +149,9 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
         
         //MARK: - Idea Label Config
         cell.ideaLabel.numberOfLines = 0
-        cell.ideaLabel.frame = CGRectMake(25, cell.topicLabel.frame.maxY + 2, labelWidth - 5, 70)
+        cell.ideaLabel.frame = CGRectMake(25, cell.topicLabel.frame.maxY + 2, labelWidth - 15, 70)
         
-        cell.ideaLabel.font = UIFont(name: "HelveticaNeue", size: 13)
+        cell.ideaLabel.font = UIFont(name: "Avenir-Light", size: 10)
         cell.ideaLabel.textColor = UIColor.blackColor()
         
         if ideaObjects[indexPath.row]["content"] != nil{
@@ -212,20 +187,17 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
             
         }else{
             
-            cell.profileButton.backgroundColor = UIColor.grayColor()
+            //cell.profileButton.backgroundColor = UIColor.grayColor()
         }
         
-        
-        cell.profileButton.layer.cornerRadius = cell.profileButton.frame.width/2
-        
-        cell.profileButton.layer.masksToBounds = true
         cell.profileButton.tag = indexPath.row
         let gestureRec = UITapGestureRecognizer(target: self, action: "profileTapped:")
         cell.profileButton.addGestureRecognizer(gestureRec)
         cell.profileButton.userInteractionEnabled = true
         cell.profileButton.frame = CGRectMake(10, 105, 40, 40)
-        cell.profileButton.layer.cornerRadius = cell.profileButton.frame.width/2
-        cell.profileButton.tag = indexPath.row + 300
+        cell.profileButton.layer.cornerRadius = 20
+        cell.profileButton.layer.masksToBounds = true
+        
         
         
         //MARK: - Username Label Config
@@ -241,31 +213,53 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
         
         cell.usernameLabel.tag = indexPath.row + 400
         
+        //MARK: - TimeStamp
+        var createdAt = NSDate()
+        
+        if ideaObjects[indexPath.row].createdAt != nil{
+            createdAt = ideaObjects[indexPath.row].createdAt!
+            cell.timeStamp.text = createdAt.timeAgoSimple
+        }
+        cell.timeStamp.frame = CGRectMake(cell.frame.maxX - 30, cell.usernameLabel.frame.minY, 20, 20)
+        cell.timeStamp.font = UIFont(name: "Avenir", size: 10)
+        cell.timeStamp.textColor = oneFiftyGrayColor
+        cell.timeStamp.textAlignment = NSTextAlignment.Right
         
         
-        //MARK: - Share Button Config
-        var shareImage = UIImage(named: "ideaShare.png") as UIImage!
-        let shareButtonX = cell.numberOfUpvotesButton.frame.minX - 90
-        cell.shareButton.frame = CGRectMake(shareButtonX, cell.usernameLabel.frame.minY - 7, 20, 25)
-        cell.shareButton.setImage(shareImage, forState: .Normal)
-        cell.shareButton.addTarget(self, action: "shareTopic:", forControlEvents: .TouchUpInside)
-        cell.shareButton.tag = indexPath.row + 500
         
         
+//        //MARK: - Share Button Config
+//        var shareImage = UIImage(named: "ideaShare.png") as UIImage!
+//        let shareButtonX = cell.numberOfUpvotesButton.frame.minX - 90
+//        cell.shareButton.frame = CGRectMake(shareButtonX, cell.usernameLabel.frame.minY - 7, 20, 25)
+//        cell.shareButton.setImage(shareImage, forState: .Normal)
+//        cell.shareButton.addTarget(self, action: "shareTopic:", forControlEvents: .TouchUpInside)
+//        cell.shareButton.tag = indexPath.row + 500
+//        
+//        
+//        
+//        //MARK: - Compose Button Config
+//        var composeImage = UIImage(named: "ideaCompose.png") as UIImage!
+//        cell.composeButton.frame = CGRectMake(cell.shareButton.frame.maxX + 15, cell.usernameLabel.frame.minY - 7, 20, 25)
+//        cell.composeButton.setImage(composeImage, forState: .Normal)
+//        cell.composeButton.addTarget(self, action: "composeForTopic:", forControlEvents: .TouchUpInside)
+//        cell.composeButton.tag = indexPath.row + 600
+//        
         
-        //MARK: - Compose Button Config
-        var composeImage = UIImage(named: "ideaCompose.png") as UIImage!
-        cell.composeButton.frame = CGRectMake(cell.shareButton.frame.maxX + 15, cell.usernameLabel.frame.minY - 7, 20, 25)
-        cell.composeButton.setImage(composeImage, forState: .Normal)
-        cell.composeButton.addTarget(self, action: "composeForTopic:", forControlEvents: .TouchUpInside)
-        cell.composeButton.tag = indexPath.row + 600
         
-        return cell
+       return cell
         
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        let ideaDetailVC = IdeaDetailViewController()
+        let passingIdea = ideaObjects[indexPath.row]
+        let passingTopic = ideaObjects[indexPath.row]["topicPointer"] as! PFObject
+        ideaDetailVC.activeIdea = passingIdea
+        ideaDetailVC.activeTopic =  passingTopic
+        shouldReloadTable = true
+        self.navigationController?.pushViewController(ideaDetailVC, animated: true)
     }
     
     
@@ -293,12 +287,11 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
                     upvoteObject = object! as PFObject
                     upvoteObject.deleteInBackground()
                 }
-               sender.setTitleColor(oneFiftyGrayColor, forState: .Normal)
                 let title = ideaObject["numberOfUpvotes"] as! Int
-               sender.setTitle("\(title)", forState: .Normal)
-               sender.setTitleColor(oneFiftyGrayColor, forState: .Normal)
-                sender.tintColor = oneFiftyGrayColor
-               sender.layer.borderColor = oneFiftyGrayColor.CGColor
+                let numberString = abbreviateNumber(title)
+                sender.setTitle(numberString as String, forState: .Normal)
+                sender.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+                sender.tintColor = UIColor.whiteColor()
             })
             
             }
@@ -315,13 +308,11 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
                 upvoteObject.setObject(ideaObject, forKey: "ideaUpvoted")
                 upvoteObject.saveInBackground()
                 
-                sender.setTitleColor(redColor, forState: .Normal)
                 let title = ideaObject["numberOfUpvotes"] as! Int
-                sender.setTitle("\(title)", forState: .Normal)
+                let numberString = abbreviateNumber(title)
+                sender.setTitle(numberString as String, forState: .Normal)
                 sender.setTitleColor(redColor, forState: .Normal)
                 sender.tintColor = redColor
-                
-                sender.layer.borderColor = redColor.CGColor
                 hasUpvoted[sender.tag] = true
                 
             }
@@ -337,12 +328,12 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
         
         activityIndicatorContainer.frame = CGRectMake(0, 0, self.view.frame.width, 50)
         
-        //activityIndicatorContainer.backgroundColor = UIColor.blackColor()
+        activityIndicatorContainer.backgroundColor = UIColor.whiteColor()
         activityIndicatorContainer.hidden = false
         self.view.addSubview(activityIndicatorContainer)
         activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
         activityIndicator.hidesWhenStopped = true
-        activityIndicator.frame = CGRectMake(0, 0, 50, 50)
+        activityIndicator.frame = CGRectMake(0, 0, self.view.frame.width, 1000)
         activityIndicator.center = activityIndicatorContainer.center
         activityIndicatorContainer.addSubview(activityIndicator)
         activityIndicator.startAnimating()

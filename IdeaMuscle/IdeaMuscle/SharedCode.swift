@@ -26,6 +26,7 @@ let fiftyGrayColor : UIColor = UIColor(red: 50/255, green: 50/255, blue: 50/255,
 let oneFiftyGrayColor : UIColor = UIColor(red: 150/255, green: 150/255, blue: 150/255, alpha: 1)
 let tenGrayColor : UIColor = UIColor(red: 10/255, green: 10/255, blue: 10/255, alpha: 1)
 
+let sixtyThreeGrayColor : UIColor = UIColor(red: 63/255, green: 63/255, blue: 63/255, alpha: 1)
 
 //MARK: - Images
 let smallLogo = UIImage(named: "smallLogo.png")
@@ -108,4 +109,43 @@ func imageToGray(image: UIImage) -> UIImage{
     return newImage!
 }
 
+func abbreviateNumber(num: NSNumber) -> NSString {
+    var ret: NSString = ""
+    let abbrve: [String] = ["K", "M", "B"]
+    
+    var floatNum = num.floatValue
+    
+    if floatNum > 1000 {
+        
+        for i in 0..<abbrve.count {
+            let size = pow(10.0, (Float(i) + 1.0) * 3.0)
+            //println("\(size)   \(floatNum)")
+            if (size <= floatNum) {
+                let num = floatNum / size
+                let str = floatToString(num)
+                ret = NSString(format: "%@%@", str, abbrve[i])
+            }
+        }
+    } else {
+        ret = NSString(format: "%d", Int(floatNum))
+    }
+    
+    return ret
+}
+
+func floatToString(val: Float) -> NSString {
+    var ret = NSString(format: "%.1f", val)
+    var c = ret.characterAtIndex(ret.length - 1)
+    
+    while c == 48 {
+        ret = ret.substringToIndex(ret.length - 1)
+        c = ret.characterAtIndex(ret.length - 1)
+        
+        
+        if (c == 46) {
+            ret = ret.substringToIndex(ret.length - 1)
+        }
+    }
+    return ret
+}
 

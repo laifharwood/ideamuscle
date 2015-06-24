@@ -22,6 +22,7 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
     let redCheckmarkImage = UIImage(named: "checkmarkRed.png")
     var checkmarkButton = UIButton()
     var submitButton = UIButton()
+    var characterCountLabel = UILabel()
     var characterCount = 0
     
 
@@ -65,7 +66,7 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
         
         //MARK: - Text View container
         var textViewContainer = UIView()
-        textViewContainer.frame = CGRectMake(0, topBar.frame.maxY + 5, self.view.frame.width, 80)
+        textViewContainer.frame = CGRectMake(0, topBar.frame.maxY + 5, self.view.frame.width, 100)
         textViewContainer.backgroundColor = seventySevenGrayColor
         self.view.addSubview(textViewContainer)
         
@@ -84,10 +85,17 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
             textView.layer.cornerRadius = 3
             textView.layer.masksToBounds = true
             textView.textColor = fiftyGrayColor
-            textView.font = UIFont(name: "HelveticaNeue-Light", size: 10)
+            textView.font = UIFont(name: "Avenir", size: 10)
             textView.returnKeyType = UIReturnKeyType.Done
             textView.tintColor = redColor
             textViewContainer.addSubview(textView)
+        
+            //MARK: - Character Count
+            characterCountLabel.frame = CGRectMake(textView.frame.maxX - 40, textView.frame.maxY + 3, 40, 20)
+            characterCountLabel.font = UIFont(name: "HelveticaNeue-Light", size: 10)
+            characterCountLabel.textColor = UIColor.whiteColor()
+            characterCountLabel.text = "\(characterCount)" + "/118"
+            textViewContainer.addSubview(characterCountLabel)
         
             //MARK: - Make Public Label
             var mPLabelX = CGFloat()
@@ -136,36 +144,45 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
     }
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-        
-        
-        
-        
+
         if text == "\n"{
             textView.resignFirstResponder()
             return false
         }else if text == "" {
-            
-            
-            
             if characterCount > 0{
                 
             --characterCount
-                
+            characterCountLabel.text = "\(characterCount)" + "/118"
             if characterCount == 0{
                 submitButton.enabled = false
                 submitButton.alpha = 0.2
             }
             return true
             }else{
-                
-                
+
                 return false
             }
             
             
-        }else{
+        }else if characterCount == 118{
+            return false
+        }else if text == " "{
+            if characterCount > 0{
+                
+                ++characterCount
+                characterCountLabel.text = "\(characterCount)" + "/118"
+                submitButton.enabled = true
+                submitButton.alpha = 1
+                return true
+            }else{
+                return false
+            }
             
+            
+            
+        }else{
             ++characterCount
+            characterCountLabel.text = "\(characterCount)" + "/118"
             submitButton.enabled = true
             submitButton.alpha = 1
             return true

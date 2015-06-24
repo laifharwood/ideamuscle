@@ -106,7 +106,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             // MARK: - Compose Title
             var title = UILabel()
             title.text = "Compose Ideas"
-            title.font = UIFont(name: "HelveticaNeue-Light", size: 15)
+            title.font = UIFont(name: "Avenir", size: 13)
             title.textColor = UIColor.whiteColor()
             title.frame = CGRectMake(topBar.frame.width/2 - 60, topBar.frame.height/2, 120, 16)
             topBar.addSubview(title)

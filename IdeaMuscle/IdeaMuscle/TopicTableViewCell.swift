@@ -19,6 +19,7 @@ class TopicTableViewCell: UITableViewCell {
     var profileImage = UIImage()
     var shareButton = UIButton()
     var composeButton = UIButton()
+    var timeStamp = UILabel()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -30,6 +31,7 @@ class TopicTableViewCell: UITableViewCell {
         self.contentView.addSubview(profileButton)
         self.contentView.addSubview(shareButton)
         self.contentView.addSubview(composeButton)
+        self.contentView.addSubview(timeStamp)
         
     }
 

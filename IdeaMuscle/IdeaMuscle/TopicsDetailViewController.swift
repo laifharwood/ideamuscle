@@ -38,6 +38,10 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        self.tabBarController!.tabBar.hidden = true
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
