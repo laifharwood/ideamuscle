@@ -255,6 +255,10 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         
         cell.usernameLabel.font = UIFont(name: "Avenir-Heavy", size: 12)
         cell.usernameLabel.textColor = fiftyGrayColor
+        let gestureRec = UITapGestureRecognizer(target: self, action: "profileTapped:")
+        cell.usernameLabel.addGestureRecognizer(gestureRec)
+        cell.usernameLabel.userInteractionEnabled = true
+        cell.usernameLabel.tag = indexPath.row
         
         //MARK: - Time Ago Stamp
         var createdAt = NSDate()
@@ -313,6 +317,11 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         
     }
     
+    func profileTapped(sender: AnyObject){
+        println("profile tapped")
+        println(sender.view!.tag)
+    }
+    
     
     
     
@@ -352,10 +361,9 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     
     
     func compose(sender: UIButton!){
-        println("compose")
-        
-        
-    
+        let composeVC = ComposeViewController()
+        composeVC.activeComposeTopicObject = activeTopic
+        self.presentViewController(composeVC, animated: true, completion: nil)
     }
     
     func upvote(sender: UIButton!){

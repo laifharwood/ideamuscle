@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "IdeaMuscle/TopicsTableViewController.swift"
-            timestampString = "456178339.778797"
+            timestampString = "456873230.573427"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "22"
-            endingLineNumber = "22"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
             landmarkName = "TopicsTableViewController"
             landmarkType = "3">
          </BreakpointContent>

@@ -9,13 +9,8 @@
 import UIKit
 import Parse
 
-var shouldDismissCompose = false
-var activeComposeTopic = ""
-var activeComposeTopicObject = PFObject(className: "Topic")
-
-
 class ComposeTopicViewController: UIViewController, UITextViewDelegate {
-    
+    var shouldDismissCompose = false
     var textView = UITextView()
     var isPublic = true
     let grayCheckmarkImage = UIImage(named: "checkmarkGray.png")
@@ -212,15 +207,10 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
     
     func submit(sender: UIButton!){
         
-        isNewTopic = false
-        shouldDismissCompose = false
-        activeComposeTopic = textView.text
-        
+        var newTopic = PFObject(className: "Topic")
         
         
         if isPublic == true{
-            
-            var newTopic = PFObject(className: "Topic")
             var creator = PFUser.currentUser()
             newTopic["title"] = textView.text
             newTopic["creator"] = creator
@@ -236,8 +226,7 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
                 if success{
                     
                     println("Topic Saved Publically Successfully")
-                    publicAlreadyEncountered = true
-                    activeComposeTopicObject = newTopic
+                    //activeComposeTopicObject = newTopic
                     
                     
                 }else{
@@ -266,7 +255,7 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
                 if success{
                     
                     println("Topic Saved Privately Successfully")
-                    activeComposeTopicObject = newTopic
+                    //activeComposeTopicObject = newTopic
                     
                     
                 }else{
@@ -276,13 +265,10 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
             }
         }
         
-        
-        
-        
-        
-        //self.dismissViewControllerAnimated(true, completion: nil)
-        
+        shouldDismissCompose = true
+        textView.text = ""
         let composeVC = ComposeViewController()
+        composeVC.activeComposeTopicObject = newTopic
         self.presentViewController(composeVC, animated: true, completion: nil)
         
         

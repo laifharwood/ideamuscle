@@ -9,11 +9,13 @@
 import UIKit
 import Parse
 
-var publicAlreadyEncountered = false
+
 
 class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDataSource, UITableViewDelegate{
     
+    var publicAlreadyEncountered = false
     var tableView: UITableView = UITableView()
+    var activeComposeTopicObject = PFObject(className: "Topic")
     
     let grayCheckmarkImage = UIImage(named: "checkmarkGray.png")
     let redCheckmarkImage = UIImage(named: "checkmarkRed.png")
@@ -57,27 +59,12 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
    
     override func viewDidAppear(animated: Bool) {
         
-        topicLabel.text = activeComposeTopic
+        if activeComposeTopicObject["title"] != nil{
+        topicLabel.text = activeComposeTopicObject["title"] as? String
+        }
         
-//        if shouldDismissCompose == true{
-//            
-//            shouldDismissCompose == false
-//            self.dismissViewControllerAnimated(true, completion: nil)
-//            
-//            
-//            
-//        }
-//        
-//        if isNewTopic == true{
-//            
-//            let composeTopicVC = ComposeTopicViewController()
-//            self.presentViewController(composeTopicVC, animated: true, completion: nil)
-//            
-//            
-//        }else{
-        
-            textViewOne.becomeFirstResponder()
-//        }
+        textViewOne.becomeFirstResponder()
+
    }
     
     
@@ -134,7 +121,9 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         
             //MARK: - Topic Title Label
             topicLabel = UILabel(frame: CGRectMake(2.5, 2.5, topicTitleBar.frame.width - 5, topicTitleBar.frame.height - 5))
-            topicLabel.text = activeComposeTopic
+            if activeComposeTopicObject["title"] != nil{
+                topicLabel.text = activeComposeTopicObject["title"] as? String
+            }
             topicLabel.textColor = UIColor.blackColor()
             topicLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 13)
             topicLabel.numberOfLines = 3
@@ -381,9 +370,9 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                             upvoteObject["ideaUpvoted"] = ideaObject
                             upvoteObject.saveInBackground()
                         
-                            activeComposeTopicObject.incrementKey("numberOfIdeas")
+                            self.activeComposeTopicObject.incrementKey("numberOfIdeas")
                             
-                            activeComposeTopicObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                            self.activeComposeTopicObject.saveInBackgroundWithBlock({ (success, error) -> Void in
                                 if success{
                                     println("numberOfIdeas Updated Successfully")
                                 }else{
@@ -413,7 +402,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                                 println("Topic Could not be saved publically")
                             }
                             
-                            publicAlreadyEncountered = true
+                            self.publicAlreadyEncountered = true
                         })
                     }
                 
@@ -452,10 +441,6 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             publicAlreadyEncountered = false
         }
         
-        
-        
-        activeComposeTopic = ""
-        shouldDismissCompose = true
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -476,10 +461,8 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     
     func cancel(sender: UIButton!){
         
-        
-        activeComposeTopic = ""
         self.dismissViewControllerAnimated(true, completion: nil)
-        shouldDismissCompose = true
+        
     }
     
     

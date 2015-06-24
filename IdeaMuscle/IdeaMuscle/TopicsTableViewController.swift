@@ -15,8 +15,6 @@ var isNewTopic = false
 
 class TopicsTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UINavigationBarDelegate{
 
-    
-    
     var profileImage = UIImage()
     
     var tableView: UITableView = UITableView()
