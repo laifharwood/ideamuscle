@@ -131,18 +131,18 @@ class ViewController: UIViewController{
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
         if (PFUser.currentUser() == nil) {
             
         }else{
             
-           startActivityIndicator()
-           getAvatar()
-           goToTabBar()
+            startActivityIndicator()
+            getAvatar()
+            goToTabBar()
         }
-  
-        
-        
+    
+    }
+    
+    override func viewWillAppear(animated: Bool) {
         
     }
     
@@ -203,6 +203,24 @@ class ViewController: UIViewController{
     moreController.tabBarItem.setTitlePositionAdjustment(offset)
     moreController.tabBarItem.title = "More"
     
+        
+        if let currentUser = PFUser.currentUser(){
+        var isOnLeaderboard = Bool()
+            if let isOnLeaderboard = currentUser["isOnLeaderboard"] as? Bool{
+                
+            }else{
+            var leaderboardObject = PFObject(className: "Leaderboard")
+            leaderboardObject["userPointer"] = currentUser
+            leaderboardObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                if success{
+                    currentUser["isOnLeaderboard"] = true
+                    currentUser.saveInBackground()
+                }
+            })
+            
+            
+        }
+        }
     
     
     stopActivityIndicator()

@@ -369,6 +369,20 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                             upvoteObject["userWhoUpvoted"] = user
                             upvoteObject["ideaUpvoted"] = ideaObject
                             upvoteObject.saveInBackground()
+                            
+                            let ideaOwner = ideaObject["owner"] as! PFUser
+                            var leaderboardQuery = PFQuery(className: "Leaderboard")
+                            leaderboardQuery.whereKey("userPointer", equalTo: ideaOwner)
+                            leaderboardQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
+                                
+                                if error == nil{
+                                    var leaderboardObject = PFObject(className: "Leaderboard")
+                                    leaderboardObject = object!
+                                    leaderboardObject.incrementKey("numberOfUpvotes", byAmount: 1)
+                                    leaderboardObject.saveInBackground()
+                                }
+                            })
+
                         
                             self.activeComposeTopicObject.incrementKey("numberOfIdeas")
                             

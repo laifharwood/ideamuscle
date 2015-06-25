@@ -42,6 +42,9 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         
         commentsQuery()
         
+        //MARK: Logo
+        
+        
         //MARK: - Topic Label
         var topicLabel = UILabel()
         if activeTopic["title"] != nil{
@@ -393,6 +396,19 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
                     sender.setTitle(numberString as String, forState: .Normal)
                     sender.setTitleColor(UIColor.whiteColor(), forState: .Normal)
                     sender.tintColor = UIColor.whiteColor()
+                    
+                    let ideaOwner = self.activeIdea["owner"] as! PFUser
+                    var leaderboardQuery = PFQuery(className: "Leaderboard")
+                    leaderboardQuery.whereKey("userPointer", equalTo: ideaOwner)
+                    leaderboardQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
+                        
+                        if error == nil{
+                            var leaderboardObject = PFObject(className: "Leaderboard")
+                            leaderboardObject = object!
+                            leaderboardObject.incrementKey("numberOfUpvotes", byAmount: -1)
+                            leaderboardObject.saveInBackground()
+                        }
+                    })
                 })
                 
             }
@@ -414,6 +430,22 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
                 sender.setTitle(numberString as String, forState: .Normal)
                 sender.setTitleColor(redColor, forState: .Normal)
                 sender.tintColor = redColor
+                
+                let ideaOwner = activeIdea["owner"] as! PFUser
+                var leaderboardQuery = PFQuery(className: "Leaderboard")
+                leaderboardQuery.whereKey("userPointer", equalTo: ideaOwner)
+                leaderboardQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
+                    
+                    if error == nil{
+                        var leaderboardObject = PFObject(className: "Leaderboard")
+                        leaderboardObject = object!
+                        leaderboardObject.incrementKey("numberOfUpvotes", byAmount: 1)
+                        leaderboardObject.saveInBackground()
+                    }
+                })
+                
+                
+                
                 hasUpvoted = true
                 
             }

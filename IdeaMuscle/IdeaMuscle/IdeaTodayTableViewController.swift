@@ -277,9 +277,7 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
             var upvoteObjectQuery = PFQuery(className: "Upvote")
             upvoteObjectQuery.whereKey("userWhoUpvoted", equalTo: user)
             upvoteObjectQuery.whereKey("ideaUpvoted", equalTo: ideaObject)
-            
             var upvoteObject = PFObject(className: "Upvote")
-            
             upvoteObjectQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
                 if error != nil{
                     
@@ -292,8 +290,22 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
                 sender.setTitle(numberString as String, forState: .Normal)
                 sender.setTitleColor(UIColor.whiteColor(), forState: .Normal)
                 sender.tintColor = UIColor.whiteColor()
+                
+                let ideaOwner = ideaObject["owner"] as! PFUser
+                var leaderboardQuery = PFQuery(className: "Leaderboard")
+                leaderboardQuery.whereKey("userPointer", equalTo: ideaOwner)
+                leaderboardQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
+                    
+                    if error == nil{
+                        var leaderboardObject = PFObject(className: "Leaderboard")
+                        leaderboardObject = object!
+                        leaderboardObject.incrementKey("numberOfUpvotes", byAmount: -1)
+                        leaderboardObject.saveInBackground()
+                    }
+                })
             })
-            
+                
+                
             }
             hasUpvoted[sender.tag] = false
         }else{
@@ -314,6 +326,19 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
                 sender.setTitleColor(redColor, forState: .Normal)
                 sender.tintColor = redColor
                 hasUpvoted[sender.tag] = true
+                
+                let ideaOwner = ideaObject["owner"] as! PFUser
+                var leaderboardQuery = PFQuery(className: "Leaderboard")
+                leaderboardQuery.whereKey("userPointer", equalTo: ideaOwner)
+                leaderboardQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
+                    
+                    if error == nil{
+                        var leaderboardObject = PFObject(className: "Leaderboard")
+                        leaderboardObject = object!
+                        leaderboardObject.incrementKey("numberOfUpvotes", byAmount: 1)
+                        leaderboardObject.saveInBackground()
+                    }
+                })
                 
             }
             
