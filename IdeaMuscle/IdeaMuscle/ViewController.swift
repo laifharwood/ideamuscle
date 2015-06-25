@@ -211,6 +211,7 @@ class ViewController: UIViewController{
             }else{
             var leaderboardObject = PFObject(className: "Leaderboard")
             leaderboardObject["userPointer"] = currentUser
+            leaderboardObject["numberOfUpvotes"] = 0
             leaderboardObject.saveInBackgroundWithBlock({ (success, error) -> Void in
                 if success{
                     currentUser["isOnLeaderboard"] = true

@@ -23,6 +23,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     var composeButton = UIButton()
     var postCommentButton = UIButton()
     var characterCountLabel = UILabel()
+    var ideaOwner = PFUser()
   
    
 
@@ -103,7 +104,6 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         self.view.addSubview(numberOfUpvotesButton)
         
         //MARK: - Avatar Button
-        var ideaOwner = PFUser()
         var ownerAvatarFile = PFFile()
         var ownerImage = UIImage()
         var ownerUsername = String()
@@ -317,7 +317,9 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     
     func ownerProfileTapped(sender: UIButton!){
         
-        
+        let profileVC = ProfileViewController()
+        profileVC.activeUser = ideaOwner
+        navigationController?.pushViewController(profileVC, animated: true)
     }
     
     func profileTapped(sender: AnyObject){
