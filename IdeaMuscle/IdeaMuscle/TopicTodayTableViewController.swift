@@ -155,36 +155,17 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
                 cell.profileButton.layer.borderWidth = 0
             }
             
-            let pfFile = pfUser["avatar"] as! PFFile
+            getAvatar(pfUser, nil, cell.profileButton)
             
-            pfFile.getDataInBackgroundWithBlock({ (data, error) -> Void in
-                if error != nil{
-                    //cell.profileImage = UIImage(named: "smallLogo.png")!
-                }else{
-                    
-                    cell.profileImage = UIImage(data: data!)!
-                }
-                cell.profileImage = cropToSquare(image: cell.profileImage)
-                cell.profileImage = cell.profileImage.convertToGrayScale()
-                cell.profileButton.image = cell.profileImage
-            })
-            
-        }else{
-            
-            cell.profileButton.backgroundColor = UIColor.grayColor()
         }
-
         
-        cell.profileButton.layer.cornerRadius = cell.profileButton.frame.width/2
-
         cell.profileButton.layer.masksToBounds = true
-        cell.profileButton.tag = indexPath.row
         let gestureRec = UITapGestureRecognizer(target: self, action: "profileTapped:")
         cell.profileButton.addGestureRecognizer(gestureRec)
         cell.profileButton.userInteractionEnabled = true
         cell.profileButton.frame = CGRectMake(10, 55, 40, 40)
         cell.profileButton.layer.cornerRadius = cell.profileButton.frame.width/2
-        cell.profileButton.tag = indexPath.row + 300
+        cell.profileButton.tag = indexPath.row
         
         
         //MARK: - Username Label Config
@@ -279,8 +260,11 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
     }
     
     func profileTapped(sender: AnyObject){
-        
-        println(sender.view!.tag)
+        let profileVC = ProfileViewController()
+        if topicObjects[sender.view!.tag]["creator"] != nil{
+            profileVC.activeUser = topicObjects[sender.view!.tag]["creator"] as! PFUser
+            navigationController?.pushViewController(profileVC, animated: true)
+        }
     }
     
     func refresh(sender:AnyObject)

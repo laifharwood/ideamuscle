@@ -212,6 +212,7 @@ class ViewController: UIViewController{
             var leaderboardObject = PFObject(className: "Leaderboard")
             leaderboardObject["userPointer"] = currentUser
             leaderboardObject["numberOfUpvotes"] = 0
+            leaderboardObject.ACL?.setPublicWriteAccess(true)
             leaderboardObject.saveInBackgroundWithBlock({ (success, error) -> Void in
                 if success{
                     currentUser["isOnLeaderboard"] = true
@@ -221,7 +222,24 @@ class ViewController: UIViewController{
             
             
         }
+        
+    
+        
+        var hasIncUserTotal = Bool()
+        if let hasIncUserTotal = currentUser["hasIncTotalUserCount"] as? Bool{
+            
+        }else{
+            let totalUsers = PFObject(withoutDataWithClassName: "TotalUsers", objectId: "RjDIi23LNW")
+            totalUsers.incrementKey("numberOfUsers")
+            totalUsers.saveInBackgroundWithBlock({ (success, error) -> Void in
+                if success{
+                    currentUser["hasIncTotalUserCount"] = true
+                    currentUser.saveInBackground()
+                }
+            })
         }
+        }
+        
     
     
     stopActivityIndicator()

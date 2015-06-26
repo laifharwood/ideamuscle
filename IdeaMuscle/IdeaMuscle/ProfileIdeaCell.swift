@@ -9,26 +9,20 @@
 import UIKit
 import ParseUI
 
-class IdeaTableViewCell: UITableViewCell {
+class ProfileIdeaCell: UITableViewCell {
     
-    var usernameLabel = UILabel()
+    
     var numberOfUpvotesButton = UIButton()
     var ideaLabel = UILabel()
     var topicLabel = UILabel()
-    var profileButton = PFImageView()
-    var shareButton = UIButton()
-    var composeButton = UIButton()
     var timeStamp = UILabel()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        self.contentView.addSubview(usernameLabel)
+        
         self.contentView.addSubview(ideaLabel)
         self.contentView.addSubview(numberOfUpvotesButton)
-        self.contentView.addSubview(profileButton)
-        self.contentView.addSubview(shareButton)
-        self.contentView.addSubview(composeButton)
         self.contentView.addSubview(topicLabel)
         self.contentView.addSubview(timeStamp)
         
@@ -50,4 +44,5 @@ class IdeaTableViewCell: UITableViewCell {
     }
     
 }
+
 

@@ -16,7 +16,6 @@ class TopicTableViewCell: UITableViewCell {
     let ideaLabel = UILabel()
     var ideaTopicLabel = UILabel()
     var profileButton = PFImageView()
-    var profileImage = UIImage()
     var shareButton = UIButton()
     var composeButton = UIButton()
     var timeStamp = UILabel()

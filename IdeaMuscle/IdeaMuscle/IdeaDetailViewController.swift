@@ -68,74 +68,28 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         
         //MARK: - Upvote Button
         var numberOfUpvotesButton = UIButton()
-        var numberOfUpvotes = Int()
-        if activeIdea["numberOfUpvotes"] != nil{
-            numberOfUpvotes = activeIdea["numberOfUpvotes"] as! Int
-            let numberString = abbreviateNumber(numberOfUpvotes)
-            numberOfUpvotesButton.setTitle(numberString as String, forState: .Normal)
-            if let currentUser = PFUser.currentUser(){
-                if activeIdea.objectForKey("usersWhoUpvoted")?.containsObject(currentUser) == true{
-                    numberOfUpvotesButton.setTitleColor(redColor, forState: .Normal)
-                    numberOfUpvotesButton.tintColor = redColor
-                    hasUpvoted = true
-                }else{
-                    numberOfUpvotesButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-                    numberOfUpvotesButton.tintColor = UIColor.whiteColor()
-                    hasUpvoted = false
-                }
-            }
-        }else{
-            numberOfUpvotesButton.setTitle("0", forState: .Normal)
-            numberOfUpvotesButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        }
-        
-        numberOfUpvotesButton.frame =  CGRectMake(5, topicLabel.frame.maxY + 5, 40, 60)
-        let arrowImage = UIImage(named: "upvoteArrow")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-        numberOfUpvotesButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 10)
-        numberOfUpvotesButton.setImage(arrowImage, forState: .Normal)
-        let spacing = CGFloat(20)
-        let imageSize = numberOfUpvotesButton.imageView!.image!.size
-        let titleSize = numberOfUpvotesButton.titleLabel!.frame.size
-        numberOfUpvotesButton.titleEdgeInsets = UIEdgeInsetsMake(0, -imageSize.width, 0, 0)
-        numberOfUpvotesButton.imageEdgeInsets = UIEdgeInsetsMake(-45, 0.0, 0.0, -titleSize.width)
-        numberOfUpvotesButton.layer.cornerRadius = 3
-        numberOfUpvotesButton.backgroundColor = oneFiftyGrayColor
         numberOfUpvotesButton.addTarget(self, action: "upvote:", forControlEvents: .TouchUpInside)
+        numberOfUpvotesButton.frame =  CGRectMake(5, topicLabel.frame.maxY + 5, 40, 60)
+        if activeIdea["numberOfUpvotes"] != nil{
+            
+          hasUpvoted = getUpvotes(activeIdea, numberOfUpvotesButton, nil)
+
+        }
+
         self.view.addSubview(numberOfUpvotesButton)
         
         //MARK: - Avatar Button
-        var ownerAvatarFile = PFFile()
-        var ownerImage = UIImage()
-        var ownerUsername = String()
-        var avatarButton = UIButton()
-        if activeIdea["owner"] != nil{
-            ideaOwner = activeIdea["owner"] as! PFUser
-            if ideaOwner["avatar"] != nil{
-                ownerAvatarFile = ideaOwner["avatar"] as! PFFile
-                
-                ownerAvatarFile.getDataInBackgroundWithBlock({ (data, error) -> Void in
-                    if error == nil{
-                        
-                        ownerImage = UIImage(data: data!)!
-                        ownerImage = cropToSquare(image: ownerImage)
-                        ownerImage = ownerImage.convertToGrayScale()
-                        avatarButton.setImage(ownerImage, forState: .Normal)
-                        
-                    }else{
-                        
-                        println("Error: \(error!.userInfo)")
-                        
-                    }
-                })
-            }
-            
-            
-        }
+        var avatarButton = UIImageView()
         
+        if let ideaOwner = activeIdea["owner"] as? PFUser{
+        getAvatar(ideaOwner, avatarButton, nil)
+        }
         avatarButton.frame = CGRectMake(5, numberOfUpvotesButton.frame.maxY + 5, 40, 40)
         avatarButton.layer.cornerRadius = 20
         avatarButton.layer.masksToBounds = true
-        avatarButton.addTarget(self, action: "ownerProfileTapped:", forControlEvents: .TouchUpInside)
+        let gestureRec = UITapGestureRecognizer(target: self, action: "ownerProfileTapped:")
+        avatarButton.addGestureRecognizer(gestureRec)
+        avatarButton.userInteractionEnabled = true
         self.view.addSubview(avatarButton)
         
         //MARK: - Username Label
@@ -318,18 +272,18 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     func ownerProfileTapped(sender: UIButton!){
         
         let profileVC = ProfileViewController()
+        ideaOwner = activeIdea["owner"] as! PFUser
         profileVC.activeUser = ideaOwner
         navigationController?.pushViewController(profileVC, animated: true)
     }
     
     func profileTapped(sender: AnyObject){
-        println("profile tapped")
-        println(sender.view!.tag)
+        let profileVC = ProfileViewController()
+        if commentObjects[sender.view!.tag]["owner"] != nil{
+        profileVC.activeUser = commentObjects[sender.view!.tag]["owner"] as! PFUser
+        navigationController?.pushViewController(profileVC, animated: true)
+        }
     }
-    
-    
-    
-    
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         self.view.endEditing(true)
@@ -375,82 +329,12 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         
         if hasUpvoted == true{
             //Remove Upvote
-            if let user = PFUser.currentUser(){
-                activeIdea.removeObject(user, forKey: "usersWhoUpvoted")
-                activeIdea.incrementKey("numberOfUpvotes", byAmount: -1)
-                activeIdea.saveInBackground()
-                
-                var upvoteObjectQuery = PFQuery(className: "Upvote")
-                upvoteObjectQuery.whereKey("userWhoUpvoted", equalTo: user)
-                upvoteObjectQuery.whereKey("ideaUpvoted", equalTo: activeIdea)
-                
-                var upvoteObject = PFObject(className: "Upvote")
-                
-                upvoteObjectQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
-                    if error != nil{
-                        
-                    }else{
-                        upvoteObject = object! as PFObject
-                        upvoteObject.deleteInBackground()
-                    }
-                    let title = self.activeIdea["numberOfUpvotes"] as! Int
-                    let numberString = abbreviateNumber(title)
-                    sender.setTitle(numberString as String, forState: .Normal)
-                    sender.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-                    sender.tintColor = UIColor.whiteColor()
-                    
-                    let ideaOwner = self.activeIdea["owner"] as! PFUser
-                    var leaderboardQuery = PFQuery(className: "Leaderboard")
-                    leaderboardQuery.whereKey("userPointer", equalTo: ideaOwner)
-                    leaderboardQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
-                        
-                        if error == nil{
-                            var leaderboardObject = PFObject(className: "Leaderboard")
-                            leaderboardObject = object!
-                            leaderboardObject.incrementKey("numberOfUpvotes", byAmount: -1)
-                            leaderboardObject.saveInBackground()
-                        }
-                    })
-                })
-                
-            }
-            hasUpvoted = false
+                    upvoteGlobal(activeIdea, false, sender)
+                    hasUpvoted = false
         }else{
             //Add Upvote
-            if let user = PFUser.currentUser(){
-                activeIdea.addObject(user, forKey: "usersWhoUpvoted")
-                activeIdea.incrementKey("numberOfUpvotes")
-                activeIdea.saveInBackground()
-                
-                var upvoteObject = PFObject(className: "Upvote")
-                upvoteObject.setObject(user, forKey: "userWhoUpvoted")
-                upvoteObject.setObject(activeIdea, forKey: "ideaUpvoted")
-                upvoteObject.saveInBackground()
-                
-                let title = activeIdea["numberOfUpvotes"] as! Int
-                let numberString = abbreviateNumber(title)
-                sender.setTitle(numberString as String, forState: .Normal)
-                sender.setTitleColor(redColor, forState: .Normal)
-                sender.tintColor = redColor
-                
-                let ideaOwner = activeIdea["owner"] as! PFUser
-                var leaderboardQuery = PFQuery(className: "Leaderboard")
-                leaderboardQuery.whereKey("userPointer", equalTo: ideaOwner)
-                leaderboardQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
-                    
-                    if error == nil{
-                        var leaderboardObject = PFObject(className: "Leaderboard")
-                        leaderboardObject = object!
-                        leaderboardObject.incrementKey("numberOfUpvotes", byAmount: 1)
-                        leaderboardObject.saveInBackground()
-                    }
-                })
-                
-                
-                
+                upvoteGlobal(activeIdea, true, sender)
                 hasUpvoted = true
-                
-            }
         }
     }
     
