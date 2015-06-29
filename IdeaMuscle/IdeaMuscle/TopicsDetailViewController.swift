@@ -24,10 +24,14 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         startActivityIndicator()
         ideaQuery()
         
-        self.view.backgroundColor = UIColor.whiteColor()
+        self.view.backgroundColor = oneFiftyGrayColor
         
         //MARK: - Topic Label
         var topicLabel = UILabel()
+        var topicLabelView = UIView()
+        topicLabelView.frame = CGRectMake(0, 69, self.view.frame.width, 60)
+        topicLabelView.backgroundColor = UIColor.whiteColor()
+        self.view.addSubview(topicLabelView)
         if activeTopic["title"] != nil{
             topicLabel.text = activeTopic["title"] as? String
         }
@@ -35,14 +39,14 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         topicLabel.textColor = UIColor.blackColor()
         topicLabel.numberOfLines = 0
         topicLabel.textAlignment = NSTextAlignment.Center
-        topicLabel.frame = CGRectMake(5, 64, self.view.frame.width - 10, 60)
-        self.view.addSubview(topicLabel)
+        topicLabel.frame = CGRectMake(5, 0, self.view.frame.width - 10, 60)
+        topicLabelView.addSubview(topicLabel)
         
         // MARK: - Table View Configuration
         tableView.registerClass(TopicTableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.frame = CGRectMake(0, topicLabel.frame.maxY, self.view.frame.width, self.view.frame.height - navigationController!.navigationBar.frame.height - 30 - 60)
+        tableView.frame = CGRectMake(0, topicLabelView.frame.maxY + 5, self.view.frame.width, self.view.frame.height - navigationController!.navigationBar.frame.height - 30 - 60)
         tableView.rowHeight = 120
         self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 30, 0)
         self.view.addSubview(tableView)
