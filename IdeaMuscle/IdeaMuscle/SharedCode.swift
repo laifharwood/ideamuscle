@@ -329,47 +329,6 @@ func getAvatar(user: PFUser, imageView: UIImageView?, parseImageView: PFImageVie
     }
 }
 
-func getUpvotes(idea: PFObject, button: UIButton, cell: UITableViewCell?) -> Bool{
-    var numberOfUpvotes = Int()
-    var hasUpvoted = Bool()
-    numberOfUpvotes = idea["numberOfUpvotes"] as! Int
-    let numberString = abbreviateNumber(numberOfUpvotes)
-    button.setTitle(numberString as String, forState: .Normal)
-    if let currentUser = PFUser.currentUser(){
-        if idea.objectForKey("usersWhoUpvoted")?.containsObject(currentUser) == true{
-            button.setTitleColor(redColor, forState: .Normal)
-            button.tintColor = redColor
-            hasUpvoted = true
-        }else{
-            button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-            button.tintColor = UIColor.whiteColor()
-            hasUpvoted = false
-        }
-        if cell != nil{
-            button.frame =  CGRectMake(cell!.frame.maxX - (40) - 10, cell!.frame.height/2 - 30, 40, 60)
-        }
-        let image = UIImage(named: "upvoteArrow")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-        button.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 10)
-        button.setImage(image, forState: .Normal)
-        let spacing = CGFloat(20)
-        let imageSize = button.imageView!.image!.size
-        let titleSize = button.titleLabel!.frame.size
-        button.titleEdgeInsets = UIEdgeInsetsMake(0, -imageSize.width, 0, 0)
-        button.imageEdgeInsets = UIEdgeInsetsMake(-45, 0.0, 0.0, -titleSize.width)
-        button.layer.cornerRadius = 3
-        button.backgroundColor = oneFiftyGrayColor
-
-    }else{
-        button.setTitle("0", forState: .Normal)
-        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-    }
-    
-    if hasUpvoted == true{
-        return true
-    }else{
-        return false
-    }
-}
 
 
 

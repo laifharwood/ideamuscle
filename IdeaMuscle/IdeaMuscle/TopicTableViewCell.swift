@@ -13,24 +13,26 @@ class TopicTableViewCell: UITableViewCell {
     
     var usernameLabel = UILabel()
     var ideaTotalButton = UIButton()
-    let ideaLabel = UILabel()
-    var ideaTopicLabel = UILabel()
+    let ideaTitleLabel = UILabel()
+    var topicLabel = UILabel()
     var profileButton = PFImageView()
     var shareButton = UIButton()
     var composeButton = UIButton()
     var timeStamp = UILabel()
+    var numberOfUpvotesButton = UIButton()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.contentView.addSubview(usernameLabel)
         self.contentView.addSubview(ideaTotalButton)
-        self.contentView.addSubview(ideaLabel)
-        self.contentView.addSubview(ideaTopicLabel)
+        self.contentView.addSubview(ideaTitleLabel)
+        self.contentView.addSubview(topicLabel)
         self.contentView.addSubview(profileButton)
         self.contentView.addSubview(shareButton)
         self.contentView.addSubview(composeButton)
         self.contentView.addSubview(timeStamp)
+        self.contentView.addSubview(numberOfUpvotesButton)
         
     }
 

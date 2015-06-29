@@ -10,7 +10,7 @@ import UIKit
 import Parse
 import ParseUI
 
-class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource, UITableViewDelegate {
+class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource, UITableViewDelegate {
     
     var activityIndicator = UIActivityIndicatorView()
     var ideaObjects = [PFObject(className: "Idea")]
@@ -22,7 +22,7 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
     
     func queryForIdeaObjects(){
         var query = PFQuery(className: "Idea")
-        ideaQueryGlobal(-1, query)
+        ideaQueryGlobal(-7, query)
         query.findObjectsInBackgroundWithTarget(self, selector: "ideaSelector:error:")
     }
     
@@ -37,7 +37,7 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
     }
     
     override func viewWillAppear(animated: Bool) {
-       self.tabBarController!.tabBar.hidden = false
+        self.tabBarController!.tabBar.hidden = false
         
         if shouldReloadTable == true{
             tableView.reloadData()
@@ -73,7 +73,7 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
         
         //cell.frame = CGRectMake(0, 0, self.view.frame.width, 150)
         cellFrame(cell, self.view)
-    
+        
         //MARK: - Number Of Upvotes Button Config
         if ideaObjects[indexPath.row]["numberOfUpvotes"] != nil{
             let idea = ideaObjects[indexPath.row]
@@ -127,12 +127,12 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
         
         if hasUpvoted[sender.tag] == true{
             //Remove Upvote
-                upvoteGlobal(ideaObject, false, sender)
-                hasUpvoted[sender.tag] = false
+            upvoteGlobal(ideaObject, false, sender)
+            hasUpvoted[sender.tag] = false
         }else{
             //Add Upvote
-                upvoteGlobal(ideaObject, true, sender)
-                hasUpvoted[sender.tag] = true
+            upvoteGlobal(ideaObject, true, sender)
+            hasUpvoted[sender.tag] = true
         }
     }
     

@@ -14,7 +14,14 @@ class TopicAndIdeaContainerViewController: UIViewController {
     let tableSelectionSC = UISegmentedControl()
     
     let ideaTodayVC = IdeaTodayTableViewController()
+    let ideaSevenVC = IdeaSevenTableViewController()
+    let ideaThirtyVC = IdeaThirtyTableViewController()
+    let ideaAllVC = IdeaAllTableViewController()
+    
     let topicTodayVC = TopicTodayTableViewController()
+    let topicSevenVC = TopicSevenTableViewController()
+    let topicThirtyVC = TopicThirtyTableViewController()
+    let topicAllVC = TopicAllTableViewController()
     
     let periodFrame = UIView()
 
@@ -141,21 +148,65 @@ class TopicAndIdeaContainerViewController: UIViewController {
             
             self.title = "Top Ideas"
             
+            if periodSC.selectedSegmentIndex == 0{
             activeViewController = ideaTodayVC
-            
+            }else if periodSC.selectedSegmentIndex == 1{
+                activeViewController = ideaSevenVC
+            }else if periodSC.selectedSegmentIndex == 2{
+                activeViewController = ideaThirtyVC
+            }else if periodSC.selectedSegmentIndex == 3{
+                activeViewController = ideaAllVC
+            }
             
         }else{
             
             self.title = "Top Topics"
             
-            activeViewController = topicTodayVC
+            if periodSC.selectedSegmentIndex == 0{
+                activeViewController = topicTodayVC
+            }else if periodSC.selectedSegmentIndex == 1{
+                activeViewController = topicSevenVC
+            }else if periodSC.selectedSegmentIndex == 2{
+                activeViewController = topicThirtyVC
+            }else if periodSC.selectedSegmentIndex == 3{
+                activeViewController = topicAllVC
+            }
             
         }
     }
     
     func changePeriodView(sender: UISegmentedControl){
         
-        println(sender.selectedSegmentIndex)
+        if sender.selectedSegmentIndex == 0{
+            if tableSelectionSC.selectedSegmentIndex == 0{
+                activeViewController = ideaTodayVC
+            }else{
+                activeViewController = topicTodayVC
+            }
+        }else if sender.selectedSegmentIndex == 1{
+            if tableSelectionSC.selectedSegmentIndex == 0{
+                activeViewController = ideaSevenVC
+            }else{
+                activeViewController = topicSevenVC
+            }
+            
+        }else if sender.selectedSegmentIndex == 2{
+            if tableSelectionSC.selectedSegmentIndex == 0{
+                activeViewController = ideaThirtyVC
+            }else{
+                activeViewController = topicThirtyVC
+            }
+            
+        }else if sender.selectedSegmentIndex == 3{
+            if tableSelectionSC.selectedSegmentIndex == 0{
+                activeViewController = ideaAllVC
+            }else{
+                activeViewController = topicAllVC
+            }
+            
+        }
+        
+        
     }
     
 

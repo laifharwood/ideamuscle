@@ -25,8 +25,9 @@ class ViewController: UIViewController{
         //MARK: - Logo Configuration
         logo = UIImage(named: "IdeaMuscleLogo.png")!
         let logoView = UIImageView(image: logo)
-        logoView.frame = CGRectMake(self.view.frame.width/2 - 100, 50, 200, 232)
+        logoView.frame = CGRectMake(self.view.frame.width/2 - 100, 30, 200, 232)
         self.view.addSubview(logoView)
+        activityIndicator.addSubview(logoView)
         
         // MARK: - Twitter Login Button Configuration
         //let twitterColor : UIColor = UIColor(red: 0/255, green: 172/255, blue: 237/255, alpha: 1)
@@ -42,7 +43,12 @@ class ViewController: UIViewController{
         twitterLoginButton.imageEdgeInsets = UIEdgeInsetsMake(5, 140, 5, 28.74)
         twitterLoginButton.titleEdgeInsets = UIEdgeInsetsMake(10, -160, 10, 0)
         twitterLoginButton.addTarget(self, action: "login:", forControlEvents: .TouchUpInside)
+        if PFUser.currentUser() == nil{
         self.view.addSubview(twitterLoginButton)
+        }else{
+            self.view.addSubview(activityIndicator)
+            startActivityIndicator()
+        }
         
         //MARK: - Proceed Without Login Button Configuration
         proceedWithoutLoginButton.setTitle("Proceed Without Login", forState: .Normal)
@@ -51,7 +57,7 @@ class ViewController: UIViewController{
         proceedWithoutLoginButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 10)
         proceedWithoutLoginButton.frame = CGRectMake((self.view.frame.width/2) - 100, twitterLoginButton.frame.minY + 75, 200, 20)
         proceedWithoutLoginButton.addTarget(self, action: "proceedWithoutAccount:", forControlEvents: .TouchUpInside)
-        self.view.addSubview(proceedWithoutLoginButton)
+        //self.view.addSubview(proceedWithoutLoginButton)
         
         
         
@@ -59,7 +65,7 @@ class ViewController: UIViewController{
     
     func login(sender: UIButton!){
         
-        startActivityIndicator()
+        //startActivityIndicator()
         
         PFTwitterUtils.logInWithBlock { (user, error) -> Void in
             
@@ -359,13 +365,13 @@ class ViewController: UIViewController{
         self.view.addSubview(activityIndicator)
         activityIndicator.hidesWhenStopped = true
         activityIndicator.startAnimating()
-        UIApplication.sharedApplication().beginIgnoringInteractionEvents()
+        //UIApplication.sharedApplication().beginIgnoringInteractionEvents()
         
     }
     
     func stopActivityIndicator(){
         self.activityIndicator.stopAnimating()
-        UIApplication.sharedApplication().endIgnoringInteractionEvents()
+        //UIApplication.sharedApplication().endIgnoringInteractionEvents()
     }
     
     

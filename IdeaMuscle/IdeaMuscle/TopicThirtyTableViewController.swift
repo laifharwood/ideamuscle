@@ -10,7 +10,7 @@ import UIKit
 import Parse
 import ParseUI
 
-class TopicTodayTableViewController: UITableViewController, UITableViewDataSource, UITableViewDelegate {
+class TopicThirtyTableViewController: UITableViewController, UITableViewDataSource, UITableViewDelegate {
     
     var activityIndicator = UIActivityIndicatorView()
     var topicObjects = [PFObject(className: "Topic")]
@@ -20,7 +20,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
     
     func queryForTopicObjects(){
         var query = PFQuery(className: "Topic")
-        topicQueryGlobal(-1, query)
+        topicQueryGlobal(-30, query)
         query.findObjectsInBackgroundWithTarget(self, selector: "topicSelector:error:")
     }
     
@@ -34,7 +34,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
         stopActivityIndicator()
         refreshTable.endRefreshing()
     }
-
+    
     override func viewWillAppear(animated: Bool) {
         
         self.tabBarController!.tabBar.hidden = false
@@ -63,21 +63,21 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return topicObjects.count
+        return topicObjects.count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! TopicTableViewCell
-
+        
         cellFrameTopic(cell, self.view)
         
         //MARK: - Idea Total Button Config
         numberOfIdeasGlobal(topicObjects, indexPath, cell.ideaTotalButton, cell)
         cell.ideaTotalButton.addTarget(self, action: "viewIdeas:", forControlEvents: .TouchUpInside)
-
+        
         //MARK: - Idea Title Label
         ideaTitleLabelGlobal(cell.ideaTitleLabel, cell.ideaTotalButton)
-
+        
         //MARK: - Topic Label Config
         topicLabelForTopic(topicObjects, cell, cell.ideaTotalButton, cell.topicLabel, indexPath)
         
@@ -91,7 +91,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
         
         //MARK: - Time Stamp
         timeStampTopicGlobal(topicObjects, cell.timeStamp, cell.ideaTotalButton, indexPath, cell)
-
+        
         return cell
         
     }
@@ -113,7 +113,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
     }
     
     func startActivityIndicator(){
-
+        
         startActivityGlobal(activityIndicatorContainer, activityIndicator, self.view)
         
     }
@@ -137,7 +137,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
     
     func refresh(sender:AnyObject)
     {
-       queryForTopicObjects()
+        queryForTopicObjects()
     }
     
     override func didReceiveMemoryWarning() {
@@ -145,5 +145,5 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
         // Dispose of any resources that can be recreated.
     }
     
-
+    
 }

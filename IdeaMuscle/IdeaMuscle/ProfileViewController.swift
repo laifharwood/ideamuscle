@@ -23,6 +23,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     var ideaObjects = [PFObject(className: "Idea")]
     var hasUpvoted = [Bool](count: 100, repeatedValue: false)
     var totalUsersLabel = UILabel()
+    var shouldReloadTable = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,7 +67,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         worldRankTitleLabel.frame = CGRectMake(self.view.frame.width/3 - 50 - 30, usernameLabel.frame.maxY + 2, 100, 20)
         worldRankTitleLabel.text = "World Ranking"
         worldRankTitleLabel.font = UIFont(name: "Helvetica", size: 14)
-        worldRankTitleLabel.textColor = oneFiftyGrayColor
+        worldRankTitleLabel.textColor = UIColor.blackColor()
         worldRankTitleLabel.textAlignment = NSTextAlignment.Center
         self.view.addSubview(worldRankTitleLabel)
         
@@ -105,10 +106,28 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         self.view.addSubview(followButton)
         }
         
+        //MARK: - Idea title label
+        let ideaTitleLabel = UILabel(frame: CGRectMake(10, followButton.frame.maxY + 15, self.view.frame.width - 20, 20))
+        if usernameLabel.text != nil{
+        ideaTitleLabel.text = usernameLabel.text! + "'s Ideas:"
+        }
+        ideaTitleLabel.font = UIFont(name: "Helvetica-Light", size: 10)
+        ideaTitleLabel.textColor = UIColor.blackColor()
+        ideaTitleLabel.textAlignment = NSTextAlignment.Left
+        self.view.addSubview(ideaTitleLabel)
+        
         //Table View Config
-        ideaTableView.frame = CGRectMake(0, followButton.frame.maxY + 20, self.view.frame.width, self.view.frame.height - followButton.frame.maxY - 20)
+        ideaTableView.frame = CGRectMake(0, ideaTitleLabel.frame.maxY, self.view.frame.width, self.view.frame.height - followButton.frame.maxY - 20)
         self.view.addSubview(ideaTableView)
         
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        self.tabBarController!.tabBar.hidden = true
+        if shouldReloadTable == true{
+            ideaTableView.reloadData()
+            shouldReloadTable == false
+        }
     }
     
     func viewRank(sender: AnyObject){
@@ -269,11 +288,41 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         
         cell.numberOfUpvotesButton.addTarget(self, action: "upvote:", forControlEvents: .TouchUpInside)
         cell.numberOfUpvotesButton.tag = indexPath.row
+        
+        //MARK: - Topic Label
+        var labelWidth = cell.frame.width - cell.numberOfUpvotesButton.frame.width - 25
+        cell.topicLabel.frame = CGRectMake(10, 5, labelWidth, 20)
+        cell.topicLabel.font = UIFont(name: "Avenir-Heavy", size: 12)
+        cell.topicLabel.numberOfLines = 1
+        cell.topicLabel.textColor = UIColor.blackColor()
+        
+        if let topic = ideaObjects[indexPath.row]["topicPointer"] as? PFObject{
+            let topicText = topic["title"] as! String
+            cell.topicLabel.text = topicText
+        }
+        cell.topicLabel.tag = indexPath.row
+        
+        //MARK: - Idea Label
+        cell.ideaLabel.numberOfLines = 0
+        cell.ideaLabel.frame = CGRectMake(25, cell.topicLabel.frame.maxY + 2, labelWidth - 15, 70)
+        cell.ideaLabel.font = UIFont(name: "Avenir-Light", size: 10)
+        cell.ideaLabel.textColor = fiftyGrayColor
+        if ideaObjects[indexPath.row]["content"] != nil{
+            cell.ideaLabel.text = (ideaObjects[indexPath.row]["content"] as! String)
+        }
        
-        
-        
-        
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        let ideaDetailVC = IdeaDetailViewController()
+        let passingIdea = ideaObjects[indexPath.row]
+        let passingTopic = ideaObjects[indexPath.row]["topicPointer"] as! PFObject
+        ideaDetailVC.activeIdea = passingIdea
+        ideaDetailVC.activeTopic =  passingTopic
+        shouldReloadTable = true
+        self.navigationController?.pushViewController(ideaDetailVC, animated: true)
     }
     
     

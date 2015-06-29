@@ -51,19 +51,11 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         if activeTopic["title"] != nil{
         topicLabel.text = activeTopic["title"] as? String
         }
-//        topicLabel.userInteractionEnabled = false
-//        topicLabel.editable = false
-        topicLabel.font = UIFont(name: "Avenir-Heavy", size: 13)
-        topicLabel.textColor = oneFiftyGrayColor
+        topicLabel.font = UIFont(name: "Avenir-Heavy", size: 12)
+        topicLabel.textColor = UIColor.blackColor()
         topicLabel.numberOfLines = 0
         topicLabel.textAlignment = NSTextAlignment.Center
-//        topicLabel.scrollEnabled = true
-//        let maxWidth : CGFloat = self.view.frame.width - 34.7
-//        let size = topicLabel.sizeThatFits(CGSize(width: maxWidth, height: CGFloat.max))
-//        topicLabel.sizeToFit()
-//        self.automaticallyAdjustsScrollViewInsets = false
         topicLabel.frame = CGRectMake(5, topicContainerY!, self.view.frame.width - 10, 60)
-        //println(size.height)
         self.view.addSubview(topicLabel)
         
         //MARK: - Upvote Button
@@ -94,25 +86,19 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         
         //MARK: - Username Label
         var usernameLabel = UILabel(frame: CGRectMake(5, avatarButton.frame.maxY + 5, 40, 20))
-        
         if ideaOwner["username"] != nil{
-            
             usernameLabel.text = ideaOwner["username"] as? String
         }
-        
-        usernameLabel.font = UIFont(name: "Avenir-Light", size: 9)
-        usernameLabel.textColor = fiftyGrayColor
+        usernameLabel.font = UIFont(name: "Avenir", size: 10)
+        usernameLabel.textColor = oneFiftyGrayColor
         self.view.addSubview(usernameLabel)
         
         //MARK: - Idea Text View
-        
         ideaTextView.frame = CGRectMake(numberOfUpvotesButton.frame.maxX + 5, topicLabel.frame.maxY + 5, self.view.frame.width - 55, 125)
         if activeIdea["content"] != nil{
-            
             ideaTextView.text = activeIdea["content"] as! String
         }
-        
-        ideaTextView.font = UIFont(name: "Avenir", size: 11)
+        ideaTextView.font = UIFont(name: "Avenir-Light", size: 10)
         ideaTextView.layer.borderColor = oneFiftyGrayColor.CGColor
         ideaTextView.layer.borderWidth = 1
         ideaTextView.layer.cornerRadius = 3
