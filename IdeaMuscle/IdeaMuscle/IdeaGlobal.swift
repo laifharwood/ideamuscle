@@ -52,11 +52,14 @@ topicLabel.frame = CGRectMake(10, 5, labelWidth, 20)
 topicLabel.font = UIFont(name: "Avenir-Heavy", size: 12)
 topicLabel.numberOfLines = 1
 topicLabel.textColor = UIColor.blackColor()
-
-if let topic = ideaObjects[row]["topicPointer"] as? PFObject{
-    let topicText = topic["title"] as! String
-    topicLabel.text = topicText
-}
+    
+    if ideaObjects[row]["topicPointer"] != nil{
+        let topic = ideaObjects[row]["topicPointer"] as! PFObject
+        if let text = topic["title"] as? String{
+            topicLabel.text = text
+        }
+    }
+    
 topicLabel.tag = row
 }
 

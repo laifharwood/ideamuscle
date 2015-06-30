@@ -20,6 +20,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var shouldReloadTable = false
     var tableView = UITableView()
     var followingObjects = [PFObject(className: "following")]
+    var query = PFQuery()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,6 +64,8 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     override func viewWillAppear(animated: Bool) {
+        
+        self.tabBarController!.tabBar.hidden = false
         if shouldReloadTable == true{
             tableView.reloadData()
             shouldReloadTable == false
@@ -106,6 +109,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         topicLabelGlobal(labelWidth, cell.topicLabel, ideaObjects, indexPath.row)
         
         
+        
         //MARK: - Idea Label Config
         ideaLabelGlobal(labelWidth, cell.ideaLabel, ideaObjects, indexPath.row, cell.topicLabel)
         
@@ -141,10 +145,10 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tableView.reloadData()
     }
     
+    
     func followingQuery(){
         if let currentUser = PFUser.currentUser(){
             var relation = PFRelation()
-            var query = PFQuery()
             query.includeKey("following")
             relation = currentUser.relationForKey("following")
             query = relation.query()!
@@ -164,17 +168,16 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func queryForIdeaObjects(){
-        var query = PFQuery(className: "Idea")
-        query.whereKey("isPublic", equalTo: true)
         
-        for object in followingObjects{
-            object.
-            query.whereKey("owner", equalTo: user)
-        }
-        
-        query.orderByDescending("createdAt")
-        query.limit = 200
-        query.findObjectsInBackgroundWithTarget(self, selector: "ideaSelector:error:")
+        let ideaQuery = PFQuery(className: "Idea")
+        ideaQuery.whereKey("isPublic", equalTo: true)
+        ideaQuery.whereKey("owner", matchesQuery: query)
+        ideaQuery.orderByDescending("createdAt")
+        ideaQuery.limit = 200
+        ideaQuery.includeKey("owner")
+        ideaQuery.includeKey("topicPointer")
+        ideaQuery.findObjectsInBackgroundWithTarget(self, selector: "ideaSelector:error:")
+
     }
     
     func ideaSelector(objects: [AnyObject]!, error: NSError!){
@@ -190,6 +193,42 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func refresh(sender:AnyObject)
     {
         queryForIdeaObjects()
+    }
+    
+    func upvote(sender: UIButton!){
+        
+        let ideaObject = ideaObjects[sender.tag]
+        
+        if hasUpvoted[sender.tag] == true{
+            //Remove Upvote
+            upvoteGlobal(ideaObject, false, sender)
+            hasUpvoted[sender.tag] = false
+        }else{
+            //Add Upvote
+            upvoteGlobal(ideaObject, true, sender)
+            hasUpvoted[sender.tag] = true
+        }
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        let ideaDetailVC = IdeaDetailViewController()
+        if ideaObjects[indexPath.row]["topicPointer"] != nil{
+            let passingIdea = ideaObjects[indexPath.row]
+            let passingTopic = ideaObjects[indexPath.row]["topicPointer"] as! PFObject
+            ideaDetailVC.activeIdea = passingIdea
+            ideaDetailVC.activeTopic =  passingTopic
+            shouldReloadTable = true
+            self.navigationController?.pushViewController(ideaDetailVC, animated: true)
+        }
+    }
+    
+    func profileTapped(sender: AnyObject){
+        let profileVC = ProfileViewController()
+        if ideaObjects[sender.view!.tag]["owner"] != nil{
+            profileVC.activeUser = ideaObjects[sender.view!.tag]["owner"] as! PFUser
+            navigationController?.pushViewController(profileVC, animated: true)
+        }
     }
     
     

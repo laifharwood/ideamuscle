@@ -77,11 +77,12 @@ func topicLabelForTopic(topicObjects: [PFObject], cell: UITableViewCell, ideaTot
     topicLabel.numberOfLines = 2
     topicLabel.textColor = UIColor.blackColor()
     
-    if let topicText = topicObjects[indexPath.row]["title"] as? String{
+    if topicObjects[indexPath.row]["title"] != nil{
         
-        topicLabel.text = topicText
-        
+        topicLabel.text = topicObjects[indexPath.row]["title"] as? String
+    
     }
+    
     topicLabel.tag = indexPath.row
 }
 
