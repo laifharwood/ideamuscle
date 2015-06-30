@@ -244,8 +244,6 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     func commentSelector(objects: [AnyObject]!, error: NSError!){
         
         if error == nil{
-            //topicObjects = []
-            println("got Objects")
             commentObjects = objects as! [PFObject]
             commentsTableView.reloadData()
         }else{

@@ -1,104 +1,129 @@
 //
-//  LeaderboardViewController.swift
+//  TopicAndIdeaContainerViewController.swift
 //  IdeaMuscle
 //
-//  Created by Laif Harwood on 6/5/15.
+//  Created by Laif Harwood on 6/16/15.
 //  Copyright (c) 2015 Parse. All rights reserved.
 //
 
 import UIKit
 
 class LeaderboardViewController: UIViewController {
-
+    
+    let tableSelectionSC = UISegmentedControl()
+    
+    let friendsVC = FriendsLeaderboardTableViewController()
+    let worldVC = WorldLeaderboardTableViewController()
+    let tableSelectionFrame = UIView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
-        let topicTitleLabel = UILabel()
-        topicTitleLabel.text = "LeaderBoard"
-        topicTitleLabel.font = UIFont(name: "HelveticaNeue", size: 12)
-        topicTitleLabel.textColor = UIColor.blackColor()
-        topicTitleLabel.frame = CGRectMake(30, 30, 40, 15)
-        self.view.addSubview(topicTitleLabel)
-    }
+        self.view.backgroundColor = UIColor.whiteColor()
+        
+        self.title = "Leaderboard"
+        
+        //Right Compose Button
+        let composeOriginalButton = UIButton()
+        let composeOriginalImage = UIImage(named: "ComposeWhite.png")
+        composeOriginalButton.setImage(composeOriginalImage, forState: .Normal)
+        composeOriginalButton.frame = CGRectMake(self.view.frame.width - 38, 25, 24.7, 25)
+        composeOriginalButton.addTarget(self, action: "composeOriginal:", forControlEvents: .TouchUpInside)
+        let rightBarButtonItem: UIBarButtonItem = UIBarButtonItem(customView: composeOriginalButton)
+        self.navigationItem.setRightBarButtonItem(rightBarButtonItem, animated: false);
+        
+        //MARK: - Left Small Logo
+        
+        let leftLogoView = UIImageView(image: smallLogo)
+        leftLogoView.frame = CGRectMake(10, 25, 35, 35)
+        let leftBarButtonItem: UIBarButtonItem = UIBarButtonItem(customView: leftLogoView)
+        self.navigationItem.setLeftBarButtonItem(leftBarButtonItem, animated: false)
+        
+        //MARK: - Table Selection Frame Config
+        tableSelectionFrame.frame = CGRectMake(0, navigationController!.navigationBar.frame.maxY, self.view.frame.width, 30)
+        tableSelectionFrame.backgroundColor = oneFiftyGrayColor
+        self.view.addSubview(tableSelectionFrame)
+        
+        //Table Selection Segmented Control
+        tableSelectionSC.insertSegmentWithTitle("Friends", atIndex: 0, animated: false)
+        tableSelectionSC.insertSegmentWithTitle("World", atIndex: 1, animated: false)
+        tableSelectionSC.selectedSegmentIndex = 0
+        tableSelectionSC.frame = CGRectMake(5, 5, tableSelectionFrame.frame.width - 10, 20)
+        tableSelectionSC.tintColor = UIColor.whiteColor()
+        tableSelectionSC.backgroundColor = seventySevenGrayColor
+        tableSelectionSC.layer.borderColor = UIColor.whiteColor().CGColor
+        tableSelectionSC.layer.cornerRadius = 4
+        //customSC.layer.masksToBounds = true
+        tableSelectionSC.addTarget(self, action: "changeTableSelection:", forControlEvents: .ValueChanged)
+        tableSelectionFrame.addSubview(tableSelectionSC)
+        activeViewController = friendsVC
+        
 
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        self.tabBarController!.tabBar.hidden = false
+    }
+    
+    
+    private var activeViewController: UIViewController? {
+        didSet {
+            removeInactiveViewController(oldValue)
+            updateActiveViewController()
+        }
+    }
+    
+    private func removeInactiveViewController(inactiveViewController: UIViewController?) {
+        if let inActiveVC = inactiveViewController {
+            // call before removing child view controller's view from hierarchy
+            inActiveVC.willMoveToParentViewController(nil)
+            
+            inActiveVC.view.removeFromSuperview()
+            
+            // call after removing child view controller's view from hierarchy
+            inActiveVC.removeFromParentViewController()
+        }
+    }
+    
+    private func updateActiveViewController() {
+        if let activeVC = activeViewController {
+            // call before adding child view controller's view as subview
+            addChildViewController(activeVC)
+            
+            activeVC.view.frame = CGRectMake(0, tableSelectionFrame.frame.maxY, self.view.frame.width, self.view.frame.height - 143)
+            
+            self.view.addSubview(activeVC.view)
+            
+            // call before adding child view controller's view as subview
+            activeVC.didMoveToParentViewController(self)
+        }
+    }
+    
+    func composeOriginal(sender: UIButton!){
+        
+        isNewTopic = true
+        
+        let composeTopicVC = ComposeTopicViewController()
+        
+        self.presentViewController(composeTopicVC, animated: true, completion: nil)
+        
+    }
+    
+    func changeTableSelection(sender: UISegmentedControl){
+        
+        if sender.selectedSegmentIndex == 0{
+            activeViewController = friendsVC
+        }else{
+            activeViewController = worldVC
+        }
+        
+
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    // MARK: - Table view data source
-
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
-        return 0
-    }
-
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
-        return 0
-    }
-
-    /*
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as! UITableViewCell
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    
+    
 }

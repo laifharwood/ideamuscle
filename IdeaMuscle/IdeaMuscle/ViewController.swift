@@ -262,7 +262,6 @@ class ViewController: UIViewController{
     
     if PFTwitterUtils.isLinkedWithUser(PFUser.currentUser()) {
         
-        println("linked")
         
         let screenName = PFTwitterUtils.twitter()?.screenName!
         
@@ -281,7 +280,6 @@ class ViewController: UIViewController{
         
         if error == nil {
             
-            println("No Error In request from Twitter")
             
             let result: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &error)
             
@@ -329,13 +327,13 @@ class ViewController: UIViewController{
             user?.saveInBackgroundWithBlock({ (success, error) -> Void in
                 if error != nil{
                     //Handle Error
-                    println("could not save image")
+                    
                     
                     
                 }else{
                     //Handle Success
                     
-                    println("Saved")
+                    
                     
                     
                     
@@ -344,14 +342,14 @@ class ViewController: UIViewController{
             
         }else{
             
-            println("could not get profile pic")
+            
         }
     
     
     
     
     }else{
-        println("not Linked")
+        
     }
     
     

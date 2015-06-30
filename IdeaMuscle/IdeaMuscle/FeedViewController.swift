@@ -14,12 +14,12 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var activityIndicator = UIActivityIndicatorView()
     var ideaObjects = [PFObject(className: "Idea")]
+    var followingObjects = [PFObject(className: "following")]
     let activityIndicatorContainer = UIView()
     let refreshTable = UIRefreshControl()
     var hasUpvoted = [Bool](count: 200, repeatedValue: false)
     var shouldReloadTable = false
     var tableView = UITableView()
-    var followingObjects = [PFObject(className: "following")]
     var query = PFQuery()
 
     override func viewDidLoad() {
@@ -54,7 +54,6 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.navigationItem.setRightBarButtonItem(rightBarButtonItem, animated: false);
         
         //MARK: - Left Small Logo
-        
         let leftLogoView = UIImageView(image: smallLogo)
         leftLogoView.frame = CGRectMake(10, 25, 35, 35)
         let leftBarButtonItem: UIBarButtonItem = UIBarButtonItem(customView: leftLogoView)
