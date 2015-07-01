@@ -13,32 +13,39 @@ import ParseUI
 class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var activityIndicator = UIActivityIndicatorView()
+    var rankIndicator = UIActivityIndicatorView()
     let activityIndicatorContainer = UIView()
     var tableView = UITableView()
-    var leaderboardObjects = [PFObject(className: "LeaderBoard")]
+    var leaderboardObjects = [PFObject(className: "Leaderboard")]
     var followingObjects = [PFObject(className: "following")]
-    var query = PFQuery()
+    var currenUserLeaderBoard = PFObject(className: "Leaderboard")
+    var currentUserNumberOfUpvotesButton = UIButton()
+    let bottomContainer = UIView()
+    var worldRankLabel = UILabel()
+    var worldRankTitleLabel = UILabel()
+    var totalUsersLabel = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         
-                //MARK: - Bottom container
-                let bottomContainer = UIView()
-                bottomContainer.backgroundColor = twoHundredGrayColor
-                let y = self.view.frame.height - 213
-                bottomContainer.frame = CGRectMake(0, y, self.view.frame.width, 70)
-                self.view.addSubview(bottomContainer)
+        //MARK: - Bottom container
+        bottomContainer.backgroundColor = twoHundredGrayColor
+        let y = self.view.frame.height - 213
+        bottomContainer.frame = CGRectMake(0, y, self.view.frame.width, 70)
+        self.view.addSubview(bottomContainer)
         
-                //MARK: - User Avatar
-                let imageView = UIImageView()
-                imageView.frame = CGRectMake(5, 15, 40, 40)
-                if PFUser.currentUser() != nil{
-                    getAvatar(PFUser.currentUser()!, imageView, nil)
-                }
-                imageView.layer.cornerRadius = 20
-                imageView.layer.masksToBounds = true
-                bottomContainer.addSubview(imageView)
+        //MARK: - User Avatar
+        let imageView = UIImageView()
+        imageView.frame = CGRectMake(5, 15, 40, 40)
+        if PFUser.currentUser() != nil{
+            getAvatar(PFUser.currentUser()!, imageView, nil)
+        }
+        imageView.layer.cornerRadius = 20
+        imageView.layer.masksToBounds = true
+        bottomContainer.addSubview(imageView)
+        
+
         
         //MARK: - TableView Did Load
         tableView.rowHeight = 70
@@ -46,11 +53,13 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
         tableView.registerClass(LeaderboardTableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
+        tableView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height - 213)
         self.view.addSubview(tableView)
         
         startActivityIndicator()
         queryForLeaderboardObjects()
+        currentUserLeaderboardQuery()
+        totalUsersQuery()
         
     }
     
@@ -165,6 +174,46 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
         //refreshTable.endRefreshing()
     }
     
+    func currentUserLeaderboardQuery(){
+        if PFUser.currentUser() != nil{
+        let query = PFQuery(className: "Leaderboard")
+        query.whereKey("userPointer", equalTo: PFUser.currentUser()!)
+        query.includeKey("userPointer")
+            query.getFirstObjectInBackgroundWithTarget(self, selector: "currentUserLeaderBoardSelector:error:")
+        }
+        
+        
+    }
+    
+    func currentUserLeaderBoardSelector(object: AnyObject!, error: NSError!){
+        if error == nil{
+            currenUserLeaderBoard = object as! PFObject
+            if currenUserLeaderBoard["numberOfUpvotes"] != nil{
+                let currentNumUpvotes = currenUserLeaderBoard["numberOfUpvotes"] as! Int
+                let abNum = abbreviateNumber(currentNumUpvotes) as! String
+                currentUserNumberOfUpvotesButton.setTitle(abNum, forState: .Normal)
+                
+                currentUserNumberOfUpvotesButton.frame = CGRectMake(bottomContainer.frame.maxX - 45, 5, 40, 60)
+                currentUserNumberOfUpvotesButton.layer.cornerRadius = 3.0
+                currentUserNumberOfUpvotesButton.backgroundColor = UIColor.whiteColor()
+                currentUserNumberOfUpvotesButton.setTitleColor(oneFiftyGrayColor, forState: .Normal)
+                currentUserNumberOfUpvotesButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 15)
+                currentUserNumberOfUpvotesButton.enabled = false
+                bottomContainer.addSubview(currentUserNumberOfUpvotesButton)
+                
+                let upvotesLabel = UILabel()
+                upvotesLabel.frame = CGRectMake(currentUserNumberOfUpvotesButton.frame.minX + 2, currentUserNumberOfUpvotesButton.frame.maxY - 20, 38, 15)
+                upvotesLabel.text = "Upvotes"
+                upvotesLabel.font = UIFont(name: "HelveticaNeue-Light", size: 10)
+                upvotesLabel.textColor = oneFiftyGrayColor
+                upvotesLabel.textAlignment = .Center
+                bottomContainer.addSubview(upvotesLabel)
+            }
+        }else{
+            println("Error: \(error.userInfo)")
+        }
+    }
+    
     func profileTapped(sender: AnyObject){
         let profileVC = ProfileViewController()
         if leaderboardObjects[sender.view!.tag]["userPointer"] != nil{
@@ -195,6 +244,109 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
         tableView.hidden = false
         tableView.reloadData()
     }
+    
+    func totalUsersQuery(){
+        
+        let query = PFQuery(className: "TotalUsers")
+        query.getObjectInBackgroundWithId("RjDIi23LNW", block: { (object, error) -> Void in
+            if error == nil{
+                //MARK: - World Rank Label
+                self.worldRankTitleLabel.frame = CGRectMake(self.bottomContainer.frame.width/2 - 75, 3, 150, 20)
+                self.worldRankTitleLabel.text = "Your World Ranking"
+                self.worldRankTitleLabel.font = UIFont(name: "Helvetica", size: 14)
+                self.worldRankTitleLabel.textColor = UIColor.blackColor()
+                self.worldRankTitleLabel.textAlignment = NSTextAlignment.Center
+                self.bottomContainer.addSubview(self.worldRankTitleLabel)
+                
+                
+                self.worldRankLabel.frame = CGRectMake(self.view.frame.width/2 - 30, self.worldRankTitleLabel.frame.maxY + 3, 60, 20)
+                self.worldRankLabel.font = UIFont(name: "HelveticaNeue", size: 11)
+                self.worldRankLabel.textAlignment = NSTextAlignment.Center
+                let gestureRec = UITapGestureRecognizer(target: self, action: "viewRank:")
+                self.worldRankLabel.addGestureRecognizer(gestureRec)
+                self.worldRankLabel.userInteractionEnabled = true
+                self.worldRankLabel.text = "View Rank"
+                self.worldRankLabel.backgroundColor = UIColor.whiteColor()
+                self.worldRankLabel.textColor = oneFiftyGrayColor
+                self.worldRankLabel.layer.cornerRadius = 3
+                self.bottomContainer.addSubview(self.worldRankLabel)
+                
+                //MARK: - Total User Label
+                self.totalUsersLabel.frame = CGRectMake(self.bottomContainer.frame.width/2 - 75, self.worldRankLabel.frame.maxY + 2, 150, 20)
+                self.totalUsersLabel.font = UIFont(name: "HelveticaNeue", size: 12)
+                self.totalUsersLabel.textColor = UIColor.whiteColor()
+                self.totalUsersLabel.textAlignment = NSTextAlignment.Center
+                self.bottomContainer.addSubview(self.totalUsersLabel)
+                
+                
+                let totalUsersObject = object!
+                var totalUsersInt = Int()
+                totalUsersInt = totalUsersObject["numberOfUsers"] as! Int
+                self.totalUsersLabel.text = "out of " + (abbreviateNumber(totalUsersInt) as String) + " users"
+            }
+        })
+    }
+    
+    func worldRankQuery(){
+        
+        if PFUser.currentUser() != nil{
+        var leaderboardObjectQuery = PFQuery(className: "Leaderboard")
+        var leaderboardOjbect = PFObject(className: "LeaderBoard")
+        leaderboardObjectQuery.whereKey("userPointer", equalTo: PFUser.currentUser()!)
+        leaderboardObjectQuery.getFirstObjectInBackgroundWithBlock { (object, error) -> Void in
+            if error == nil{
+                var numberOfUpvotes = Int()
+                leaderboardOjbect = object!
+                if leaderboardOjbect["numberOfUpvotes"] != nil{
+                    numberOfUpvotes = leaderboardOjbect["numberOfUpvotes"] as! Int
+                }else{
+                    numberOfUpvotes = 0
+                }
+                var worldRankQuery = PFQuery(className: "Leaderboard")
+                worldRankQuery.whereKey("numberOfUpvotes", greaterThanOrEqualTo: numberOfUpvotes)
+                worldRankQuery.countObjectsInBackgroundWithBlock({ (rank, error) -> Void in
+                    if error == nil{
+                        let worldRank = Int(rank)
+                        self.worldRankLabel.font = UIFont(name: "HelveticaNeue", size: 20)
+                        self.worldRankLabel.textColor = redColor
+                        self.worldRankLabel.frame = CGRectMake(self.bottomContainer.frame.width/2 - 75, self.worldRankTitleLabel.frame.maxY + 3, 150, 20)
+                        self.worldRankLabel.textAlignment = NSTextAlignment.Center
+                        self.worldRankLabel.text = abbreviateNumber(worldRank) as String
+                        self.worldRankLabel.userInteractionEnabled = false
+                        self.stopRankActivityIndicator()
+                        
+                    }
+                })
+                
+            }
+        }
+        }
+        
+    }
+    
+    func viewRank(sender: AnyObject){
+        worldRankLabel.backgroundColor = transparentColor
+        worldRankLabel.text = ""
+        startRankActivityIndicator()
+        worldRankQuery()
+        
+    }
+    
+    func startRankActivityIndicator(){
+        
+        rankIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.White
+        rankIndicator.frame = CGRectMake(worldRankLabel.frame.width/2 - 10, 0, 20, 20)
+        rankIndicator.backgroundColor = transparentColor
+        worldRankLabel.addSubview(rankIndicator)
+        rankIndicator.hidesWhenStopped = true
+        rankIndicator.startAnimating()
+    }
+    
+    func stopRankActivityIndicator(){
+        rankIndicator.stopAnimating()
+    }
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

@@ -27,6 +27,7 @@ let twoHundredGrayColor : UIColor = UIColor(red: 200/255, green: 200/255, blue: 
 let fiftyGrayColor : UIColor = UIColor(red: 50/255, green: 50/255, blue: 50/255, alpha: 1)
 let oneFiftyGrayColor : UIColor = UIColor(red: 150/255, green: 150/255, blue: 150/255, alpha: 1)
 let tenGrayColor : UIColor = UIColor(red: 10/255, green: 10/255, blue: 10/255, alpha: 1)
+let transparentColor : UIColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0)
 
 let sixtyThreeGrayColor : UIColor = UIColor(red: 63/255, green: 63/255, blue: 63/255, alpha: 1)
 

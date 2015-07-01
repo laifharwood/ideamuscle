@@ -255,10 +255,6 @@ class ViewController: UIViewController{
     let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     appDelegate.window?.rootViewController = tabBarController
     
-    //ViewController.presentViewController(tabBarController, animated: true, completion: nil)
-    
-    
-    
 }
 
     func getAvatar(){
@@ -277,59 +273,27 @@ class ViewController: UIViewController{
         
         var response: NSURLResponse?
         var error: NSError?
-        let data: NSData = NSURLConnection.sendSynchronousRequest(request, returningResponse: &response, error: &error)!
+        
+        if let data: NSData = NSURLConnection.sendSynchronousRequest(request, returningResponse: &response, error: &error){
         
         if error == nil {
             
             let result: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &error)
-            
             let urlString = result?.objectForKey("profile_image_url_https") as! String
-            
             let hiResUrlString = urlString.stringByReplacingOccurrencesOfString("_normal", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
-            
-            
             let twitterPhotoUrl = NSURL(string: hiResUrlString)
             let imageData = NSData(contentsOfURL: twitterPhotoUrl!)
-            
-            //let twitterImage: UIImage! = UIImage(data:imageData!)
-            
-            let imageFile: PFFile = PFFile(name: (PFUser.currentUser()!.objectId! + "profileImage.png"), data: imageData!)
-
-            imageFile.saveInBackground()
-            
-            let user = PFUser.currentUser()
         
-            user?.setObject(imageFile, forKey: "avatar")
-            
-            user?.saveInBackgroundWithBlock({ (success, error) -> Void in
-                if error != nil{
-                    //Handle Error
-                    
-                    
-                    
-                }else{
-                    //Handle Success
-                    
-                    
-                    
-                    
-                    
-                }
-            })
-            
-        }else{
-            
+            let imageFile: PFFile = PFFile(name: (PFUser.currentUser()!.objectId! + "profileImage.png"), data: imageData!)
+            imageFile.saveInBackground()
+            if let user = PFUser.currentUser(){
+                user.setObject(imageFile, forKey: "avatar")
+                user.saveInBackground()
+            }
             
         }
-    
-    
-    
-    
-    }else{
-        
+        }
     }
-    
-    
 }
     
     func startActivityIndicator(){

@@ -15,7 +15,7 @@ class FriendsLeaderboardTableViewController: UIViewController, UITableViewDelega
     var activityIndicator = UIActivityIndicatorView()
     let activityIndicatorContainer = UIView()
     var tableView = UITableView()
-    var leaderboardObjects = [PFObject(className: "LeaderBoard")]
+    var leaderboardObjects = [PFObject(className: "Leaderboard")]
     var followingObjects = [PFObject(className: "following")]
     var query = PFQuery()
 
