@@ -13,8 +13,8 @@ import ParseUI
 class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource, UITableViewDelegate {
     
     var activityIndicator = UIActivityIndicatorView()
-    var ideaObjects = [PFObject(className: "Idea")]
     let activityIndicatorContainer = UIView()
+    var ideaObjects = [PFObject(className: "Idea")]
     let refreshTable = UIRefreshControl()
     var hasUpvoted = [Bool](count: 100, repeatedValue: false)
     var shouldReloadTable = false

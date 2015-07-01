@@ -12,8 +12,10 @@ import ParseUI
 class LeaderboardTableViewCell: UITableViewCell {
     
     var usernameLabel = UILabel()
-    var numberOfUpvotes = UILabel()
+    var numberOfUpvotes = UIButton()
     var profileButton = PFImageView()
+    var upvotesLabel = UILabel()
+    var rankLabel = UILabel()
 
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -22,6 +24,8 @@ class LeaderboardTableViewCell: UITableViewCell {
         self.contentView.addSubview(usernameLabel)
         self.contentView.addSubview(numberOfUpvotes)
         self.contentView.addSubview(profileButton)
+        self.contentView.addSubview(upvotesLabel)
+        self.contentView.addSubview(rankLabel)
         
     }
     

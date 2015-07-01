@@ -26,8 +26,11 @@ class ViewController: UIViewController{
         logo = UIImage(named: "IdeaMuscleLogo.png")!
         let logoView = UIImageView(image: logo)
         logoView.frame = CGRectMake(self.view.frame.width/2 - 100, 30, 200, 232)
+        if PFUser.currentUser() == nil{
         self.view.addSubview(logoView)
+        }else{
         activityIndicator.addSubview(logoView)
+        }
         
         // MARK: - Twitter Login Button Configuration
         //let twitterColor : UIColor = UIColor(red: 0/255, green: 172/255, blue: 237/255, alpha: 1)
@@ -262,7 +265,6 @@ class ViewController: UIViewController{
     
     if PFTwitterUtils.isLinkedWithUser(PFUser.currentUser()) {
         
-        
         let screenName = PFTwitterUtils.twitter()?.screenName!
         
         let requestString = ("https://api.twitter.com/1.1/users/show.json?screen_name=" + screenName!)
@@ -275,15 +277,11 @@ class ViewController: UIViewController{
         
         var response: NSURLResponse?
         var error: NSError?
-        
         let data: NSData = NSURLConnection.sendSynchronousRequest(request, returningResponse: &response, error: &error)!
         
         if error == nil {
             
-            
             let result: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &error)
-            
-            
             
             let urlString = result?.objectForKey("profile_image_url_https") as! String
             
@@ -296,28 +294,7 @@ class ViewController: UIViewController{
             //let twitterImage: UIImage! = UIImage(data:imageData!)
             
             let imageFile: PFFile = PFFile(name: (PFUser.currentUser()!.objectId! + "profileImage.png"), data: imageData!)
-            
-//            let cgImage = twitterImage.CGImage
-//            
-//            let bitsPerComponent = CGImageGetBitsPerComponent(cgImage)
-//            let bytesPerRow = CGImageGetBytesPerRow(cgImage)
-//            let colorSpace = CGImageGetColorSpace(cgImage)
-//            let bitmapInfo = CGImageGetBitmapInfo(cgImage)
-//            
-//            let context = CGBitmapContextCreate(nil, 300, 300, bitsPerComponent, bytesPerRow, colorSpace, bitmapInfo)
-//            
-//            CGContextSetInterpolationQuality(context, kCGInterpolationHigh)
-//            
-//            CGContextDrawImage(context, CGRect(origin: CGPointZero, size: CGSize(width: CGFloat(300), height: CGFloat(300))), cgImage)
-//            
-//            let scaledImage = UIImage(CGImage: CGBitmapContextCreateImage(context))
-//            
-//            let imageUIImage = UIImagePNGRepresentation(scaledImage)
-//            
-//            let imageFile: PFFile = PFFile(name: (PFUser.currentUser()!.objectId! + "profileImage.png"), data:imageUIImage)
-            
-            
-            
+
             imageFile.saveInBackground()
             
             let user = PFUser.currentUser()

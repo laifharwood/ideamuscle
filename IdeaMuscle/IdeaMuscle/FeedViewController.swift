@@ -132,7 +132,16 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func startActivityIndicator(){
         
-        startActivityGlobal(activityIndicatorContainer, activityIndicator, self.view)
+        activityIndicatorContainer.frame = CGRectMake(0, 75, self.view.frame.width, 1000)
+        activityIndicatorContainer.backgroundColor = UIColor.whiteColor()
+        activityIndicatorContainer.hidden = false
+        self.view.addSubview(activityIndicatorContainer)
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.frame = CGRectMake(0, 0, view.frame.width, 50)
+        //activityIndicator.center = activityIndicatorContainer.center
+        activityIndicatorContainer.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
         
     }
     
