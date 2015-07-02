@@ -18,27 +18,10 @@ class FriendsLeaderboardTableViewController: UIViewController, UITableViewDelega
     var leaderboardObjects = [PFObject(className: "Leaderboard")]
     var followingObjects = [PFObject(className: "following")]
     var query = PFQuery()
+    let refreshTable = UIRefreshControl()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-       
-        
-//        //MARK: - Bottom container
-//        let bottomContainer = UIView()
-//        bottomContainer.backgroundColor = twoHundredGrayColor
-//        let y = self.view.frame.height - 213
-//        bottomContainer.frame = CGRectMake(0, y, self.view.frame.width, 70)
-//        self.view.addSubview(bottomContainer)
-//        
-//        //MARK: - User Avatar
-//        let imageView = UIImageView()
-//        imageView.frame = CGRectMake(5, 15, 40, 40)
-//        if PFUser.currentUser() != nil{
-//            getAvatar(PFUser.currentUser()!, imageView, nil)
-//        }
-//        imageView.layer.cornerRadius = 20
-//        imageView.layer.masksToBounds = true
-//        bottomContainer.addSubview(imageView)
         
         //MARK: - TableView Did Load
         tableView.rowHeight = 70
@@ -48,6 +31,10 @@ class FriendsLeaderboardTableViewController: UIViewController, UITableViewDelega
         tableView.delegate = self
         tableView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
         self.view.addSubview(tableView)
+        
+        refreshTable.attributedTitle = NSAttributedString(string: "")
+        refreshTable.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
+        tableView.addSubview(refreshTable)
         
         startActivityIndicator()
         followingQuery()
@@ -189,7 +176,7 @@ class FriendsLeaderboardTableViewController: UIViewController, UITableViewDelega
             println("Error: \(error.userInfo)")
         }
         stopActivityIndicator()
-        //refreshTable.endRefreshing()
+        refreshTable.endRefreshing()
     }
     
     func profileTapped(sender: AnyObject){
@@ -226,6 +213,11 @@ class FriendsLeaderboardTableViewController: UIViewController, UITableViewDelega
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
+    }
+    
+    func refresh(sender:AnyObject)
+    {
+        followingQuery()
     }
     
 }

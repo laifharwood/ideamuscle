@@ -24,9 +24,12 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
     var worldRankLabel = UILabel()
     var worldRankTitleLabel = UILabel()
     var totalUsersLabel = UILabel()
+    let refreshTable = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         
         
         //MARK: - Bottom container
@@ -56,10 +59,13 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
         tableView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height - 213)
         self.view.addSubview(tableView)
         
+        refreshTable.attributedTitle = NSAttributedString(string: "")
+        refreshTable.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
+        tableView.addSubview(refreshTable)
+        
         startActivityIndicator()
         queryForLeaderboardObjects()
-        currentUserLeaderboardQuery()
-        totalUsersQuery()
+
         
     }
     
@@ -171,7 +177,8 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
             println("Error: \(error.userInfo)")
         }
         stopActivityIndicator()
-        //refreshTable.endRefreshing()
+        currentUserLeaderboardQuery()
+        
     }
     
     func currentUserLeaderboardQuery(){
@@ -212,6 +219,8 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
         }else{
             println("Error: \(error.userInfo)")
         }
+        
+        totalUsersQuery()
     }
     
     func profileTapped(sender: AnyObject){
@@ -285,6 +294,8 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
                 self.totalUsersLabel.text = "out of " + (abbreviateNumber(totalUsersInt) as String) + " users"
             }
         })
+        
+        refreshTable.endRefreshing()
     }
     
     func worldRankQuery(){
@@ -351,6 +362,11 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
+    }
+    
+    func refresh(sender:AnyObject)
+    {
+        queryForLeaderboardObjects()
     }
     
 }
