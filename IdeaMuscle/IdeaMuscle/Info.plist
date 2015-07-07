@@ -18,8 +18,21 @@
 	<string>1.7.4</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb739269956183650</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1.7.4</string>
+	<key>FacebookAppID</key>
+	<string>739269956183650</string>
+	<key>FacebookDisplayName</key>
+	<string>IdeaMuscle</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIMainStoryboardFile</key>

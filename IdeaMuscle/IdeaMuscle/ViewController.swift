@@ -7,13 +7,20 @@
 import UIKit
 import Parse
 import ParseUI
+import FBSDKCoreKit
+import FBSDKLoginKit
+import FBSDKShareKit
+
+
 
 class ViewController: UIViewController{
     
     var twitterLoginButton = UIButton()
+    var facebookLoginButton = UIButton()
     var proceedWithoutLoginButton = UIButton()
     var logo = UIImage()
     var activityIndicator = UIActivityIndicatorView()
+    let permissions = ["public_profile", "email", "user_friends"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +48,7 @@ class ViewController: UIViewController{
         twitterLoginButton.frame = CGRectMake(self.view.frame.width/2 - 100, logoView.frame.maxY + 75, 200, 40)
         //twitterLoginButton.center = self.view.center
         twitterLoginButton.backgroundColor = fiftyGrayColor
-        let twitterLogoImage = UIImage(named: "whiteTwitterLogo.png")
+        let twitterLogoImage = UIImage(named: "twitter")
         twitterLoginButton.setImage(twitterLogoImage, forState: .Normal)
         twitterLoginButton.imageEdgeInsets = UIEdgeInsetsMake(5, 140, 5, 28.74)
         twitterLoginButton.titleEdgeInsets = UIEdgeInsetsMake(10, -160, 10, 0)
@@ -52,6 +59,27 @@ class ViewController: UIViewController{
             self.view.addSubview(activityIndicator)
             startActivityIndicator()
         }
+        
+        facebookLoginButton.setTitle("Login with", forState: .Normal)
+        facebookLoginButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        facebookLoginButton.setTitleColor(UIColor.grayColor(), forState: .Highlighted)
+        facebookLoginButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 20)
+        facebookLoginButton.frame = CGRectMake(self.view.frame.width/2 - 100, twitterLoginButton.frame.maxY + 20, 200, 40)
+        //twitterLoginButton.center = self.view.center
+        facebookLoginButton.backgroundColor = fiftyGrayColor
+        let facebookLogoImage = UIImage(named: "facebook")
+        facebookLoginButton.setImage(facebookLogoImage, forState: .Normal)
+        facebookLoginButton.imageEdgeInsets = UIEdgeInsetsMake(5, 140, 5, 28.74)
+        facebookLoginButton.titleEdgeInsets = UIEdgeInsetsMake(10, -160, 10, 0)
+        facebookLoginButton.addTarget(self, action: "loginFacebook:", forControlEvents: .TouchUpInside)
+        if PFUser.currentUser() == nil{
+            self.view.addSubview(facebookLoginButton)
+        }else{
+            self.view.addSubview(activityIndicator)
+            startActivityIndicator()
+        }
+        
+        
         
         //MARK: - Proceed Without Login Button Configuration
         proceedWithoutLoginButton.setTitle("Proceed Without Login", forState: .Normal)
@@ -66,9 +94,68 @@ class ViewController: UIViewController{
         
     }
     
-    func login(sender: UIButton!){
+    func loginFacebook(sender: UIButton!){
         
-        //startActivityIndicator()
+    
+        
+        PFFacebookUtils.logInInBackgroundWithReadPermissions(permissions, block: { (user, error) -> Void in
+            
+            if user == nil {
+                println("Uh oh. The user cancelled the Facebook login.")
+            }else if user!.isNew {
+                println("User signed up and logged in through Facebook!")
+                self.getUserFacebookInfo()
+                self.goToTabBar()
+                
+            }else{
+                println("User logged in through Facebook!")
+                self.getUserFacebookInfo()
+                self.goToTabBar()
+            }
+            
+        })
+        
+        
+        
+    }
+    
+    func getUserFacebookInfo(){
+        
+        let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: nil)
+        graphRequest.startWithCompletionHandler({ (connection, result, error) -> Void in
+            
+            if ((error) != nil)
+            {
+                // Process error
+                println("Error: \(error)")
+            }
+            else
+            {
+                
+                let username = result.valueForKey("name") as! String
+                let userEmail = result.valueForKey("email") as! String
+                let userID = result.valueForKey("id") as! String
+                
+                if let user = PFUser.currentUser(){
+                    
+                    user["username"] = username
+                    user["email"] = userEmail
+                    user["facebookID"] = userID
+                    let fid = user["facebookID"] as! String
+                    var imgURLString = "http://graph.facebook.com/" + fid + "/picture?type=large"
+                    var imgURL = NSURL(string: imgURLString)
+                    var imageData = NSData(contentsOfURL: imgURL!)
+                    let imageFile: PFFile = PFFile(name: (PFUser.currentUser()!.objectId! + "profileImage.png"), data: imageData!)
+                    imageFile.saveInBackground()
+                    user.setObject(imageFile, forKey: "avatar")
+                    user.saveInBackground()
+                }
+                
+            }
+        })
+    }
+    func login(sender: UIButton!){
+    
         
         PFTwitterUtils.logInWithBlock { (user, error) -> Void in
             
@@ -145,7 +232,13 @@ class ViewController: UIViewController{
         }else{
             
             startActivityIndicator()
-            getAvatar()
+            let userCurrent = PFUser.currentUser()!
+
+            if userCurrent["facebookID"] != nil{
+                getUserFacebookInfo()
+            }else{
+                getAvatar()
+            }
             goToTabBar()
         }
     
