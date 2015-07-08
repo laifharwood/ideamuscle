@@ -26,6 +26,16 @@
 				<string>fb739269956183650</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.company.ideamuscle</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>ideamuscle</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1.7.4</string>

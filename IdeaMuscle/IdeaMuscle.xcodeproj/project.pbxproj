@@ -24,6 +24,32 @@
 		EE1A7F461B4C5795004EBD8B /* ParseCrashReporting.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE1A7F401B4C5795004EBD8B /* ParseCrashReporting.framework */; };
 		EE1A7F481B4C5795004EBD8B /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE1A7F421B4C5795004EBD8B /* ParseFacebookUtilsV4.framework */; };
 		EE1A7F491B4C5795004EBD8B /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE1A7F431B4C5795004EBD8B /* ParseUI.framework */; };
+		EE1A7F891B4C97B3004EBD8B /* HOKApp.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F511B4C97B3004EBD8B /* HOKApp.m */; };
+		EE1A7F8A1B4C97B3004EBD8B /* HOKDeeplink.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F541B4C97B3004EBD8B /* HOKDeeplink.m */; };
+		EE1A7F8B1B4C97B3004EBD8B /* HOKDeeplinking.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F571B4C97B3004EBD8B /* HOKDeeplinking.m */; };
+		EE1A7F8C1B4C97B3004EBD8B /* HOKDeferredDeeplinking.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F591B4C97B3004EBD8B /* HOKDeferredDeeplinking.m */; };
+		EE1A7F8D1B4C97B3004EBD8B /* HOKDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F5B1B4C97B3004EBD8B /* HOKDevice.m */; };
+		EE1A7F8E1B4C97B3004EBD8B /* HOKError.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F5D1B4C97B3004EBD8B /* HOKError.m */; };
+		EE1A7F8F1B4C97B3004EBD8B /* HOKGZip.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F5F1B4C97B3004EBD8B /* HOKGZip.m */; };
+		EE1A7F901B4C97B3004EBD8B /* HOKHandlerBlockWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F611B4C97B3004EBD8B /* HOKHandlerBlockWrapper.m */; };
+		EE1A7F911B4C97B3004EBD8B /* HOKHandling.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F631B4C97B3004EBD8B /* HOKHandling.m */; };
+		EE1A7F921B4C97B3004EBD8B /* HOKLinkGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F651B4C97B3004EBD8B /* HOKLinkGenerator.m */; };
+		EE1A7F931B4C97B3004EBD8B /* HOKLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F671B4C97B3004EBD8B /* HOKLogger.m */; };
+		EE1A7F941B4C97B3004EBD8B /* HOKNavigation.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F691B4C97B3004EBD8B /* HOKNavigation.m */; };
+		EE1A7F951B4C97B3004EBD8B /* HOKNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F6B1B4C97B3004EBD8B /* HOKNetworking.m */; };
+		EE1A7F961B4C97B3004EBD8B /* HOKNetworkOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F6D1B4C97B3004EBD8B /* HOKNetworkOperation.m */; };
+		EE1A7F971B4C97B3004EBD8B /* HOKNetworkOperationQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F701B4C97B3004EBD8B /* HOKNetworkOperationQueue.m */; };
+		EE1A7F981B4C97B3004EBD8B /* HOKNotificationObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F721B4C97B3004EBD8B /* HOKNotificationObserver.m */; };
+		EE1A7F991B4C97B3004EBD8B /* Hoko.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F761B4C97B3004EBD8B /* Hoko.m */; };
+		EE1A7F9A1B4C97B3004EBD8B /* HOKObjectObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F781B4C97B3004EBD8B /* HOKObjectObserver.m */; };
+		EE1A7F9B1B4C97B3004EBD8B /* HOKObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F7A1B4C97B3004EBD8B /* HOKObserver.m */; };
+		EE1A7F9C1B4C97B3004EBD8B /* HOKResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F7C1B4C97B3004EBD8B /* HOKResolver.m */; };
+		EE1A7F9D1B4C97B3004EBD8B /* HOKRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F7E1B4C97B3004EBD8B /* HOKRoute.m */; };
+		EE1A7F9E1B4C97B3004EBD8B /* HOKRouting.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F801B4C97B3004EBD8B /* HOKRouting.m */; };
+		EE1A7F9F1B4C97B3004EBD8B /* HOKSwizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F821B4C97B3004EBD8B /* HOKSwizzling.m */; };
+		EE1A7FA01B4C97B3004EBD8B /* HOKURL.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F841B4C97B3004EBD8B /* HOKURL.m */; };
+		EE1A7FA11B4C97B3004EBD8B /* HOKUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F861B4C97B3004EBD8B /* HOKUtils.m */; };
+		EE1A7FA21B4C97B3004EBD8B /* HOKVersionChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F881B4C97B3004EBD8B /* HOKVersionChecker.m */; };
 		EE3A79B01B261B2500300018 /* ComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3A79AF1B261B2500300018 /* ComposeViewController.swift */; };
 		EE5B25C91B2F4B05006829C7 /* ComposeTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B25C81B2F4B05006829C7 /* ComposeTopicViewController.swift */; };
 		EE5B25CD1B30B5ED006829C7 /* TopicAndIdeaContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B25CC1B30B5ED006829C7 /* TopicAndIdeaContainerViewController.swift */; };
@@ -47,7 +73,6 @@
 		EE8085211B1E1AE300BFC07C /* SharedCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8085201B1E1AE300BFC07C /* SharedCode.swift */; };
 		EE8085231B1E2BD800BFC07C /* ideaShare.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8085221B1E2BD800BFC07C /* ideaShare.png */; };
 		EE8085251B1E2E4A00BFC07C /* ideaCompose.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8085241B1E2E4A00BFC07C /* ideaCompose.png */; };
-		EE84D9901B45FE8200774C78 /* Hoko in Resources */ = {isa = PBXBuildFile; fileRef = EE84D98F1B45FE8200774C78 /* Hoko */; };
 		EE8740441B43538800D0519B /* LeaderboardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8740431B43538800D0519B /* LeaderboardTableViewCell.swift */; };
 		EE8EE49A1B1E5D270093A62A /* ComposeWhite.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4991B1E5D270093A62A /* ComposeWhite.png */; };
 		EE8EE49C1B224DFC0093A62A /* smallLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE49B1B224DFC0093A62A /* smallLogo.png */; };
@@ -103,6 +128,64 @@
 		EE1A7F401B4C5795004EBD8B /* ParseCrashReporting.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseCrashReporting.framework; path = "../../../Downloads/parse-library-1.7.5/ParseCrashReporting.framework"; sourceTree = "<group>"; };
 		EE1A7F421B4C5795004EBD8B /* ParseFacebookUtilsV4.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseFacebookUtilsV4.framework; path = "../../../Downloads/parse-library-1.7.5/ParseFacebookUtilsV4.framework"; sourceTree = "<group>"; };
 		EE1A7F431B4C5795004EBD8B /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseUI.framework; path = "../../../Downloads/parse-library-1.7.5/ParseUI.framework"; sourceTree = "<group>"; };
+		EE1A7F4D1B4C9507004EBD8B /* Hoko */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Hoko; path = "../../../Downloads/hoko-ios-master 2/Hoko"; sourceTree = "<group>"; };
+		EE1A7F501B4C97B3004EBD8B /* HOKApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKApp.h; sourceTree = "<group>"; };
+		EE1A7F511B4C97B3004EBD8B /* HOKApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKApp.m; sourceTree = "<group>"; };
+		EE1A7F521B4C97B3004EBD8B /* HOKDeeplink+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HOKDeeplink+Private.h"; sourceTree = "<group>"; };
+		EE1A7F531B4C97B3004EBD8B /* HOKDeeplink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKDeeplink.h; sourceTree = "<group>"; };
+		EE1A7F541B4C97B3004EBD8B /* HOKDeeplink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKDeeplink.m; sourceTree = "<group>"; };
+		EE1A7F551B4C97B3004EBD8B /* HOKDeeplinking+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HOKDeeplinking+Private.h"; sourceTree = "<group>"; };
+		EE1A7F561B4C97B3004EBD8B /* HOKDeeplinking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKDeeplinking.h; sourceTree = "<group>"; };
+		EE1A7F571B4C97B3004EBD8B /* HOKDeeplinking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKDeeplinking.m; sourceTree = "<group>"; };
+		EE1A7F581B4C97B3004EBD8B /* HOKDeferredDeeplinking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKDeferredDeeplinking.h; sourceTree = "<group>"; };
+		EE1A7F591B4C97B3004EBD8B /* HOKDeferredDeeplinking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKDeferredDeeplinking.m; sourceTree = "<group>"; };
+		EE1A7F5A1B4C97B3004EBD8B /* HOKDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKDevice.h; sourceTree = "<group>"; };
+		EE1A7F5B1B4C97B3004EBD8B /* HOKDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKDevice.m; sourceTree = "<group>"; };
+		EE1A7F5C1B4C97B3004EBD8B /* HOKError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKError.h; sourceTree = "<group>"; };
+		EE1A7F5D1B4C97B3004EBD8B /* HOKError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKError.m; sourceTree = "<group>"; };
+		EE1A7F5E1B4C97B3004EBD8B /* HOKGZip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKGZip.h; sourceTree = "<group>"; };
+		EE1A7F5F1B4C97B3004EBD8B /* HOKGZip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKGZip.m; sourceTree = "<group>"; };
+		EE1A7F601B4C97B3004EBD8B /* HOKHandlerBlockWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKHandlerBlockWrapper.h; sourceTree = "<group>"; };
+		EE1A7F611B4C97B3004EBD8B /* HOKHandlerBlockWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKHandlerBlockWrapper.m; sourceTree = "<group>"; };
+		EE1A7F621B4C97B3004EBD8B /* HOKHandling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKHandling.h; sourceTree = "<group>"; };
+		EE1A7F631B4C97B3004EBD8B /* HOKHandling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKHandling.m; sourceTree = "<group>"; };
+		EE1A7F641B4C97B3004EBD8B /* HOKLinkGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKLinkGenerator.h; sourceTree = "<group>"; };
+		EE1A7F651B4C97B3004EBD8B /* HOKLinkGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKLinkGenerator.m; sourceTree = "<group>"; };
+		EE1A7F661B4C97B3004EBD8B /* HOKLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKLogger.h; sourceTree = "<group>"; };
+		EE1A7F671B4C97B3004EBD8B /* HOKLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKLogger.m; sourceTree = "<group>"; };
+		EE1A7F681B4C97B3004EBD8B /* HOKNavigation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKNavigation.h; sourceTree = "<group>"; };
+		EE1A7F691B4C97B3004EBD8B /* HOKNavigation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKNavigation.m; sourceTree = "<group>"; };
+		EE1A7F6A1B4C97B3004EBD8B /* HOKNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKNetworking.h; sourceTree = "<group>"; };
+		EE1A7F6B1B4C97B3004EBD8B /* HOKNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKNetworking.m; sourceTree = "<group>"; };
+		EE1A7F6C1B4C97B3004EBD8B /* HOKNetworkOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKNetworkOperation.h; sourceTree = "<group>"; };
+		EE1A7F6D1B4C97B3004EBD8B /* HOKNetworkOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKNetworkOperation.m; sourceTree = "<group>"; };
+		EE1A7F6E1B4C97B3004EBD8B /* HOKNetworkOperationQueue+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "HOKNetworkOperationQueue+Private.h"; sourceTree = "<group>"; };
+		EE1A7F6F1B4C97B3004EBD8B /* HOKNetworkOperationQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKNetworkOperationQueue.h; sourceTree = "<group>"; };
+		EE1A7F701B4C97B3004EBD8B /* HOKNetworkOperationQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKNetworkOperationQueue.m; sourceTree = "<group>"; };
+		EE1A7F711B4C97B3004EBD8B /* HOKNotificationObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKNotificationObserver.h; sourceTree = "<group>"; };
+		EE1A7F721B4C97B3004EBD8B /* HOKNotificationObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKNotificationObserver.m; sourceTree = "<group>"; };
+		EE1A7F731B4C97B3004EBD8B /* Hoko+Nullability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Hoko+Nullability.h"; sourceTree = "<group>"; };
+		EE1A7F741B4C97B3004EBD8B /* Hoko+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Hoko+Private.h"; sourceTree = "<group>"; };
+		EE1A7F751B4C97B3004EBD8B /* Hoko.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hoko.h; sourceTree = "<group>"; };
+		EE1A7F761B4C97B3004EBD8B /* Hoko.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Hoko.m; sourceTree = "<group>"; };
+		EE1A7F771B4C97B3004EBD8B /* HOKObjectObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKObjectObserver.h; sourceTree = "<group>"; };
+		EE1A7F781B4C97B3004EBD8B /* HOKObjectObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKObjectObserver.m; sourceTree = "<group>"; };
+		EE1A7F791B4C97B3004EBD8B /* HOKObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKObserver.h; sourceTree = "<group>"; };
+		EE1A7F7A1B4C97B3004EBD8B /* HOKObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKObserver.m; sourceTree = "<group>"; };
+		EE1A7F7B1B4C97B3004EBD8B /* HOKResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKResolver.h; sourceTree = "<group>"; };
+		EE1A7F7C1B4C97B3004EBD8B /* HOKResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKResolver.m; sourceTree = "<group>"; };
+		EE1A7F7D1B4C97B3004EBD8B /* HOKRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKRoute.h; sourceTree = "<group>"; };
+		EE1A7F7E1B4C97B3004EBD8B /* HOKRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKRoute.m; sourceTree = "<group>"; };
+		EE1A7F7F1B4C97B3004EBD8B /* HOKRouting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKRouting.h; sourceTree = "<group>"; };
+		EE1A7F801B4C97B3004EBD8B /* HOKRouting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKRouting.m; sourceTree = "<group>"; };
+		EE1A7F811B4C97B3004EBD8B /* HOKSwizzling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKSwizzling.h; sourceTree = "<group>"; };
+		EE1A7F821B4C97B3004EBD8B /* HOKSwizzling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKSwizzling.m; sourceTree = "<group>"; };
+		EE1A7F831B4C97B3004EBD8B /* HOKURL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKURL.h; sourceTree = "<group>"; };
+		EE1A7F841B4C97B3004EBD8B /* HOKURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKURL.m; sourceTree = "<group>"; };
+		EE1A7F851B4C97B3004EBD8B /* HOKUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKUtils.h; sourceTree = "<group>"; };
+		EE1A7F861B4C97B3004EBD8B /* HOKUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKUtils.m; sourceTree = "<group>"; };
+		EE1A7F871B4C97B3004EBD8B /* HOKVersionChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKVersionChecker.h; sourceTree = "<group>"; };
+		EE1A7F881B4C97B3004EBD8B /* HOKVersionChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKVersionChecker.m; sourceTree = "<group>"; };
 		EE3A79AF1B261B2500300018 /* ComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeViewController.swift; sourceTree = "<group>"; };
 		EE48EF291B4B2E5300B72246 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		EE5B25C81B2F4B05006829C7 /* ComposeTopicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeTopicViewController.swift; sourceTree = "<group>"; };
@@ -127,7 +210,6 @@
 		EE8085201B1E1AE300BFC07C /* SharedCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedCode.swift; sourceTree = "<group>"; };
 		EE8085221B1E2BD800BFC07C /* ideaShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ideaShare.png; path = "../../../../Desktop/Idea Muscle/ideaShare.png"; sourceTree = "<group>"; };
 		EE8085241B1E2E4A00BFC07C /* ideaCompose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ideaCompose.png; path = "../../../../Desktop/Idea Muscle/ideaCompose.png"; sourceTree = "<group>"; };
-		EE84D98F1B45FE8200774C78 /* Hoko */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Hoko; path = "../../../../Desktop/hoko-ios-master/Hoko"; sourceTree = "<group>"; };
 		EE8740431B43538800D0519B /* LeaderboardTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaderboardTableViewCell.swift; sourceTree = "<group>"; };
 		EE8EE4991B1E5D270093A62A /* ComposeWhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ComposeWhite.png; path = "../../../../Desktop/Idea Muscle/ComposeWhite.png"; sourceTree = "<group>"; };
 		EE8EE49B1B224DFC0093A62A /* smallLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = smallLogo.png; path = "../../../../Desktop/Idea Muscle/smallLogo.png"; sourceTree = "<group>"; };
@@ -199,6 +281,7 @@
 		81BA813C1A49DA1800E65899 = {
 			isa = PBXGroup;
 			children = (
+				EE1A7F4F1B4C97B3004EBD8B /* Hoko */,
 				81BA81471A49DA1800E65899 /* IdeaMuscle */,
 				81BA816A1A49DB5600E65899 /* Frameworks */,
 				81BA81461A49DA1800E65899 /* Products */,
@@ -216,7 +299,6 @@
 		81BA81471A49DA1800E65899 /* IdeaMuscle */ = {
 			isa = PBXGroup;
 			children = (
-				EE84D98F1B45FE8200774C78 /* Hoko */,
 				EE80850B1B1A720100BFC07C /* Images */,
 				81BA814A1A49DA1800E65899 /* AppDelegate.swift */,
 				81BA814C1A49DA1800E65899 /* ViewController.swift */,
@@ -248,6 +330,7 @@
 		81BA816A1A49DB5600E65899 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EE1A7F4D1B4C9507004EBD8B /* Hoko */,
 				EE1A7F3E1B4C5795004EBD8B /* Bolts.framework */,
 				EE1A7F3F1B4C5795004EBD8B /* Parse.framework */,
 				EE1A7F401B4C5795004EBD8B /* ParseCrashReporting.framework */,
@@ -281,6 +364,71 @@
 				81BA81761A49E0D500E65899 /* libsqlite3.dylib */,
 			);
 			name = "System Frameworks";
+			sourceTree = "<group>";
+		};
+		EE1A7F4F1B4C97B3004EBD8B /* Hoko */ = {
+			isa = PBXGroup;
+			children = (
+				EE1A7F501B4C97B3004EBD8B /* HOKApp.h */,
+				EE1A7F511B4C97B3004EBD8B /* HOKApp.m */,
+				EE1A7F521B4C97B3004EBD8B /* HOKDeeplink+Private.h */,
+				EE1A7F531B4C97B3004EBD8B /* HOKDeeplink.h */,
+				EE1A7F541B4C97B3004EBD8B /* HOKDeeplink.m */,
+				EE1A7F551B4C97B3004EBD8B /* HOKDeeplinking+Private.h */,
+				EE1A7F561B4C97B3004EBD8B /* HOKDeeplinking.h */,
+				EE1A7F571B4C97B3004EBD8B /* HOKDeeplinking.m */,
+				EE1A7F581B4C97B3004EBD8B /* HOKDeferredDeeplinking.h */,
+				EE1A7F591B4C97B3004EBD8B /* HOKDeferredDeeplinking.m */,
+				EE1A7F5A1B4C97B3004EBD8B /* HOKDevice.h */,
+				EE1A7F5B1B4C97B3004EBD8B /* HOKDevice.m */,
+				EE1A7F5C1B4C97B3004EBD8B /* HOKError.h */,
+				EE1A7F5D1B4C97B3004EBD8B /* HOKError.m */,
+				EE1A7F5E1B4C97B3004EBD8B /* HOKGZip.h */,
+				EE1A7F5F1B4C97B3004EBD8B /* HOKGZip.m */,
+				EE1A7F601B4C97B3004EBD8B /* HOKHandlerBlockWrapper.h */,
+				EE1A7F611B4C97B3004EBD8B /* HOKHandlerBlockWrapper.m */,
+				EE1A7F621B4C97B3004EBD8B /* HOKHandling.h */,
+				EE1A7F631B4C97B3004EBD8B /* HOKHandling.m */,
+				EE1A7F641B4C97B3004EBD8B /* HOKLinkGenerator.h */,
+				EE1A7F651B4C97B3004EBD8B /* HOKLinkGenerator.m */,
+				EE1A7F661B4C97B3004EBD8B /* HOKLogger.h */,
+				EE1A7F671B4C97B3004EBD8B /* HOKLogger.m */,
+				EE1A7F681B4C97B3004EBD8B /* HOKNavigation.h */,
+				EE1A7F691B4C97B3004EBD8B /* HOKNavigation.m */,
+				EE1A7F6A1B4C97B3004EBD8B /* HOKNetworking.h */,
+				EE1A7F6B1B4C97B3004EBD8B /* HOKNetworking.m */,
+				EE1A7F6C1B4C97B3004EBD8B /* HOKNetworkOperation.h */,
+				EE1A7F6D1B4C97B3004EBD8B /* HOKNetworkOperation.m */,
+				EE1A7F6E1B4C97B3004EBD8B /* HOKNetworkOperationQueue+Private.h */,
+				EE1A7F6F1B4C97B3004EBD8B /* HOKNetworkOperationQueue.h */,
+				EE1A7F701B4C97B3004EBD8B /* HOKNetworkOperationQueue.m */,
+				EE1A7F711B4C97B3004EBD8B /* HOKNotificationObserver.h */,
+				EE1A7F721B4C97B3004EBD8B /* HOKNotificationObserver.m */,
+				EE1A7F731B4C97B3004EBD8B /* Hoko+Nullability.h */,
+				EE1A7F741B4C97B3004EBD8B /* Hoko+Private.h */,
+				EE1A7F751B4C97B3004EBD8B /* Hoko.h */,
+				EE1A7F761B4C97B3004EBD8B /* Hoko.m */,
+				EE1A7F771B4C97B3004EBD8B /* HOKObjectObserver.h */,
+				EE1A7F781B4C97B3004EBD8B /* HOKObjectObserver.m */,
+				EE1A7F791B4C97B3004EBD8B /* HOKObserver.h */,
+				EE1A7F7A1B4C97B3004EBD8B /* HOKObserver.m */,
+				EE1A7F7B1B4C97B3004EBD8B /* HOKResolver.h */,
+				EE1A7F7C1B4C97B3004EBD8B /* HOKResolver.m */,
+				EE1A7F7D1B4C97B3004EBD8B /* HOKRoute.h */,
+				EE1A7F7E1B4C97B3004EBD8B /* HOKRoute.m */,
+				EE1A7F7F1B4C97B3004EBD8B /* HOKRouting.h */,
+				EE1A7F801B4C97B3004EBD8B /* HOKRouting.m */,
+				EE1A7F811B4C97B3004EBD8B /* HOKSwizzling.h */,
+				EE1A7F821B4C97B3004EBD8B /* HOKSwizzling.m */,
+				EE1A7F831B4C97B3004EBD8B /* HOKURL.h */,
+				EE1A7F841B4C97B3004EBD8B /* HOKURL.m */,
+				EE1A7F851B4C97B3004EBD8B /* HOKUtils.h */,
+				EE1A7F861B4C97B3004EBD8B /* HOKUtils.m */,
+				EE1A7F871B4C97B3004EBD8B /* HOKVersionChecker.h */,
+				EE1A7F881B4C97B3004EBD8B /* HOKVersionChecker.m */,
+			);
+			name = Hoko;
+			path = "../../../Downloads/hoko-ios-master 2/Hoko";
 			sourceTree = "<group>";
 		};
 		EE80850B1B1A720100BFC07C /* Images */ = {
@@ -447,7 +595,6 @@
 				EE80851D1B1E123900BFC07C /* IdeaMuscleLogo.png in Resources */,
 				EE8085251B1E2E4A00BFC07C /* ideaCompose.png in Resources */,
 				81BA81521A49DA1800E65899 /* Images.xcassets in Resources */,
-				EE84D9901B45FE8200774C78 /* Hoko in Resources */,
 				EED08A2F1B3DCDA7002FAE19 /* IdeaMuscleLogoWhiteBackground.png in Resources */,
 				EE8085151B1D017000BFC07C /* path5.png in Resources */,
 				EEF821211B279B7D00454579 /* checkmarkRed.png in Resources */,
@@ -488,34 +635,60 @@
 			buildActionMask = 2147483647;
 			files = (
 				EED08A2C1B3CC0EB002FAE19 /* ProfileIdeaCell.swift in Sources */,
+				EE1A7F941B4C97B3004EBD8B /* HOKNavigation.m in Sources */,
+				EE1A7F991B4C97B3004EBD8B /* Hoko.m in Sources */,
 				EE3A79B01B261B2500300018 /* ComposeViewController.swift in Sources */,
 				EE8EE4A61B228EAC0093A62A /* LeaderboardViewController.swift in Sources */,
+				EE1A7FA21B4C97B3004EBD8B /* HOKVersionChecker.m in Sources */,
 				EED08A251B3B4050002FAE19 /* TimeAgo.swift in Sources */,
 				EED08A371B41D62D002FAE19 /* IdeaAllTableViewController.swift in Sources */,
+				EE1A7F9A1B4C97B3004EBD8B /* HOKObjectObserver.m in Sources */,
 				EED08A421B432E01002FAE19 /* FriendsLeaderboardTableViewController.swift in Sources */,
+				EE1A7F891B4C97B3004EBD8B /* HOKApp.m in Sources */,
 				EE5B25C91B2F4B05006829C7 /* ComposeTopicViewController.swift in Sources */,
+				EE1A7F921B4C97B3004EBD8B /* HOKLinkGenerator.m in Sources */,
+				EE1A7F9C1B4C97B3004EBD8B /* HOKResolver.m in Sources */,
 				EEFCB7121B335AC9009CB923 /* TopicTableViewCell.swift in Sources */,
 				EE8085111B1CC9DC00BFC07C /* TopicsTableViewController.swift in Sources */,
 				EE8EE4A21B226C6D0093A62A /* TopicsDetailViewController.swift in Sources */,
 				EED08A3F1B41ECB2002FAE19 /* TopicAllTableViewController.swift in Sources */,
+				EE1A7F8D1B4C97B3004EBD8B /* HOKDevice.m in Sources */,
+				EE1A7F931B4C97B3004EBD8B /* HOKLogger.m in Sources */,
+				EE1A7F951B4C97B3004EBD8B /* HOKNetworking.m in Sources */,
 				EE8740441B43538800D0519B /* LeaderboardTableViewCell.swift in Sources */,
+				EE1A7F8E1B4C97B3004EBD8B /* HOKError.m in Sources */,
+				EE1A7F9F1B4C97B3004EBD8B /* HOKSwizzling.m in Sources */,
 				EED08A311B41BAC7002FAE19 /* IdeaGlobal.swift in Sources */,
 				EE5B25CF1B30B64A006829C7 /* TopicTodayTableViewController.swift in Sources */,
+				EE1A7F901B4C97B3004EBD8B /* HOKHandlerBlockWrapper.m in Sources */,
 				EED08A351B41D619002FAE19 /* IdeaThirtyTableViewController.swift in Sources */,
 				EED8C4581B34727E008981D1 /* IdeaTableViewCell.swift in Sources */,
+				EE1A7F8C1B4C97B3004EBD8B /* HOKDeferredDeeplinking.m in Sources */,
 				EED08A391B41D7C8002FAE19 /* TopicGlobal.swift in Sources */,
 				EED08A291B3C7507002FAE19 /* ProfileViewController.swift in Sources */,
+				EE1A7F8F1B4C97B3004EBD8B /* HOKGZip.m in Sources */,
 				EE8085211B1E1AE300BFC07C /* SharedCode.swift in Sources */,
 				EED08A441B432E16002FAE19 /* WorldLeaderboardTableViewController.swift in Sources */,
+				EE1A7F9B1B4C97B3004EBD8B /* HOKObserver.m in Sources */,
+				EE1A7F961B4C97B3004EBD8B /* HOKNetworkOperation.m in Sources */,
+				EE1A7FA01B4C97B3004EBD8B /* HOKURL.m in Sources */,
 				EED08A231B39D061002FAE19 /* IdeaDetailTableViewCell.swift in Sources */,
 				81BA814D1A49DA1800E65899 /* ViewController.swift in Sources */,
+				EE1A7F971B4C97B3004EBD8B /* HOKNetworkOperationQueue.m in Sources */,
+				EE1A7FA11B4C97B3004EBD8B /* HOKUtils.m in Sources */,
+				EE1A7F9D1B4C97B3004EBD8B /* HOKRoute.m in Sources */,
 				EE8EE4A81B228EF30093A62A /* MoreViewController.swift in Sources */,
 				EE8EE4A41B228E260093A62A /* FeedViewController.swift in Sources */,
+				EE1A7F8B1B4C97B3004EBD8B /* HOKDeeplinking.m in Sources */,
+				EE1A7F9E1B4C97B3004EBD8B /* HOKRouting.m in Sources */,
+				EE1A7F911B4C97B3004EBD8B /* HOKHandling.m in Sources */,
 				81BA814B1A49DA1800E65899 /* AppDelegate.swift in Sources */,
 				EED08A3D1B41EC86002FAE19 /* TopicThirtyTableViewController.swift in Sources */,
 				EED08A3B1B41EC24002FAE19 /* TopicSevenTableViewController.swift in Sources */,
 				EE5B25D11B30B660006829C7 /* IdeaTodayTableViewController.swift in Sources */,
+				EE1A7F8A1B4C97B3004EBD8B /* HOKDeeplink.m in Sources */,
 				EED08A211B386DC5002FAE19 /* IdeaDetailViewController.swift in Sources */,
+				EE1A7F981B4C97B3004EBD8B /* HOKNotificationObserver.m in Sources */,
 				EED08A331B41D5D8002FAE19 /* IdeaSevenTableViewController.swift in Sources */,
 				EE5B25CD1B30B5ED006829C7 /* TopicAndIdeaContainerViewController.swift in Sources */,
 			);
@@ -617,6 +790,7 @@
 		81BA81651A49DA1800E65899 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -635,6 +809,7 @@
 		81BA81661A49DA1800E65899 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				FRAMEWORK_SEARCH_PATHS = (

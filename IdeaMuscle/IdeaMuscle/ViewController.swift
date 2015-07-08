@@ -96,7 +96,7 @@ class ViewController: UIViewController{
     
     func loginFacebook(sender: UIButton!){
         
-    
+        startActivityIndicator()
         
         PFFacebookUtils.logInInBackgroundWithReadPermissions(permissions, block: { (user, error) -> Void in
             
@@ -155,6 +155,8 @@ class ViewController: UIViewController{
         })
     }
     func login(sender: UIButton!){
+        
+        startActivityIndicator()
     
         
         PFTwitterUtils.logInWithBlock { (user, error) -> Void in
@@ -390,6 +392,9 @@ class ViewController: UIViewController{
 }
     
     func startActivityIndicator(){
+        
+        facebookLoginButton.removeFromSuperview()
+        twitterLoginButton.removeFromSuperview()
         
         activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
         activityIndicator.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)

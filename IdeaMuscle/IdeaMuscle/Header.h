@@ -10,6 +10,7 @@
 #define IdeaMuscle_Header_h
 
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
+#import "Hoko.h"
 //#import <ParseFacebookUtils/PFFacebookUtils.h>
 
 
