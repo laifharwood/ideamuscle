@@ -9,8 +9,10 @@
 import UIKit
 import ParseUI
 import Parse
+import Social
+import MessageUI
 
-class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, UITableViewDataSource, UITableViewDelegate {
+class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate {
     
     var activeIdea = PFObject(className: "Idea")
     var activeTopic = PFObject(className: "Topic")
@@ -24,6 +26,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     var postCommentButton = UIButton()
     var characterCountLabel = UILabel()
     var ideaOwner = PFUser()
+    var shareContainer = UIView()
   
    
 
@@ -167,9 +170,99 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         characterCountLabel.text = "\(characterCount)" + "/118"
         commentTextFieldContainter.addSubview(characterCountLabel)
         
+        //MARK: - Share Container and Buttons
+        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 105, self.view.frame.width, 180)
+        shareContainer.backgroundColor = UIColor.whiteColor()
+        self.view.addSubview(shareContainer)
+        
+        let twitterShareButton = UIButton()
+        let facebookShareButton = UIButton()
+        let emailShareButton = UIButton()
+        let cancelShareButton = UIButton()
+        
+        twitterShareButton.frame = CGRectMake(5, 0, shareContainer.frame.width - 10, 40)
+        facebookShareButton.frame = CGRectMake(5, twitterShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
+        emailShareButton.frame = CGRectMake(5, facebookShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
+        cancelShareButton.frame = CGRectMake(5, emailShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
+        
+        twitterShareButton.backgroundColor = fiftyGrayColor
+        facebookShareButton.backgroundColor = fiftyGrayColor
+        emailShareButton.backgroundColor = fiftyGrayColor
+        cancelShareButton.backgroundColor = fiftyGrayColor
+        
+        twitterShareButton.setTitle("Twitter", forState: .Normal)
+        facebookShareButton.setTitle("Facebook", forState: .Normal)
+        emailShareButton.setTitle("Email", forState: .Normal)
+        cancelShareButton.setTitle("Cancel", forState: .Normal)
+        
+        twitterShareButton.addTarget(self, action: "shareTwitter:", forControlEvents: .TouchUpInside)
+        facebookShareButton.addTarget(self, action: "shareFacebook:", forControlEvents: .TouchUpInside)
+        emailShareButton.addTarget(self, action: "shareEmail:", forControlEvents: .TouchUpInside)
+        cancelShareButton.addTarget(self, action: "shareCancel:", forControlEvents: .TouchUpInside)
+        
+        shareContainer.addSubview(twitterShareButton)
+        shareContainer.addSubview(facebookShareButton)
+        shareContainer.addSubview(emailShareButton)
+        shareContainer.addSubview(cancelShareButton)
+        
         
         
         // Do any additional setup after loading the view.
+    }
+    
+    func shareTwitter(sender: UIButton!){
+        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
+        let twitterComposeVC = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
+        
+        let ideaString = activeIdea["content"] as! String
+        let stringCount = count(ideaString)
+        let characterAllowance = 118
+        if stringCount > characterAllowance{
+            let twitterString = ideaString.substringWithRange(Range<String.Index>(start: ideaString.startIndex, end: advance(ideaString.startIndex, characterAllowance)))
+            twitterComposeVC.setInitialText(twitterString)
+        }else{
+            twitterComposeVC.setInitialText(ideaString)
+        }
+        let deeplink = HOKDeeplink(route: "ideas/:ideaId", routeParameters: ["ideaId": activeIdea.objectId!])
+        
+        Hoko.deeplinking().generateSmartlinkForDeeplink(deeplink, success: { (smartlink) -> Void in
+            var url = NSURL()
+            url = NSURL(string: smartlink)!
+            twitterComposeVC.addURL(url)
+            self.presentViewController(twitterComposeVC, animated: true, completion: nil)
+            
+        }) { (error) -> Void in
+        }
+    }
+    
+    func shareFacebook(sender: UIButton!){
+        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
+        let facebookComposeVC = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
+        let ideaString = activeIdea["content"] as! String
+        facebookComposeVC.setInitialText(ideaString)
+        let deeplink = HOKDeeplink(route: "ideas/:ideaId", routeParameters: ["ideaId": activeIdea.objectId!])
+        
+        Hoko.deeplinking().generateSmartlinkForDeeplink(deeplink, success: { (smartlink) -> Void in
+            var url = NSURL()
+            url = NSURL(string: smartlink)!
+            facebookComposeVC.addURL(url)
+            self.presentViewController(facebookComposeVC, animated: true, completion: nil)
+            
+            }) { (error) -> Void in
+        }
+        
+        
+    }
+    
+    func shareEmail(sender: UIButton!){
+        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
+        
+        
+    }
+    
+    func shareCancel(sender: UIButton!){
+        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
+        println("share Cancel")
     }
     
     
@@ -281,7 +374,9 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     }
     
     override func viewWillAppear(animated: Bool) {
+        if tabBarController != nil{
         self.tabBarController!.tabBar.hidden = true
+        }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
@@ -324,7 +419,12 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     
     
     func share(sender: UIButton!){
-        println("share")
+        
+        
+        
+       shareContainer.frame = CGRectMake(0, self.view.frame.maxY - 180, self.view.frame.width, 180)
+        self.view.bringSubviewToFront(shareContainer)
+        
     }
     
     func postComment(sender: UIButton!){

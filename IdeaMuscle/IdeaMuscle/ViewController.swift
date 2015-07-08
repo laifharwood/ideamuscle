@@ -102,6 +102,7 @@ class ViewController: UIViewController{
             
             if user == nil {
                 println("Uh oh. The user cancelled the Facebook login.")
+                self.stopActivityIndicator()
             }else if user!.isNew {
                 println("User signed up and logged in through Facebook!")
                 self.getUserFacebookInfo()
@@ -180,6 +181,8 @@ class ViewController: UIViewController{
             }else if !(user != nil) {
             
             //User Cancelled
+            
+            self.stopActivityIndicator()
             
             
             }else{
@@ -408,6 +411,8 @@ class ViewController: UIViewController{
     
     func stopActivityIndicator(){
         self.activityIndicator.stopAnimating()
+        self.view.addSubview(facebookLoginButton)
+        self.view.addSubview(twitterLoginButton)
         //UIApplication.sharedApplication().endIgnoringInteractionEvents()
     }
     

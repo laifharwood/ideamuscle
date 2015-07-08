@@ -11,6 +11,7 @@
 
 #import <ParseFacebookUtilsV4/PFFacebookUtils.h>
 #import "Hoko.h"
+#import "HOKNavigation.h"
 //#import <ParseFacebookUtils/PFFacebookUtils.h>
 
 
