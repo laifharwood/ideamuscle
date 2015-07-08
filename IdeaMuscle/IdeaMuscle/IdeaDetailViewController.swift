@@ -271,7 +271,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
             let username = user["username"] as! String
             let body = ideaString + " " + smartlink
             
-            emailVC.setSubject(username + " has sent you and idea from IdeaMuscle")
+            emailVC.setSubject(username + " has sent you an idea from IdeaMuscle")
             emailVC.setMessageBody(body, isHTML: true)
             emailVC.navigationBar.tintColor = redColor
             
