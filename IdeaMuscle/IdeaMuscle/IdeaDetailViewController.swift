@@ -27,6 +27,10 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     var characterCountLabel = UILabel()
     var ideaOwner = PFUser()
     var shareContainer = UIView()
+    
+    func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
   
    
 
@@ -216,7 +220,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         
         let ideaString = activeIdea["content"] as! String
         let stringCount = count(ideaString)
-        let characterAllowance = 118
+        let characterAllowance = 117
         if stringCount > characterAllowance{
             let twitterString = ideaString.substringWithRange(Range<String.Index>(start: ideaString.startIndex, end: advance(ideaString.startIndex, characterAllowance)))
             twitterComposeVC.setInitialText(twitterString)
@@ -256,6 +260,26 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     
     func shareEmail(sender: UIButton!){
         shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
+        
+        let emailVC = MFMailComposeViewController()
+        emailVC.mailComposeDelegate = self
+        let ideaString = activeIdea["content"] as! String
+        let deeplink = HOKDeeplink(route: "ideas/:ideaId", routeParameters: ["ideaId": activeIdea.objectId!])
+        
+        Hoko.deeplinking().generateSmartlinkForDeeplink(deeplink, success: { (smartlink) -> Void in
+            let user = PFUser.currentUser()!
+            let username = user["username"] as! String
+            let body = ideaString + " " + smartlink
+            
+            emailVC.setSubject(username + " has sent you and idea from IdeaMuscle")
+            emailVC.setMessageBody(body, isHTML: true)
+            emailVC.navigationBar.tintColor = redColor
+            
+            self.presentViewController(emailVC, animated: true, completion: nil)
+            
+            }) { (error) -> Void in
+        }
+        
         
         
     }

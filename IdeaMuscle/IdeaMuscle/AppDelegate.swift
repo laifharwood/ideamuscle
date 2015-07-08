@@ -57,6 +57,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         })
         
+        Hoko.deeplinking().mapRoute("topics/:topicId", toTarget: { (deeplink: HOKDeeplink) -> Void in
+            if PFUser.currentUser() != nil{
+                let topicDetailVC = TopicsDetailViewController()
+                let dict = deeplink.routeParameters as! [NSObject : String]
+                let topicId = dict["topicId"]
+                let query = PFQuery(className: "Topic")
+                query.includeKey("creator")
+                query.getObjectInBackgroundWithId(topicId!, block: { (topic, error) -> Void in
+                    let activeTopic = topic! as PFObject
+                    topicDetailVC.activeTopic = activeTopic
+                    HOKNavigation.pushViewController(topicDetailVC, animated: true)
+                })
+                
+            }
+        })
+        
         // Enable storing and querying data from Local Datastore.
         // Remove this line if you don't want to use Local Datastore features or want to use cachePolicy.
         Parse.enableLocalDatastore()
