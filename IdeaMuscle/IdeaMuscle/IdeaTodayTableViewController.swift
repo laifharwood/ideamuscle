@@ -10,6 +10,7 @@ import UIKit
 import Parse
 import ParseUI
 
+
 class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource, UITableViewDelegate {
     
     var activityIndicator = UIActivityIndicatorView()

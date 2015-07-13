@@ -403,7 +403,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+        
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -411,15 +411,19 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     }
     
     func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue(){
-            
-            commentTextFieldContainter.frame = CGRectMake(0, self.view.frame.height - keyboardSize.height - 40, self.view.frame.width,40)
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue(){
+        
+            println("will Show Height" + "\n\(keyboardSize.height)")
+            commentTextFieldContainter.frame = CGRectMake(0, keyboardSize.minY - 40, self.view.frame.width, 40)
         }
     }
+    
+
     
     func keyboardWillHide(notification: NSNotification) {
         //
     }
+    
     
     
     func compose(sender: UIButton!){

@@ -101,7 +101,6 @@ class LeaderboardViewController: UIViewController {
     
     func composeOriginal(sender: UIButton!){
         
-        isNewTopic = true
         
         let composeTopicVC = ComposeTopicViewController()
         

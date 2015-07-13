@@ -65,7 +65,6 @@
 		EE8085061B191CCD00BFC07C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8085051B191CCD00BFC07C /* StoreKit.framework */; };
 		EE8085081B191CF000BFC07C /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8085071B191CF000BFC07C /* libz.dylib */; };
 		EE80850A1B19620700BFC07C /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8085091B19620700BFC07C /* Twitter.framework */; };
-		EE8085111B1CC9DC00BFC07C /* TopicsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8085101B1CC9DC00BFC07C /* TopicsTableViewController.swift */; };
 		EE8085151B1D017000BFC07C /* path5.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8085141B1D017000BFC07C /* path5.png */; };
 		EE8085171B1D176000BFC07C /* IMG_1398.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EE8085161B1D176000BFC07C /* IMG_1398.jpg */; };
 		EE80851D1B1E123900BFC07C /* IdeaMuscleLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = EE80851C1B1E123900BFC07C /* IdeaMuscleLogo.png */; };
@@ -84,6 +83,8 @@
 		EE8EE4B41B23B14C0093A62A /* bulb.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4B11B23B14C0093A62A /* bulb.png */; };
 		EE8EE4B51B23B14C0093A62A /* feed.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4B21B23B14C0093A62A /* feed.png */; };
 		EE8EE4B61B23B14C0093A62A /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4B31B23B14C0093A62A /* more.png */; };
+		EEC89CBD1B507A56009720CE /* StoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBC1B507A56009720CE /* StoreViewController.swift */; };
+		EEC89CC01B507BA1009720CE /* StoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */; };
 		EED08A1F1B34C22A002FAE19 /* upvoteArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = EED08A1E1B34C22A002FAE19 /* upvoteArrow.png */; };
 		EED08A211B386DC5002FAE19 /* IdeaDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A201B386DC5002FAE19 /* IdeaDetailViewController.swift */; };
 		EED08A231B39D061002FAE19 /* IdeaDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A221B39D061002FAE19 /* IdeaDetailTableViewCell.swift */; };
@@ -202,7 +203,6 @@
 		EE8085051B191CCD00BFC07C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		EE8085071B191CF000BFC07C /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		EE8085091B19620700BFC07C /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
-		EE8085101B1CC9DC00BFC07C /* TopicsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicsTableViewController.swift; sourceTree = "<group>"; };
 		EE8085141B1D017000BFC07C /* path5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = path5.png; path = "../../../../Desktop/Idea Muscle/path5.png"; sourceTree = "<group>"; };
 		EE8085161B1D176000BFC07C /* IMG_1398.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = IMG_1398.jpg; path = ../../../../Desktop/IMG_1398.jpg; sourceTree = "<group>"; };
 		EE80851C1B1E123900BFC07C /* IdeaMuscleLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = IdeaMuscleLogo.png; path = "../../../../Desktop/Idea Muscle/IdeaMuscleLogo.png"; sourceTree = "<group>"; };
@@ -221,6 +221,9 @@
 		EE8EE4B11B23B14C0093A62A /* bulb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bulb.png; path = "../../../../Desktop/Idea Muscle/bulb.png"; sourceTree = "<group>"; };
 		EE8EE4B21B23B14C0093A62A /* feed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = feed.png; path = "../../../../Desktop/Idea Muscle/feed.png"; sourceTree = "<group>"; };
 		EE8EE4B31B23B14C0093A62A /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = more.png; path = "../../../../Desktop/Idea Muscle/more.png"; sourceTree = "<group>"; };
+		EEC89CBB1B50390C009720CE /* IdeaMuscle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = IdeaMuscle.entitlements; sourceTree = "<group>"; };
+		EEC89CBC1B507A56009720CE /* StoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreViewController.swift; sourceTree = "<group>"; };
+		EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreTableViewCell.swift; sourceTree = "<group>"; };
 		EED08A1E1B34C22A002FAE19 /* upvoteArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = upvoteArrow.png; path = "../../../../Desktop/Idea Muscle/upvoteArrow.png"; sourceTree = "<group>"; };
 		EED08A201B386DC5002FAE19 /* IdeaDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaDetailViewController.swift; sourceTree = "<group>"; };
 		EED08A221B39D061002FAE19 /* IdeaDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaDetailTableViewCell.swift; sourceTree = "<group>"; };
@@ -299,19 +302,18 @@
 		81BA81471A49DA1800E65899 /* IdeaMuscle */ = {
 			isa = PBXGroup;
 			children = (
-				EE80850B1B1A720100BFC07C /* Images */,
+				EEC89CBB1B50390C009720CE /* IdeaMuscle.entitlements */,
 				81BA814A1A49DA1800E65899 /* AppDelegate.swift */,
 				81BA814C1A49DA1800E65899 /* ViewController.swift */,
-				EE8085101B1CC9DC00BFC07C /* TopicsTableViewController.swift */,
+				81BA81511A49DA1800E65899 /* Images.xcassets */,
+				EEC89CBE1B507B4F009720CE /* Store Controllers */,
+				EE80850B1B1A720100BFC07C /* Images */,
 				EED08A401B432DB9002FAE19 /* Leaderboard Controllers */,
-				EED08A2D1B3CC16F002FAE19 /* Global Code */,
 				EED08A2A1B3CC0B5002FAE19 /* Profile Controllers */,
 				EED8C4551B3471B1008981D1 /* Topic Controllers */,
 				EED8C4561B3471C6008981D1 /* Idea Controllers */,
 				EED8C4541B34719F008981D1 /* Compose Controllers */,
 				EED8C4531B347171008981D1 /* Tab Bar Controllers */,
-				81BA814E1A49DA1800E65899 /* Main.storyboard */,
-				81BA81511A49DA1800E65899 /* Images.xcassets */,
 				81BA81481A49DA1800E65899 /* Supporting Files */,
 			);
 			path = IdeaMuscle;
@@ -320,6 +322,7 @@
 		81BA81481A49DA1800E65899 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				81BA814E1A49DA1800E65899 /* Main.storyboard */,
 				81BA81491A49DA1800E65899 /* Info.plist */,
 				81BA81821A49E27F00E65899 /* IdeaMuscle-Bridging-Header.h */,
 				EE48EF291B4B2E5300B72246 /* Header.h */,
@@ -454,6 +457,15 @@
 			name = Images;
 			sourceTree = "<group>";
 		};
+		EEC89CBE1B507B4F009720CE /* Store Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				EEC89CBC1B507A56009720CE /* StoreViewController.swift */,
+				EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */,
+			);
+			name = "Store Controllers";
+			sourceTree = "<group>";
+		};
 		EED08A2A1B3CC0B5002FAE19 /* Profile Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -477,6 +489,7 @@
 			children = (
 				EED08A411B432E01002FAE19 /* FriendsLeaderboardTableViewController.swift */,
 				EED08A431B432E16002FAE19 /* WorldLeaderboardTableViewController.swift */,
+				EED08A2D1B3CC16F002FAE19 /* Global Code */,
 				EE8740431B43538800D0519B /* LeaderboardTableViewCell.swift */,
 			);
 			name = "Leaderboard Controllers";
@@ -563,6 +576,12 @@
 				TargetAttributes = {
 					81BA81441A49DA1800E65899 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = SA9WFPRSXG;
+						SystemCapabilities = {
+							com.apple.SafariKeychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -642,6 +661,7 @@
 				EE1A7FA21B4C97B3004EBD8B /* HOKVersionChecker.m in Sources */,
 				EED08A251B3B4050002FAE19 /* TimeAgo.swift in Sources */,
 				EED08A371B41D62D002FAE19 /* IdeaAllTableViewController.swift in Sources */,
+				EEC89CBD1B507A56009720CE /* StoreViewController.swift in Sources */,
 				EE1A7F9A1B4C97B3004EBD8B /* HOKObjectObserver.m in Sources */,
 				EED08A421B432E01002FAE19 /* FriendsLeaderboardTableViewController.swift in Sources */,
 				EE1A7F891B4C97B3004EBD8B /* HOKApp.m in Sources */,
@@ -649,7 +669,6 @@
 				EE1A7F921B4C97B3004EBD8B /* HOKLinkGenerator.m in Sources */,
 				EE1A7F9C1B4C97B3004EBD8B /* HOKResolver.m in Sources */,
 				EEFCB7121B335AC9009CB923 /* TopicTableViewCell.swift in Sources */,
-				EE8085111B1CC9DC00BFC07C /* TopicsTableViewController.swift in Sources */,
 				EE8EE4A21B226C6D0093A62A /* TopicsDetailViewController.swift in Sources */,
 				EED08A3F1B41ECB2002FAE19 /* TopicAllTableViewController.swift in Sources */,
 				EE1A7F8D1B4C97B3004EBD8B /* HOKDevice.m in Sources */,
@@ -667,6 +686,7 @@
 				EED08A391B41D7C8002FAE19 /* TopicGlobal.swift in Sources */,
 				EED08A291B3C7507002FAE19 /* ProfileViewController.swift in Sources */,
 				EE1A7F8F1B4C97B3004EBD8B /* HOKGZip.m in Sources */,
+				EEC89CC01B507BA1009720CE /* StoreTableViewCell.swift in Sources */,
 				EE8085211B1E1AE300BFC07C /* SharedCode.swift in Sources */,
 				EED08A441B432E16002FAE19 /* WorldLeaderboardTableViewController.swift in Sources */,
 				EE1A7F9B1B4C97B3004EBD8B /* HOKObserver.m in Sources */,
@@ -793,6 +813,9 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = IdeaMuscle/IdeaMuscle.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -802,6 +825,7 @@
 				INFOPLIST_FILE = IdeaMuscle/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = IdeaMuscle;
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = IdeaMuscle/Header.h;
 			};
 			name = Debug;
@@ -812,6 +836,9 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = IdeaMuscle/IdeaMuscle.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -821,6 +848,7 @@
 				INFOPLIST_FILE = IdeaMuscle/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = IdeaMuscle;
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = IdeaMuscle/Header.h;
 			};
 			name = Release;

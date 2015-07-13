@@ -29,7 +29,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         followingQuery()
         
         tableViewIdeaConfig(tableView)
-        tableView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height - 64)
+        tableView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height - tabBarController!.tabBar.frame.height)
         self.view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self
@@ -40,7 +40,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         refreshTable.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
         tableView.addSubview(refreshTable)
         
-        self.view.backgroundColor = UIColor.whiteColor()
+        self.view.backgroundColor = UIColor.blackColor()
         
         self.title = "Feed"
         
@@ -237,6 +237,15 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
             profileVC.activeUser = ideaObjects[sender.view!.tag]["owner"] as! PFUser
             navigationController?.pushViewController(profileVC, animated: true)
         }
+    }
+    
+    func composeOriginal(sender: UIButton!){
+        
+        
+        let composeTopicVC = ComposeTopicViewController()
+        
+        self.presentViewController(composeTopicVC, animated: true, completion: nil)
+        
     }
     
     

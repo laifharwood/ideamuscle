@@ -171,10 +171,10 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                     numberOfUpvotes = 0
                 }
                 var worldRankQuery = PFQuery(className: "Leaderboard")
-                worldRankQuery.whereKey("numberOfUpvotes", greaterThanOrEqualTo: numberOfUpvotes)
+                worldRankQuery.whereKey("numberOfUpvotes", greaterThan: numberOfUpvotes)
                 worldRankQuery.countObjectsInBackgroundWithBlock({ (rank, error) -> Void in
                     if error == nil{
-                        self.worldRank = Int(rank)
+                        self.worldRank = Int(rank) + 1
                         self.worldRankLabel.font = UIFont(name: "HelveticaNeue", size: 20)
                         self.worldRankLabel.textColor = redColor
                         self.worldRankLabel.frame = CGRectMake(self.totalUsersLabel.frame.minX - 155, self.totalUsersLabel.frame.minY, 150, 20)

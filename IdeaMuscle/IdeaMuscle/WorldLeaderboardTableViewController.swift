@@ -314,10 +314,10 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
                     numberOfUpvotes = 0
                 }
                 var worldRankQuery = PFQuery(className: "Leaderboard")
-                worldRankQuery.whereKey("numberOfUpvotes", greaterThanOrEqualTo: numberOfUpvotes)
+                worldRankQuery.whereKey("numberOfUpvotes", greaterThan: numberOfUpvotes)
                 worldRankQuery.countObjectsInBackgroundWithBlock({ (rank, error) -> Void in
                     if error == nil{
-                        let worldRank = Int(rank)
+                        let worldRank = Int(rank) + 1
                         self.worldRankLabel.font = UIFont(name: "HelveticaNeue", size: 20)
                         self.worldRankLabel.textColor = redColor
                         self.worldRankLabel.frame = CGRectMake(self.bottomContainer.frame.width/2 - 75, self.worldRankTitleLabel.frame.maxY + 3, 150, 20)

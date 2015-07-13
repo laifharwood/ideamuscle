@@ -330,6 +330,24 @@ func getAvatar(user: PFUser, imageView: UIImageView?, parseImageView: PFImageVie
     }
 }
 
+extension NSDate
+{
+    func isGreaterThanDate(dateToCompare : NSDate) -> Bool
+    {
+        //Declare Variables
+        var isGreater = false
+        
+        //Compare Values
+        if self.compare(dateToCompare) == NSComparisonResult.OrderedDescending
+        {
+            isGreater = true
+        }
+        
+        //Return Result
+        return isGreater
+    }
+}
+
 
 
 

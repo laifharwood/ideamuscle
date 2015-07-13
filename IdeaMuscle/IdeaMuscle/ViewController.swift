@@ -123,6 +123,7 @@ class ViewController: UIViewController{
     func getUserFacebookInfo(){
         
         let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: nil)
+        //let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: nil, HTTPMethod: "Get")
         graphRequest.startWithCompletionHandler({ (connection, result, error) -> Void in
             
             if ((error) != nil)
@@ -312,9 +313,8 @@ class ViewController: UIViewController{
     
         
         if let currentUser = PFUser.currentUser(){
-        var isOnLeaderboard = Bool()
+            var isOnLeaderboard = Bool()
             if let isOnLeaderboard = currentUser["isOnLeaderboard"] as? Bool{
-                
             }else{
             var leaderboardObject = PFObject(className: "Leaderboard")
             leaderboardObject["userPointer"] = currentUser
@@ -326,12 +326,7 @@ class ViewController: UIViewController{
                     currentUser.saveInBackground()
                 }
             })
-            
-            
         }
-        
-    
-        
         var hasIncUserTotal = Bool()
         if let hasIncUserTotal = currentUser["hasIncTotalUserCount"] as? Bool{
             
@@ -345,6 +340,22 @@ class ViewController: UIViewController{
                 }
             })
         }
+            var isInLastPosted = Bool()
+            if let isInLastPosted = currentUser["isInLastPosted"] as? Bool{
+                
+            }else{
+                var lastPostedObject = PFObject(className: "LastPosted")
+                lastPostedObject["userPointer"] = currentUser
+                lastPostedObject["update"] = 0
+                lastPostedObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                    if success{
+                        currentUser["isInLastPosted"] = true
+                        currentUser.saveInBackground()
+                    }
+                })
+            }
+        
+        
         }
         
     

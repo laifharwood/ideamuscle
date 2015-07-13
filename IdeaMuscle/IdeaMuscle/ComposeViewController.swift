@@ -337,11 +337,23 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         
             var counter = 0
             
+            let isPro = user["isPro"] as! Bool
+            if isPro == false{
+                user["hasPosted"] = true
+                user.saveInBackground()
+                
+                let query = PFQuery(className: "LastPosted")
+                query.whereKey("userPointer", equalTo: user)
+                query.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
+                    if error == nil{
+                        let lastPostedObject = object as PFObject!
+                        lastPostedObject.incrementKey("update")
+                        lastPostedObject.saveInBackground()
+                    }
+                })
+            }
         
             for textV in textViewArray{
-                
-                
-            
                 if publicBoolArray[counter] == true{
                     
                     var ideaObject = PFObject(className: "Idea")
@@ -349,7 +361,6 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                     ideaObject["topicPointer"] = activeComposeTopicObject
                     ideaObject["owner"] = user
                     ideaObject["isPublic"] = true
-                    
                     let publicACL = PFACL()
                     publicACL.setPublicReadAccess(true)
                     publicACL.setPublicWriteAccess(true)
@@ -357,10 +368,6 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                     ideaObject["ACL"] = publicACL
                     ideaObject.incrementKey("numberOfUpvotes")
                     ideaObject.addObject(user, forKey: "usersWhoUpvoted")
-                    
-                    
-                    
-                    
                     ideaObject.saveInBackgroundWithBlock({ (success, error) -> Void in
                         if success{
                             println("Saved Idea Publically")
@@ -382,10 +389,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                                     leaderboardObject.saveInBackground()
                                 }
                             })
-
-                        
                             self.activeComposeTopicObject.incrementKey("numberOfIdeas")
-                            
                             self.activeComposeTopicObject.saveInBackgroundWithBlock({ (success, error) -> Void in
                                 if success{
                                     println("numberOfIdeas Updated Successfully")
@@ -419,10 +423,6 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                             self.publicAlreadyEncountered = true
                         })
                     }
-                
-                    
-                
-                
                 }else{
                     
                     var ideaObject = PFObject(className: "Idea")
