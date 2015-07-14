@@ -241,10 +241,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func composeOriginal(sender: UIButton!){
         
-        
-        let composeTopicVC = ComposeTopicViewController()
-        
-        self.presentViewController(composeTopicVC, animated: true, completion: nil)
+        composeOriginalGlobal(self)
         
     }
     

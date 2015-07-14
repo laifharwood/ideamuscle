@@ -14,6 +14,27 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.title = "More"
+        
+        //Right Compose Button
+        let composeOriginalButton = UIButton()
+        let composeOriginalImage = UIImage(named: "ComposeWhite.png")
+        composeOriginalButton.setImage(composeOriginalImage, forState: .Normal)
+        composeOriginalButton.frame = CGRectMake(self.view.frame.width - 38, 25, 24.7, 25)
+        composeOriginalButton.addTarget(self, action: "composeOriginal:", forControlEvents: .TouchUpInside)
+        let rightBarButtonItem: UIBarButtonItem = UIBarButtonItem(customView: composeOriginalButton)
+        self.navigationItem.setRightBarButtonItem(rightBarButtonItem, animated: false);
+        
+        //MARK: - Left Small Logo
+        
+        let leftLogoView = UIImageView(image: smallLogo)
+        leftLogoView.frame = CGRectMake(10, 25, 35, 35)
+        let leftBarButtonItem: UIBarButtonItem = UIBarButtonItem(customView: leftLogoView)
+        self.navigationItem.setLeftBarButtonItem(leftBarButtonItem, animated: false)
+        
+        
+        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
@@ -40,6 +61,12 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
         return 1
+    }
+    
+    func composeOriginal(sender: UIButton!){
+        
+        composeOriginalGlobal(self)
+        
     }
 
     

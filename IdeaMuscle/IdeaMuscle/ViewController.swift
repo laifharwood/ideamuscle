@@ -426,7 +426,8 @@ class ViewController: UIViewController{
     }
     
     func checkProExpiration(user: PFUser){
-        if user["proExpiration"] != nil{
+        if let isPro = user["isPro"] as? Bool{
+        if isPro == true{
             println("proExpiration does not equal nil")
             //let timeNowObject = PFObject(withoutDataWithObjectId: "yhUEKpyRSg")
             var timeNowObject = PFObject(className: "TimeNow")
@@ -452,6 +453,7 @@ class ViewController: UIViewController{
                     })
                 }
             })
+        }
         }
     }
     

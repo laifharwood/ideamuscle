@@ -83,6 +83,7 @@
 		EE8EE4B41B23B14C0093A62A /* bulb.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4B11B23B14C0093A62A /* bulb.png */; };
 		EE8EE4B51B23B14C0093A62A /* feed.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4B21B23B14C0093A62A /* feed.png */; };
 		EE8EE4B61B23B14C0093A62A /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4B31B23B14C0093A62A /* more.png */; };
+		EEB3202A1B55D238005D1334 /* TabBarGlobal.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB320291B55D238005D1334 /* TabBarGlobal.swift */; };
 		EEC89CBD1B507A56009720CE /* StoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBC1B507A56009720CE /* StoreViewController.swift */; };
 		EEC89CC01B507BA1009720CE /* StoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */; };
 		EED08A1F1B34C22A002FAE19 /* upvoteArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = EED08A1E1B34C22A002FAE19 /* upvoteArrow.png */; };
@@ -221,6 +222,7 @@
 		EE8EE4B11B23B14C0093A62A /* bulb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bulb.png; path = "../../../../Desktop/Idea Muscle/bulb.png"; sourceTree = "<group>"; };
 		EE8EE4B21B23B14C0093A62A /* feed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = feed.png; path = "../../../../Desktop/Idea Muscle/feed.png"; sourceTree = "<group>"; };
 		EE8EE4B31B23B14C0093A62A /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = more.png; path = "../../../../Desktop/Idea Muscle/more.png"; sourceTree = "<group>"; };
+		EEB320291B55D238005D1334 /* TabBarGlobal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarGlobal.swift; sourceTree = "<group>"; };
 		EEC89CBB1B50390C009720CE /* IdeaMuscle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = IdeaMuscle.entitlements; sourceTree = "<group>"; };
 		EEC89CBC1B507A56009720CE /* StoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreViewController.swift; sourceTree = "<group>"; };
 		EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreTableViewCell.swift; sourceTree = "<group>"; };
@@ -502,6 +504,7 @@
 				EE8EE4A31B228E260093A62A /* FeedViewController.swift */,
 				EE8EE4A51B228EAC0093A62A /* LeaderboardViewController.swift */,
 				EE8EE4A71B228EF30093A62A /* MoreViewController.swift */,
+				EEB320291B55D238005D1334 /* TabBarGlobal.swift */,
 			);
 			name = "Tab Bar Controllers";
 			sourceTree = "<group>";
@@ -705,6 +708,7 @@
 				81BA814B1A49DA1800E65899 /* AppDelegate.swift in Sources */,
 				EED08A3D1B41EC86002FAE19 /* TopicThirtyTableViewController.swift in Sources */,
 				EED08A3B1B41EC24002FAE19 /* TopicSevenTableViewController.swift in Sources */,
+				EEB3202A1B55D238005D1334 /* TabBarGlobal.swift in Sources */,
 				EE5B25D11B30B660006829C7 /* IdeaTodayTableViewController.swift in Sources */,
 				EE1A7F8A1B4C97B3004EBD8B /* HOKDeeplink.m in Sources */,
 				EED08A211B386DC5002FAE19 /* IdeaDetailViewController.swift in Sources */,

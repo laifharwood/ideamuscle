@@ -43,7 +43,6 @@ class TopicAndIdeaContainerViewController: UIViewController {
         self.navigationItem.setRightBarButtonItem(rightBarButtonItem, animated: false);
         
         //MARK: - Left Small Logo
-        
         let leftLogoView = UIImageView(image: smallLogo)
         leftLogoView.frame = CGRectMake(10, 25, 35, 35)
         let leftBarButtonItem: UIBarButtonItem = UIBarButtonItem(customView: leftLogoView)
@@ -134,70 +133,11 @@ class TopicAndIdeaContainerViewController: UIViewController {
     
     func composeOriginal(sender: UIButton!){
         
-        if let user = PFUser.currentUser(){
-            if let hasPosted = user["hasPosted"] as? Bool{
-                if hasPosted == false{
-                    println("has not posted")
-                    let composeTopicVC = ComposeTopicViewController()
-                    self.presentViewController(composeTopicVC, animated: true, completion: nil)
-                }
-            }else{
-                println("has posted is nil")
-                let composeTopicVC = ComposeTopicViewController()
-                self.presentViewController(composeTopicVC, animated: true, completion: nil)
-            }
-            
-            if let isPro = user["isPro"] as? Bool{
-                if isPro{
-                    println("is Pro")
-                    let composeTopicVC = ComposeTopicViewController()
-                    self.presentViewController(composeTopicVC, animated: true, completion: nil)
-                }else{
-                    notProCheckIfCanPost(user)
-                }
-            }else{
-                notProCheckIfCanPost(user)
-            }
-        }
+        composeOriginalGlobal(self)
+        
     }
     
-    func notProCheckIfCanPost(user: PFUser){
-        let lastPostedQuery = PFQuery(className: "LastPosted")
-        lastPostedQuery.whereKey("userPointer", equalTo: user)
-        lastPostedQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
-            if error == nil{
-                var lastPostedDate = NSDate()
-                let lastPostedObject = object as PFObject!
-                lastPostedDate = lastPostedObject.updatedAt!
-                let components = NSDateComponents()
-                components.day = 1
-                let calender = NSCalendar.currentCalendar()
-                let canPostDate = calender.dateByAddingComponents(components, toDate: lastPostedDate, options: nil)
-                let nowQuery = PFQuery(className: "TimeNow")
-                nowQuery.getObjectInBackgroundWithId("yhUEKpyRSg", block: { (nowObject, error) -> Void in
-                    let nowDateObject = nowObject as PFObject!
-                    nowDateObject.incrementKey("update")
-                    nowDateObject.saveInBackgroundWithBlock({(success, error) -> Void in
-                        if success{
-                            nowDateObject.fetchInBackgroundWithBlock({(nowDateObject, error) -> Void in
-                                if nowDateObject != nil{
-                                    var now = NSDate()
-                                    now = nowDateObject!.updatedAt!
-                                    if now.isGreaterThanDate(canPostDate!){
-                                        let composeTopicVC = ComposeTopicViewController()
-                                        self.presentViewController(composeTopicVC, animated: true, completion: nil)
-                                    }else{
-                                        //Prompt For Upgrade
-                                        println("need to upgrade")
-                                    }
-                                }
-                            })
-                        }
-                    })
-                })
-            }
-        })
-    }
+
     
     func changeTableSelection(sender: UISegmentedControl){
         
