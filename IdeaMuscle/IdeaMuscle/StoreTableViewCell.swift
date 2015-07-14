@@ -13,12 +13,14 @@ class StoreTableViewCell: UITableViewCell {
     
     
     var buyButton = UIButton()
+    var priceLabel = UILabel()
     
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.contentView.addSubview(buyButton)
+        self.contentView.addSubview(priceLabel)
         
     }
     

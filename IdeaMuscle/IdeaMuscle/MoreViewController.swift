@@ -20,6 +20,10 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height - tabBarController!.tabBar.frame.height)
         self.view.addSubview(tableView)
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        self.tabBarController!.tabBar.hidden = false
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

@@ -94,6 +94,10 @@ class TopicAndIdeaContainerViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    override func viewWillAppear(animated: Bool) {
+        self.tabBarController!.tabBar.hidden = false
+    }
+    
     
     private var activeViewController: UIViewController? {
         didSet {
