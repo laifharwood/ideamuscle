@@ -56,6 +56,7 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
         let storeVC = StoreViewController()
         navigationController?.pushViewController(storeVC, animated: true)
     }

@@ -243,19 +243,17 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
         let facebookComposeVC = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
         let ideaString = activeIdea["content"] as! String
-        facebookComposeVC.setInitialText(ideaString)
         let deeplink = HOKDeeplink(route: "ideas/:ideaId", routeParameters: ["ideaId": activeIdea.objectId!])
-        
         Hoko.deeplinking().generateSmartlinkForDeeplink(deeplink, success: { (smartlink) -> Void in
             var url = NSURL()
             url = NSURL(string: smartlink)!
             facebookComposeVC.addURL(url)
+            //Doesn't work anymore
+            //facebookComposeVC.setInitialText(ideaString)
             self.presentViewController(facebookComposeVC, animated: true, completion: nil)
             
             }) { (error) -> Void in
         }
-        
-        
     }
     
     func shareEmail(sender: UIButton!){

@@ -262,6 +262,8 @@ class ViewController: UIViewController{
 
 
     func goToTabBar(){
+        
+    checkIfPro()
     
     let tabBarController = UITabBarController()
     
@@ -404,6 +406,54 @@ class ViewController: UIViewController{
         }
     }
 }
+    
+    func checkIfPro(){
+        println("checking if Pro")
+        if let user = PFUser.currentUser(){
+            println("there is a current user")
+            user.fetchInBackgroundWithBlock({ (object, error) -> Void in
+                if let isProForever = user["isProForever"] as? Bool{
+                    println("user has been fetched")
+                    if isProForever == false{
+                        self.checkProExpiration(user)
+                    }
+                }else{
+                    self.checkProExpiration(user)
+                }
+            })
+            
+        }
+    }
+    
+    func checkProExpiration(user: PFUser){
+        if user["proExpiration"] != nil{
+            println("proExpiration does not equal nil")
+            //let timeNowObject = PFObject(withoutDataWithObjectId: "yhUEKpyRSg")
+            var timeNowObject = PFObject(className: "TimeNow")
+            let query = PFQuery(className: "TimeNow")
+            query.getObjectInBackgroundWithId("yhUEKpyRSg", block: { (object, error) -> Void in
+                if error == nil{
+                    timeNowObject = object!
+                    timeNowObject.incrementKey("update")
+                    timeNowObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                        println("timeNowObject Saved")
+                        if success{
+                            timeNowObject.fetchInBackgroundWithBlock({ (object, error) -> Void in
+                                println("timenow object fetched")
+                                let timeNow = timeNowObject.updatedAt
+                                let expiration = user["proExpiration"] as! NSDate
+                                if timeNow!.isGreaterThanDate(expiration){
+                                    println("user should not be pro")
+                                    user["isPro"] = false
+                                    user.saveInBackground()
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        }
+    }
     
     func startActivityIndicator(){
         

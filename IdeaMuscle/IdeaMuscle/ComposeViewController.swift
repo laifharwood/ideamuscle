@@ -331,28 +331,35 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         checkForSumbitActive()
     }
     
+    func setHasPosted(user: PFUser){
+        user["hasPosted"] = true
+        user.saveInBackground()
+        
+        let query = PFQuery(className: "LastPosted")
+        query.whereKey("userPointer", equalTo: user)
+        query.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
+            if error == nil{
+                let lastPostedObject = object as PFObject!
+                lastPostedObject.incrementKey("update")
+                lastPostedObject.saveInBackground()
+            }
+        })
+    }
+    
     func submit(sender: UIButton!){
         
         if let user = PFUser.currentUser(){
         
             var counter = 0
             
-            let isPro = user["isPro"] as! Bool
-            if isPro == false{
-                user["hasPosted"] = true
-                user.saveInBackground()
-                
-                let query = PFQuery(className: "LastPosted")
-                query.whereKey("userPointer", equalTo: user)
-                query.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
-                    if error == nil{
-                        let lastPostedObject = object as PFObject!
-                        lastPostedObject.incrementKey("update")
-                        lastPostedObject.saveInBackground()
-                    }
-                })
+            if let isPro = user["isPro"] as? Bool{
+                if isPro == false{
+                    setHasPosted(user)
+                }
+            }else{
+                setHasPosted(user)
             }
-        
+            
             for textV in textViewArray{
                 if publicBoolArray[counter] == true{
                     
