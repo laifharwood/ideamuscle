@@ -65,7 +65,20 @@ func notProCheckIfCanPost(user: PFUser, sender: AnyObject!){
                                     sender.presentViewController(composeTopicVC, animated: true, completion: nil)
                                 }else{
                                     //Prompt For Upgrade
-                                    println("need to upgrade")
+                                    let upgradeAlert: UIAlertController = UIAlertController(title: "You must upgrade.", message: "As a free user you are limited to composing once every two days. Upgrade to Pro to compose unlimited ideas and topics.", preferredStyle: .Alert)
+                                    //Create and add the Cancel action
+                                    let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+                                    }
+                                    upgradeAlert.addAction(cancelAction)
+                                    
+                                    let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
+                                        let storeVC = StoreViewController()
+                                        sender.navigationController!!.pushViewController(storeVC, animated: true)
+                                        
+                                    })
+                                    
+                                    upgradeAlert.addAction(goToStore)
+                                    sender.presentViewController(upgradeAlert, animated: true, completion: nil)
                                 }
                             }
                         })

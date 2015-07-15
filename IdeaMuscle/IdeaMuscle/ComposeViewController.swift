@@ -507,11 +507,11 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     func upgradeAlert(){
         let upgradeAlert: UIAlertController = UIAlertController(title: "You must upgrade to do that.", message: "As a free user you are only allowed 1 public idea per group of 10. Upgrade to Pro to post unlimited public ideas.", preferredStyle: .Alert)
         //Create and add the Cancel action
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Okay", style: .Cancel) { action -> Void in
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
         }
         upgradeAlert.addAction(cancelAction)
         
-        let goToStore: UIAlertAction = UIAlertAction(title: "Upgrade!", style: .Default, handler: { (action) -> Void in
+        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
             let storeVC = StoreViewController()
             let navVC = UINavigationController(rootViewController: storeVC)
             self.presentViewController(navVC, animated: true, completion: nil)
