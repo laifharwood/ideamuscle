@@ -178,35 +178,60 @@ func startActivityGlobal(activityIndicatorContainer: UIView, activityIndicator: 
     activityIndicator.startAnimating()
 }
 
-func composeFromDetail(sender: AnyObject!, activeTopic: PFObject){
+func composeFromDetail(sender: AnyObject!, activeTopic: PFObject?, isNewTopic: Bool){
     
     if let user = PFUser.currentUser(){
+        
+        
         if let hasPosted = user["hasPosted"] as? Bool{
             if hasPosted == false{
-               presentCompose(sender, activeTopic)
+                if isNewTopic == false{
+                    presentCompose(sender, activeTopic!, isNewTopic)
+                }else{
+                    presentCompose(sender, nil, isNewTopic)
+                }
             }
         }else{
-            presentCompose(sender, activeTopic)        }
+            if isNewTopic == false{
+                presentCompose(sender, activeTopic!, isNewTopic)
+            }else{
+                presentCompose(sender, nil, isNewTopic)
+            }
+        }
         
         if let isPro = user["isPro"] as? Bool{
             if isPro{
-                presentCompose(sender, activeTopic)
+                if isNewTopic == false{
+                    presentCompose(sender, activeTopic!, isNewTopic)
+                }else{
+                    presentCompose(sender, nil, isNewTopic)
+                }
             }else{
-                notProCheckIfCanPostFromDetail(user, sender, activeTopic)
+                if isNewTopic == false{
+                    notProCheckIfCanPostFromDetail(user, sender, activeTopic!, isNewTopic)
+                }else{
+                    notProCheckIfCanPostFromDetail(user, sender, nil, isNewTopic)
+                }
             }
         }else{
-            notProCheckIfCanPostFromDetail(user, sender, activeTopic)
+            notProCheckIfCanPostFromDetail(user, sender, activeTopic!, isNewTopic)
         }
     }
 }
 
-func presentCompose(sender: AnyObject!, activeTopic: PFObject){
-    let composeVC = ComposeViewController()
-    composeVC.activeComposeTopicObject = activeTopic
-    sender.presentViewController(composeVC, animated: true, completion: nil)
+func presentCompose(sender: AnyObject!, activeTopic: PFObject?, isNewTopic: Bool){
+    
+    if isNewTopic == false{
+        let composeVC = ComposeViewController()
+        composeVC.activeComposeTopicObject = activeTopic!
+        sender.presentViewController(composeVC, animated: true, completion: nil)
+    }else{
+        let composeTopicVC = ComposeTopicViewController()
+        sender.presentViewController(composeTopicVC, animated: true, completion: nil)
+    }
 }
 
-func notProCheckIfCanPostFromDetail(user: PFUser, sender: AnyObject!, activeTopic: PFObject){
+func notProCheckIfCanPostFromDetail(user: PFUser, sender: AnyObject!, activeTopic: PFObject?, isNewTopic: Bool){
     let lastPostedQuery = PFQuery(className: "LastPosted")
     lastPostedQuery.whereKey("userPointer", equalTo: user)
     lastPostedQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
@@ -229,7 +254,11 @@ func notProCheckIfCanPostFromDetail(user: PFUser, sender: AnyObject!, activeTopi
                                 var now = NSDate()
                                 now = nowDateObject!.updatedAt!
                                 if now.isGreaterThanDate(canPostDate!){
-                                    presentCompose(sender, activeTopic)
+                                    if isNewTopic == false{
+                                        presentCompose(sender, activeTopic!, isNewTopic)
+                                    }else{
+                                        presentCompose(sender, nil, isNewTopic)
+                                    }
                                 }else{
                                     //Prompt For Upgrade
                                     let upgradeAlert: UIAlertController = UIAlertController(title: "You must upgrade to do that.", message: "As a free user you are limited to composing once every two days. Upgrade to Pro to compose unlimited ideas and topics.", preferredStyle: .Alert)

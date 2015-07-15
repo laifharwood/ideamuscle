@@ -241,8 +241,8 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func composeOriginal(sender: UIButton!){
         
-        composeOriginalGlobal(self)
-        
+        //composeOriginalGlobal(self)
+        composeFromDetail(self, nil, true)
     }
     
     

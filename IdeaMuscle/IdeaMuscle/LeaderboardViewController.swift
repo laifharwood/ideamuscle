@@ -101,7 +101,8 @@ class LeaderboardViewController: UIViewController {
     
     func composeOriginal(sender: UIButton!){
         
-        composeOriginalGlobal(self)
+        //composeOriginalGlobal(self)
+        composeFromDetail(self, nil, true)
         
     }
     

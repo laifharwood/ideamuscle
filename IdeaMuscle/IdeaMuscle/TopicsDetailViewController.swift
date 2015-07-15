@@ -198,7 +198,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func compose(sender: UIButton!){
-        composeFromDetail(self, activeTopic)
+        composeFromDetail(self, activeTopic, false)
     }
     
     func ideaQuery(){

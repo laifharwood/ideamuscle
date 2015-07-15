@@ -65,7 +65,8 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func composeOriginal(sender: UIButton!){
         
-        composeOriginalGlobal(self)
+        //composeOriginalGlobal(self)
+        composeFromDetail(self, nil, true)
         
     }
 
