@@ -24,6 +24,20 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.view.backgroundColor = UIColor.whiteColor()
         self.title = "IdeaMuscle Pro Store"
         
+        
+        let vcs = self.navigationController?.viewControllers
+        if self === vcs?.first{
+            let cancelButton = UIButton()
+            cancelButton.setTitle("Cancel", forState: .Normal)
+            cancelButton.setTitleColor(redColor, forState: .Normal)
+            cancelButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 12)
+            cancelButton.addTarget(self, action: "dismiss:", forControlEvents: .TouchUpInside)
+            cancelButton.sizeToFit()
+            let cancelBarItem = UIBarButtonItem(customView: cancelButton)
+            self.navigationItem.leftBarButtonItem = cancelBarItem
+        }
+        
+        
         //MARK: - Table View Setup
         tableView.dataSource = self
         tableView.delegate = self
@@ -66,8 +80,14 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
         SKPaymentQueue.defaultQueue().addTransactionObserver(self)
     }
     
+    func dismiss(sender: UIButton){
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
     override func viewWillAppear(animated: Bool) {
-        self.tabBarController!.tabBar.hidden = true
+        if self.tabBarController != nil{
+            self.tabBarController!.tabBar.hidden = true
+        }
     }
     
     func paymentQueue(queue: SKPaymentQueue!, updatedTransactions transactions: [AnyObject]!) {
@@ -105,7 +125,7 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
                 user["isProForever"] = true
                 let calendar = NSCalendar.currentCalendar()
                 let components = NSDateComponents()
-                components.year = 100
+                components.year = 1000
                 let now = transaction.transactionDate
                 let expiration = calendar.dateByAddingComponents(components, toDate: now, options: nil)
                 user["proExpiration"] = expiration
@@ -210,47 +230,33 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
                             var alert = UIAlertView(title: "Success!", message: "Your purchase was restored. Your Pro expiration date is " + formattedDate, delegate: nil, cancelButtonTitle: "OK")
                             alert.show()
                         }else{
-                            let notLoggedInToRightAccount: UIAlertController = UIAlertController(title: "You are logged into a different account", message: "Please login to the account you made the purchase with to restore the purchase.", preferredStyle: .Alert)
-                            //Create and add the Cancel action
-                            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
-                            }
-                            notLoggedInToRightAccount.addAction(cancelAction)
-                            
-                            let logoutAction: UIAlertAction = UIAlertAction(title: "Logout", style: .Default, handler: { (action) -> Void in
-                                PFUser.logOut()
-                                let loginVC = ViewController()
-                                let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                                appDelegate.window?.rootViewController = loginVC
-                            })
-                            
-                            notLoggedInToRightAccount.addAction(logoutAction)
-                            
-                            //Present the AlertController
-                            self.presentViewController(notLoggedInToRightAccount, animated: true, completion: nil)
+                            notLoggedIntoRightAccount()
                             
                         }
                         
                     }else{
-                        let notLoggedInToRightAccount: UIAlertController = UIAlertController(title: "You are logged into a different account", message: "Please login to the account you made the purchase with to restore the purchase.", preferredStyle: .Alert)
-                        //Create and add the Cancel action
-                        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
-                        }
-                        notLoggedInToRightAccount.addAction(cancelAction)
-                        
-                        let logoutAction: UIAlertAction = UIAlertAction(title: "Logout", style: .Default, handler: { (action) -> Void in
-                            PFUser.logOut()
-                            let loginVC = ViewController()
-                            let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                            appDelegate.window?.rootViewController = loginVC
-                        })
-                        
-                        notLoggedInToRightAccount.addAction(logoutAction)
-                        
-                        //Present the AlertController
-                        self.presentViewController(notLoggedInToRightAccount, animated: true, completion: nil)
+                        notLoggedIntoRightAccount()
                     }
 
                 }
+    }
+    
+    func notLoggedIntoRightAccount(){
+        let notLoggedInToRightAccount: UIAlertController = UIAlertController(title: "You are logged into a different account", message: "Please login to the account you made the purchase with to restore the purchase.", preferredStyle: .Alert)
+        //Create and add the Cancel action
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+        }
+        notLoggedInToRightAccount.addAction(cancelAction)
+        
+        let logoutAction: UIAlertAction = UIAlertAction(title: "Logout", style: .Default, handler: { (action) -> Void in
+            PFUser.logOut()
+            let loginVC = ViewController()
+            let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            appDelegate.window?.rootViewController = loginVC
+        })
+        
+        notLoggedInToRightAccount.addAction(logoutAction)
+        self.presentViewController(notLoggedInToRightAccount, animated: true, completion: nil)
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

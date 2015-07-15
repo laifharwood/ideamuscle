@@ -17,10 +17,12 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     var tableView: UITableView = UITableView()
     var activeComposeTopicObject = PFObject(className: "Topic")
     
-    let grayCheckmarkImage = UIImage(named: "checkmarkGray.png")
-    let redCheckmarkImage = UIImage(named: "checkmarkRed.png")
+    let grayCheckmarkImage = UIImage(named: "checkmarkGray")
+    let redCheckmarkImage = UIImage(named: "checkmarkRed")
     var publicBoolArray = [false, false, false, false, false, false, false, false, false, false]
     var topicLabel = UILabel()
+    var numberOfPublic = 0
+    
     
     
     //MARK: - UIViews for text views
@@ -92,7 +94,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         
             // MARK: - Compose Title
             var title = UILabel()
-            title.text = "Compose Ideas"
+            title.text = "Compose 10 Ideas"
             title.font = UIFont(name: "Avenir", size: 13)
             title.textColor = UIColor.whiteColor()
             title.frame = CGRectMake(topBar.frame.width/2 - 60, topBar.frame.height/2, 120, 16)
@@ -466,19 +468,61 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     }
     
     func makePublic(sender: UIButton){
-        
         if publicBoolArray[sender.tag] == false{
-        
-        sender.setImage(redCheckmarkImage, forState: .Normal)
-        publicBoolArray[sender.tag] = true
-        }else{
+        if let user = PFUser.currentUser(){
+            if let isPro = user["isPro"] as? Bool{
+                if isPro{
+                    canMakePublic(sender)
+                }else if numberOfPublic < 1{
+                    canMakePublic(sender)
+                }else{
+                    //Show Alert To Upgrade
+                    println("should show alert")
+                    upgradeAlert()
+                }
+            }else{
+                if numberOfPublic < 1{
+                    canMakePublic(sender)
+                }else{
+                    //Show Alert To Upgrade
+                    println("should show alert")
+                    upgradeAlert()
+                }
+            }
+        }
+        }else if publicBoolArray[sender.tag] == true{
             sender.setImage(grayCheckmarkImage, forState: .Normal)
             publicBoolArray[sender.tag] = false
+            --numberOfPublic
         }
         
-        
-        
     }
+    
+    func canMakePublic(sender: UIButton){
+            sender.setImage(redCheckmarkImage, forState: .Normal)
+            publicBoolArray[sender.tag] = true
+            ++numberOfPublic
+    }
+    
+    func upgradeAlert(){
+        let upgradeAlert: UIAlertController = UIAlertController(title: "You must upgrade to do that.", message: "As a free user you are only allowed 1 public idea per group of 10. Upgrade to Pro to post unlimited public ideas.", preferredStyle: .Alert)
+        //Create and add the Cancel action
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Okay", style: .Cancel) { action -> Void in
+        }
+        upgradeAlert.addAction(cancelAction)
+        
+        let goToStore: UIAlertAction = UIAlertAction(title: "Upgrade!", style: .Default, handler: { (action) -> Void in
+            let storeVC = StoreViewController()
+            let navVC = UINavigationController(rootViewController: storeVC)
+            self.presentViewController(navVC, animated: true, completion: nil)
+            
+        })
+        
+        upgradeAlert.addAction(goToStore)
+        self.presentViewController(upgradeAlert, animated: true, completion: nil)
+    }
+    
+    
     
     func cancel(sender: UIButton!){
         
