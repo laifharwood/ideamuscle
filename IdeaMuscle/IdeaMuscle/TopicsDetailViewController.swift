@@ -198,9 +198,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func compose(sender: UIButton!){
-        let composeVC = ComposeViewController()
-        composeVC.activeComposeTopicObject = activeTopic
-        self.presentViewController(composeVC, animated: true, completion: nil)
+        composeFromDetail(self, activeTopic)
     }
     
     func ideaQuery(){

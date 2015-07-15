@@ -177,3 +177,81 @@ func startActivityGlobal(activityIndicatorContainer: UIView, activityIndicator: 
     activityIndicatorContainer.addSubview(activityIndicator)
     activityIndicator.startAnimating()
 }
+
+func composeFromDetail(sender: AnyObject!, activeTopic: PFObject){
+    
+    if let user = PFUser.currentUser(){
+        if let hasPosted = user["hasPosted"] as? Bool{
+            if hasPosted == false{
+               presentCompose(sender, activeTopic)
+            }
+        }else{
+            presentCompose(sender, activeTopic)        }
+        
+        if let isPro = user["isPro"] as? Bool{
+            if isPro{
+                presentCompose(sender, activeTopic)
+            }else{
+                notProCheckIfCanPostFromDetail(user, sender, activeTopic)
+            }
+        }else{
+            notProCheckIfCanPostFromDetail(user, sender, activeTopic)
+        }
+    }
+}
+
+func presentCompose(sender: AnyObject!, activeTopic: PFObject){
+    let composeVC = ComposeViewController()
+    composeVC.activeComposeTopicObject = activeTopic
+    sender.presentViewController(composeVC, animated: true, completion: nil)
+}
+
+func notProCheckIfCanPostFromDetail(user: PFUser, sender: AnyObject!, activeTopic: PFObject){
+    let lastPostedQuery = PFQuery(className: "LastPosted")
+    lastPostedQuery.whereKey("userPointer", equalTo: user)
+    lastPostedQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
+        if error == nil{
+            var lastPostedDate = NSDate()
+            let lastPostedObject = object as PFObject!
+            lastPostedDate = lastPostedObject.updatedAt!
+            let components = NSDateComponents()
+            components.day = 1
+            let calender = NSCalendar.currentCalendar()
+            let canPostDate = calender.dateByAddingComponents(components, toDate: lastPostedDate, options: nil)
+            let nowQuery = PFQuery(className: "TimeNow")
+            nowQuery.getObjectInBackgroundWithId("yhUEKpyRSg", block: { (nowObject, error) -> Void in
+                let nowDateObject = nowObject as PFObject!
+                nowDateObject.incrementKey("update")
+                nowDateObject.saveInBackgroundWithBlock({(success, error) -> Void in
+                    if success{
+                        nowDateObject.fetchInBackgroundWithBlock({(nowDateObject, error) -> Void in
+                            if nowDateObject != nil{
+                                var now = NSDate()
+                                now = nowDateObject!.updatedAt!
+                                if now.isGreaterThanDate(canPostDate!){
+                                    presentCompose(sender, activeTopic)
+                                }else{
+                                    //Prompt For Upgrade
+                                    let upgradeAlert: UIAlertController = UIAlertController(title: "You must upgrade to do that.", message: "As a free user you are limited to composing once every two days. Upgrade to Pro to compose unlimited ideas and topics.", preferredStyle: .Alert)
+                                    //Create and add the Cancel action
+                                    let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+                                    }
+                                    upgradeAlert.addAction(cancelAction)
+                                    
+                                    let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
+                                        let storeVC = StoreViewController()
+                                        sender.navigationController!!.pushViewController(storeVC, animated: true)
+                                        
+                                    })
+                                    
+                                    upgradeAlert.addAction(goToStore)
+                                    sender.presentViewController(upgradeAlert, animated: true, completion: nil)
+                                }
+                            }
+                        })
+                    }
+                })
+            })
+        }
+    })
+}

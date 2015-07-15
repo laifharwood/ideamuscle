@@ -65,10 +65,7 @@
 		EE8085061B191CCD00BFC07C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8085051B191CCD00BFC07C /* StoreKit.framework */; };
 		EE8085081B191CF000BFC07C /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8085071B191CF000BFC07C /* libz.dylib */; };
 		EE80850A1B19620700BFC07C /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8085091B19620700BFC07C /* Twitter.framework */; };
-		EE8085151B1D017000BFC07C /* path5.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8085141B1D017000BFC07C /* path5.png */; };
-		EE8085171B1D176000BFC07C /* IMG_1398.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EE8085161B1D176000BFC07C /* IMG_1398.jpg */; };
 		EE80851D1B1E123900BFC07C /* IdeaMuscleLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = EE80851C1B1E123900BFC07C /* IdeaMuscleLogo.png */; };
-		EE80851F1B1E14B300BFC07C /* whiteTwitterLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = EE80851E1B1E14B300BFC07C /* whiteTwitterLogo.png */; };
 		EE8085211B1E1AE300BFC07C /* SharedCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8085201B1E1AE300BFC07C /* SharedCode.swift */; };
 		EE8085231B1E2BD800BFC07C /* ideaShare.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8085221B1E2BD800BFC07C /* ideaShare.png */; };
 		EE8085251B1E2E4A00BFC07C /* ideaCompose.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8085241B1E2E4A00BFC07C /* ideaCompose.png */; };
@@ -79,14 +76,9 @@
 		EE8EE4A41B228E260093A62A /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8EE4A31B228E260093A62A /* FeedViewController.swift */; };
 		EE8EE4A61B228EAC0093A62A /* LeaderboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8EE4A51B228EAC0093A62A /* LeaderboardViewController.swift */; };
 		EE8EE4A81B228EF30093A62A /* MoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8EE4A71B228EF30093A62A /* MoreViewController.swift */; };
-		EE8EE4B01B23AEEF0093A62A /* crown.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4AF1B23AEEF0093A62A /* crown.png */; };
-		EE8EE4B41B23B14C0093A62A /* bulb.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4B11B23B14C0093A62A /* bulb.png */; };
-		EE8EE4B51B23B14C0093A62A /* feed.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4B21B23B14C0093A62A /* feed.png */; };
-		EE8EE4B61B23B14C0093A62A /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4B31B23B14C0093A62A /* more.png */; };
 		EEB3202A1B55D238005D1334 /* TabBarGlobal.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB320291B55D238005D1334 /* TabBarGlobal.swift */; };
 		EEC89CBD1B507A56009720CE /* StoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBC1B507A56009720CE /* StoreViewController.swift */; };
 		EEC89CC01B507BA1009720CE /* StoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */; };
-		EED08A1F1B34C22A002FAE19 /* upvoteArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = EED08A1E1B34C22A002FAE19 /* upvoteArrow.png */; };
 		EED08A211B386DC5002FAE19 /* IdeaDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A201B386DC5002FAE19 /* IdeaDetailViewController.swift */; };
 		EED08A231B39D061002FAE19 /* IdeaDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A221B39D061002FAE19 /* IdeaDetailTableViewCell.swift */; };
 		EED08A251B3B4050002FAE19 /* TimeAgo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A241B3B4050002FAE19 /* TimeAgo.swift */; };
@@ -104,8 +96,6 @@
 		EED08A421B432E01002FAE19 /* FriendsLeaderboardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A411B432E01002FAE19 /* FriendsLeaderboardTableViewController.swift */; };
 		EED08A441B432E16002FAE19 /* WorldLeaderboardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A431B432E16002FAE19 /* WorldLeaderboardTableViewController.swift */; };
 		EED8C4581B34727E008981D1 /* IdeaTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED8C4571B34727E008981D1 /* IdeaTableViewCell.swift */; };
-		EEF821201B279B7D00454579 /* checkmarkGray.png in Resources */ = {isa = PBXBuildFile; fileRef = EEF8211E1B279B7D00454579 /* checkmarkGray.png */; };
-		EEF821211B279B7D00454579 /* checkmarkRed.png in Resources */ = {isa = PBXBuildFile; fileRef = EEF8211F1B279B7D00454579 /* checkmarkRed.png */; };
 		EEFCB7121B335AC9009CB923 /* TopicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFCB7111B335AC9009CB923 /* TopicTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -204,10 +194,7 @@
 		EE8085051B191CCD00BFC07C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		EE8085071B191CF000BFC07C /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		EE8085091B19620700BFC07C /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
-		EE8085141B1D017000BFC07C /* path5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = path5.png; path = "../../../../Desktop/Idea Muscle/path5.png"; sourceTree = "<group>"; };
-		EE8085161B1D176000BFC07C /* IMG_1398.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = IMG_1398.jpg; path = ../../../../Desktop/IMG_1398.jpg; sourceTree = "<group>"; };
 		EE80851C1B1E123900BFC07C /* IdeaMuscleLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = IdeaMuscleLogo.png; path = "../../../../Desktop/Idea Muscle/IdeaMuscleLogo.png"; sourceTree = "<group>"; };
-		EE80851E1B1E14B300BFC07C /* whiteTwitterLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = whiteTwitterLogo.png; path = "../../../../Desktop/Idea Muscle/whiteTwitterLogo.png"; sourceTree = "<group>"; };
 		EE8085201B1E1AE300BFC07C /* SharedCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedCode.swift; sourceTree = "<group>"; };
 		EE8085221B1E2BD800BFC07C /* ideaShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ideaShare.png; path = "../../../../Desktop/Idea Muscle/ideaShare.png"; sourceTree = "<group>"; };
 		EE8085241B1E2E4A00BFC07C /* ideaCompose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ideaCompose.png; path = "../../../../Desktop/Idea Muscle/ideaCompose.png"; sourceTree = "<group>"; };
@@ -218,15 +205,10 @@
 		EE8EE4A31B228E260093A62A /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		EE8EE4A51B228EAC0093A62A /* LeaderboardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaderboardViewController.swift; sourceTree = "<group>"; };
 		EE8EE4A71B228EF30093A62A /* MoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreViewController.swift; sourceTree = "<group>"; };
-		EE8EE4AF1B23AEEF0093A62A /* crown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = crown.png; path = "../../../../Desktop/Idea Muscle/crown.png"; sourceTree = "<group>"; };
-		EE8EE4B11B23B14C0093A62A /* bulb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bulb.png; path = "../../../../Desktop/Idea Muscle/bulb.png"; sourceTree = "<group>"; };
-		EE8EE4B21B23B14C0093A62A /* feed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = feed.png; path = "../../../../Desktop/Idea Muscle/feed.png"; sourceTree = "<group>"; };
-		EE8EE4B31B23B14C0093A62A /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = more.png; path = "../../../../Desktop/Idea Muscle/more.png"; sourceTree = "<group>"; };
 		EEB320291B55D238005D1334 /* TabBarGlobal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarGlobal.swift; sourceTree = "<group>"; };
 		EEC89CBB1B50390C009720CE /* IdeaMuscle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = IdeaMuscle.entitlements; sourceTree = "<group>"; };
 		EEC89CBC1B507A56009720CE /* StoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreViewController.swift; sourceTree = "<group>"; };
 		EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreTableViewCell.swift; sourceTree = "<group>"; };
-		EED08A1E1B34C22A002FAE19 /* upvoteArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = upvoteArrow.png; path = "../../../../Desktop/Idea Muscle/upvoteArrow.png"; sourceTree = "<group>"; };
 		EED08A201B386DC5002FAE19 /* IdeaDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaDetailViewController.swift; sourceTree = "<group>"; };
 		EED08A221B39D061002FAE19 /* IdeaDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaDetailTableViewCell.swift; sourceTree = "<group>"; };
 		EED08A241B3B4050002FAE19 /* TimeAgo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeAgo.swift; sourceTree = "<group>"; };
@@ -244,8 +226,6 @@
 		EED08A411B432E01002FAE19 /* FriendsLeaderboardTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendsLeaderboardTableViewController.swift; sourceTree = "<group>"; };
 		EED08A431B432E16002FAE19 /* WorldLeaderboardTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorldLeaderboardTableViewController.swift; sourceTree = "<group>"; };
 		EED8C4571B34727E008981D1 /* IdeaTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaTableViewCell.swift; sourceTree = "<group>"; };
-		EEF8211E1B279B7D00454579 /* checkmarkGray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = checkmarkGray.png; path = "../../../../Desktop/Idea Muscle/checkmarkGray.png"; sourceTree = "<group>"; };
-		EEF8211F1B279B7D00454579 /* checkmarkRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = checkmarkRed.png; path = "../../../../Desktop/Idea Muscle/checkmarkRed.png"; sourceTree = "<group>"; };
 		EEFCB7111B335AC9009CB923 /* TopicTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -440,21 +420,11 @@
 			isa = PBXGroup;
 			children = (
 				EED08A2E1B3DCDA7002FAE19 /* IdeaMuscleLogoWhiteBackground.png */,
-				EED08A1E1B34C22A002FAE19 /* upvoteArrow.png */,
-				EEF8211E1B279B7D00454579 /* checkmarkGray.png */,
-				EEF8211F1B279B7D00454579 /* checkmarkRed.png */,
-				EE8EE4B11B23B14C0093A62A /* bulb.png */,
-				EE8EE4B21B23B14C0093A62A /* feed.png */,
-				EE8EE4B31B23B14C0093A62A /* more.png */,
-				EE8EE4AF1B23AEEF0093A62A /* crown.png */,
 				EE8EE49B1B224DFC0093A62A /* smallLogo.png */,
 				EE8EE4991B1E5D270093A62A /* ComposeWhite.png */,
 				EE8085241B1E2E4A00BFC07C /* ideaCompose.png */,
 				EE8085221B1E2BD800BFC07C /* ideaShare.png */,
-				EE80851E1B1E14B300BFC07C /* whiteTwitterLogo.png */,
 				EE80851C1B1E123900BFC07C /* IdeaMuscleLogo.png */,
-				EE8085161B1D176000BFC07C /* IMG_1398.jpg */,
-				EE8085141B1D017000BFC07C /* path5.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -613,22 +583,12 @@
 			files = (
 				81BA81501A49DA1800E65899 /* Main.storyboard in Resources */,
 				EE8085231B1E2BD800BFC07C /* ideaShare.png in Resources */,
-				EEF821201B279B7D00454579 /* checkmarkGray.png in Resources */,
 				EE80851D1B1E123900BFC07C /* IdeaMuscleLogo.png in Resources */,
 				EE8085251B1E2E4A00BFC07C /* ideaCompose.png in Resources */,
 				81BA81521A49DA1800E65899 /* Images.xcassets in Resources */,
 				EED08A2F1B3DCDA7002FAE19 /* IdeaMuscleLogoWhiteBackground.png in Resources */,
-				EE8085151B1D017000BFC07C /* path5.png in Resources */,
-				EEF821211B279B7D00454579 /* checkmarkRed.png in Resources */,
-				EED08A1F1B34C22A002FAE19 /* upvoteArrow.png in Resources */,
 				EE8EE49C1B224DFC0093A62A /* smallLogo.png in Resources */,
-				EE80851F1B1E14B300BFC07C /* whiteTwitterLogo.png in Resources */,
-				EE8EE4B41B23B14C0093A62A /* bulb.png in Resources */,
 				EE8EE49A1B1E5D270093A62A /* ComposeWhite.png in Resources */,
-				EE8EE4B51B23B14C0093A62A /* feed.png in Resources */,
-				EE8EE4B01B23AEEF0093A62A /* crown.png in Resources */,
-				EE8EE4B61B23B14C0093A62A /* more.png in Resources */,
-				EE8085171B1D176000BFC07C /* IMG_1398.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

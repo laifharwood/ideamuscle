@@ -425,9 +425,8 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     
     
     func compose(sender: UIButton!){
-        let composeVC = ComposeViewController()
-        composeVC.activeComposeTopicObject = activeTopic
-        self.presentViewController(composeVC, animated: true, completion: nil)
+
+        composeFromDetail(self, activeTopic)
     }
     
     func upvote(sender: UIButton!){
