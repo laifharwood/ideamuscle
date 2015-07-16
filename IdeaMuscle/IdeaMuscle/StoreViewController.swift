@@ -28,7 +28,7 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
         let vcs = self.navigationController?.viewControllers
         if self === vcs?.first{
             let cancelButton = UIButton()
-            cancelButton.setTitle("Cancel", forState: .Normal)
+            cancelButton.setTitle("Close", forState: .Normal)
             cancelButton.setTitleColor(redColor, forState: .Normal)
             cancelButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 12)
             cancelButton.addTarget(self, action: "dismiss:", forControlEvents: .TouchUpInside)

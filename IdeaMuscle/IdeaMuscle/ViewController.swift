@@ -408,12 +408,12 @@ class ViewController: UIViewController{
 }
     
     func checkIfPro(){
-        println("checking if Pro")
+        
         if let user = PFUser.currentUser(){
-            println("there is a current user")
+            
             user.fetchInBackgroundWithBlock({ (object, error) -> Void in
                 if let isProForever = user["isProForever"] as? Bool{
-                    println("user has been fetched")
+                    
                     if isProForever == false{
                         self.checkProExpiration(user)
                     }
@@ -428,7 +428,7 @@ class ViewController: UIViewController{
     func checkProExpiration(user: PFUser){
         if let isPro = user["isPro"] as? Bool{
         if isPro == true{
-            println("proExpiration does not equal nil")
+            
             //let timeNowObject = PFObject(withoutDataWithObjectId: "yhUEKpyRSg")
             var timeNowObject = PFObject(className: "TimeNow")
             let query = PFQuery(className: "TimeNow")
@@ -440,7 +440,6 @@ class ViewController: UIViewController{
                         println("timeNowObject Saved")
                         if success{
                             timeNowObject.fetchInBackgroundWithBlock({ (object, error) -> Void in
-                                println("timenow object fetched")
                                 let timeNow = timeNowObject.updatedAt
                                 let expiration = user["proExpiration"] as! NSDate
                                 if timeNow!.isGreaterThanDate(expiration){

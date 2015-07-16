@@ -12,7 +12,7 @@ import Parse
 import Social
 import MessageUI
 
-class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate {
+class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate, UIGestureRecognizerDelegate {
     
     var activeIdea = PFObject(className: "Idea")
     var activeTopic = PFObject(className: "Topic")
@@ -27,6 +27,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     var characterCountLabel = UILabel()
     var ideaOwner = PFUser()
     var shareContainer = UIView()
+    let gestureRecTextField = UITapGestureRecognizer()
     
     func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
         dismissViewControllerAnimated(true, completion: nil)
@@ -156,6 +157,18 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         commentTextField.rightView = paddingView
         commentTextField.rightViewMode = UITextFieldViewMode.Always
         //commentTextField.returnKeyType = UIReturnKeyType.Done
+        if let user = PFUser.currentUser(){
+            if let isPro = user["isPro"] as? Bool{
+                if isPro == false{
+                    
+                    gestureRecTextField.addTarget(self, action: "upgradeAlert:")
+                    gestureRecTextField.delegate = self
+                    commentTextField.addGestureRecognizer(gestureRecTextField)
+                }
+            }
+        }
+        
+        
         commentTextFieldContainter.addSubview(commentTextField)
         
         //MARK: - Post comment button
@@ -212,6 +225,49 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         
         
         // Do any additional setup after loading the view.
+    }
+    
+    func upgradeAlert(sender: UITextField){
+        upgradeAlert()
+    }
+    
+    func upgradeAlert(){
+        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "You must upgrade to Pro to comment on ideas.", preferredStyle: .Alert)
+        //Create and add the Cancel action
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+        }
+        upgradeAlert.addAction(cancelAction)
+        
+        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
+            let storeVC = StoreViewController()
+            let navVC = UINavigationController(rootViewController: storeVC)
+            self.presentViewController(navVC, animated: true, completion: nil)
+            
+        })
+        
+        upgradeAlert.addAction(goToStore)
+        self.presentViewController(upgradeAlert, animated: true, completion: nil)
+    }
+    
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        if let user = PFUser.currentUser(){
+            if let isPro = user["isPro"] as? Bool{
+                if isPro == false{
+                    return false
+                }else{
+                    return true
+                }
+            }else{
+                return false
+            }
+        }else{
+            return false
+        }
+    }
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        
+        return true
     }
     
     func shareTwitter(sender: UIButton!){
@@ -400,6 +456,14 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         self.tabBarController!.tabBar.hidden = true
         }
         
+        if let user = PFUser.currentUser(){
+            if let isPro = user["isPro"] as? Bool{
+                if isPro == true{
+                    gestureRecTextField.enabled = false
+                }
+            }
+        }
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         
     }
@@ -411,7 +475,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.CGRectValue(){
         
-            println("will Show Height" + "\n\(keyboardSize.height)")
+            
             commentTextFieldContainter.frame = CGRectMake(0, keyboardSize.minY - 40, self.view.frame.width, 40)
         }
     }

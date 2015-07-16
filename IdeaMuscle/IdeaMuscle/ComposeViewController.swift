@@ -505,7 +505,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     }
     
     func upgradeAlert(){
-        let upgradeAlert: UIAlertController = UIAlertController(title: "You must upgrade to do that.", message: "As a free user you are only allowed 1 public idea per group of 10. Upgrade to Pro to post unlimited public ideas.", preferredStyle: .Alert)
+        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "As a free user you are only allowed 1 public idea per group of 10. Upgrade to Pro to post unlimited public ideas.", preferredStyle: .Alert)
         //Create and add the Cancel action
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
         }

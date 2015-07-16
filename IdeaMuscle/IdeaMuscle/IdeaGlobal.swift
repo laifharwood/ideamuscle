@@ -261,7 +261,7 @@ func notProCheckIfCanPostFromDetail(user: PFUser, sender: AnyObject!, activeTopi
                                     }
                                 }else{
                                     //Prompt For Upgrade
-                                    let upgradeAlert: UIAlertController = UIAlertController(title: "You must upgrade to do that.", message: "As a free user you are limited to composing once every two days. Upgrade to Pro to compose unlimited ideas and topics.", preferredStyle: .Alert)
+                                    let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "As a free user you are limited to composing once every two days. Upgrade to Pro to compose unlimited ideas and topics.", preferredStyle: .Alert)
                                     //Create and add the Cancel action
                                     let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
                                     }
