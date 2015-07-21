@@ -139,48 +139,47 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
     }
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-
+        
         if text == "\n"{
             textView.resignFirstResponder()
             return false
         }else if text == "" {
             if characterCount > 0{
-                
             --characterCount
             characterCountLabel.text = "\(characterCount)" + "/118"
             if characterCount == 0{
-                submitButton.enabled = false
-                submitButton.alpha = 0.2
+                changeSubmitButton(submitButton, enabled: false)
             }
             return true
             }else{
-
                 return false
             }
-            
-            
-        }else if characterCount == 118{
+        }else if characterCount + count(text) > 118{
             return false
         }else if text == " "{
             if characterCount > 0{
-                
-                ++characterCount
+                characterCount = characterCount + count(text)
                 characterCountLabel.text = "\(characterCount)" + "/118"
-                submitButton.enabled = true
-                submitButton.alpha = 1
+                changeSubmitButton(submitButton, enabled: true)
                 return true
             }else{
                 return false
             }
-            
-            
-            
         }else{
-            ++characterCount
+            characterCount = characterCount + count(text)
             characterCountLabel.text = "\(characterCount)" + "/118"
-            submitButton.enabled = true
-            submitButton.alpha = 1
+            changeSubmitButton(submitButton, enabled: true)
             return true
+        }
+    }
+    
+    func changeSubmitButton(sender: UIButton, enabled: Bool){
+        if enabled == true{
+            sender.enabled = true
+            sender.alpha = 1
+        }else if enabled == false{
+            sender.enabled = false
+            sender.alpha = 0.2
         }
     }
     
@@ -224,14 +223,10 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
             
             newTopic.saveInBackgroundWithBlock { (success, error) -> Void in
                 if success{
-                    
-                    println("Topic Saved Publically Successfully")
-                    //activeComposeTopicObject = newTopic
-                    
-                    
+                
                 }else{
                     
-                    println("error Public Save")
+                    println("\(error?.userInfo)")
                 }
             }
             

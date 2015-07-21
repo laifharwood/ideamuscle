@@ -9,6 +9,7 @@ import UIKit
 import Bolts
 import Parse
 import FBSDKCoreKit
+import ParseCrashReporting
 
 // If you want to use any of the UI components, uncomment this line
 // import ParseUI
@@ -27,10 +28,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //--------------------------------------
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
-//        if PFUser.currentUser() != nil{
-//            //PFUser.currentUser()?.fetch()
-//        }
         
         Hoko.setupWithToken("e0348143635d4116ba4b3e31d6d47088376aefab")
         
@@ -83,7 +80,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // ****************************************************************************
         // Uncomment this line if you want to enable Crash Reporting
-        // ParseCrashReporting.enable()
+        ParseCrashReporting.enable()
         //
         // Uncomment and fill in with your Parse credentials:
         Parse.setApplicationId("XfETALgT99bADjGNWoe4rPeRhDGhAbqAi5yzGsbQ",

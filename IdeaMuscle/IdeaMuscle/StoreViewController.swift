@@ -18,11 +18,27 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
     var productsArray = Array<SKProduct>()
     //var productsArray = [SKProduct?](count: 4, repeatedValue: nil)
     var restorePurchaseButton = UIButton()
+    var descriptionTable = UITableView()
+    var activityIndicator = UIActivityIndicatorView()
+    var isPurchasing = false
+    
+    override func viewDidLayoutSubviews() {
+        descriptionTable.flashScrollIndicators()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.whiteColor()
         self.title = "IdeaMuscle Pro Store"
+        
+        startActivityIndicator()
+        requestProductData()
+        SKPaymentQueue.defaultQueue().addTransactionObserver(self)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationWillResignActive", name: UIApplicationWillResignActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
+        
+        
         
         
         let vcs = self.navigationController?.viewControllers
@@ -37,7 +53,6 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
             self.navigationItem.leftBarButtonItem = cancelBarItem
         }
         
-        
         //MARK: - Table View Setup
         tableView.dataSource = self
         tableView.delegate = self
@@ -46,7 +61,17 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
         tableView.scrollEnabled = false
         self.view.addSubview(tableView)
         
-        //MARK: - Pro Description Label
+        //MARK: - Title Label
+        let titleLabel = UILabel()
+        titleLabel.frame = CGRectMake(5, tableView.frame.maxY + 5, self.view.frame.width - 10, 30)
+        titleLabel.text = "Here's what you get with IdeaMuscle Pro"
+        titleLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
+        titleLabel.textAlignment = NSTextAlignment.Center
+        self.view.addSubview(titleLabel)
+        
+
+        
+        //MARK: - Restore Purchase Button
 
         restorePurchaseButton.frame = CGRectMake(5, self.view.frame.maxY - 45, self.view.frame.width - 10, 40)
         restorePurchaseButton.setTitle("Restore Purchases", forState: .Normal)
@@ -67,17 +92,33 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
         self.view.addSubview(restorePurchaseButton)
         
-        let labelHeight = self.view.frame.height - tableView.frame.height - restorePurchaseButton.frame.height - 20
-        let proDescriptionLabel = UITextView(frame: CGRectMake(5, restorePurchaseButton.frame.minY - labelHeight - 5, self.view.frame.width - 10, labelHeight))
-        proDescriptionLabel.text = "Build your idea muscle and your following with IdeaMuscle Pro! Here's what you get with Pro: \n \n -Ability to post unlimited ideas and topics. \n \n -Post unlimited public ideas. \n \n -Access to leaderboard to see your world rank and rank among friends.\n \n -Access to all the top idea/topic time period filters. \n \n -Ability to comment on ideas. \n \n -Ability to save drafts. \n \n -View other user's world rank."
-        proDescriptionLabel.font = UIFont(name: "Avenir-Heavy", size: 13)
-        proDescriptionLabel.layer.borderWidth = 1
-        proDescriptionLabel.layer.borderColor = twoHundredGrayColor.CGColor
-        proDescriptionLabel.layer.cornerRadius = 3
-        self.view.addSubview(proDescriptionLabel)
+        //MARK: - Description Table
         
-        requestProductData()
-        SKPaymentQueue.defaultQueue().addTransactionObserver(self)
+        descriptionTable.dataSource = self
+        descriptionTable.delegate = self
+        //descriptionTable.registerClass(StoreTableViewCell.self, forCellReuseIdentifier: "Cell")
+        let labelHeight = self.view.frame.height - tableView.frame.height - restorePurchaseButton.frame.height - titleLabel.frame.height - 30
+        descriptionTable.frame = CGRectMake(3, titleLabel.frame.maxY + 3, self.view.frame.width - 6, labelHeight)
+        //descriptionTable.separatorStyle = UITableViewCellSeparatorStyle.None
+        descriptionTable.rowHeight = 75
+        descriptionTable.layer.borderWidth = 1
+        descriptionTable.layer.borderColor = oneFiftyGrayColor.CGColor
+        descriptionTable.layer.cornerRadius = 3
+        
+        self.view.addSubview(descriptionTable)
+        
+    }
+    
+    func applicationDidBecomeActive()
+    {
+        if isPurchasing{
+            startActivityIndicator()
+        }
+    }
+    
+    func applicationWillResignActive()
+    {
+        stopActivityIndicator()
     }
     
     func dismiss(sender: UIButton){
@@ -88,9 +129,11 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
         if self.tabBarController != nil{
             self.tabBarController!.tabBar.hidden = true
         }
+        
     }
     
     func paymentQueue(queue: SKPaymentQueue!, updatedTransactions transactions: [AnyObject]!) {
+        isPurchasing = false
         
         for transaction in transactions as! [SKPaymentTransaction] {
             
@@ -103,13 +146,28 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
                 SKPaymentQueue.defaultQueue().finishTransaction(transaction)
                 
             case SKPaymentTransactionState.Failed:
+                
                 println("Transaction Failed")
+                let purchaseFailedAlert: UIAlertController = UIAlertController(title: "Purchase Failed", message: "Purchase failed or was canceled.", preferredStyle: .Alert)
+                isPurchasing = false
+                purchaseFailedAlert.view.tintColor = redColor
+                purchaseFailedAlert.view.backgroundColor = oneFiftyGrayColor
+                //Create and add the Cancel action
+                let cancelAction: UIAlertAction = UIAlertAction(title: "Okay", style: .Cancel) { action -> Void in
+                }
+                purchaseFailedAlert.addAction(cancelAction)
+                
+                self.presentViewController(purchaseFailedAlert, animated: true, completion: nil)
+                
                 SKPaymentQueue.defaultQueue().finishTransaction(transaction)
             default:
                 break
             }
         }
+        isPurchasing = false
     }
+    
+    
     
     func deliverProduct(transaction: SKPaymentTransaction){
         if transaction.payment.productIdentifier == "Pro_One_Month"{
@@ -150,6 +208,7 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func productsRequest(request: SKProductsRequest!, didReceiveResponse response: SKProductsResponse!) {
+        stopActivityIndicator()
         var products = response.products
         var unsortedArray = Array<SKProduct>()
         if products.count != 0 {
@@ -167,7 +226,7 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
                 
             })
             
-            self.tableView.reloadData()
+            //self.tableView.reloadData()
         } else {
             println("No products found")
         }
@@ -189,6 +248,8 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
             request.start()
         } else {
             var alert = UIAlertController(title: "In-App Purchases Not Enabled", message: "Please enable In App Purchase in Settings", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.view.tintColor = redColor
+            alert.view.backgroundColor = oneFiftyGrayColor
             alert.addAction(UIAlertAction(title: "Settings", style: UIAlertActionStyle.Default, handler: { alertAction in
                 alert.dismissViewControllerAnimated(true, completion: nil)
                 
@@ -197,7 +258,6 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
                 {
                     UIApplication.sharedApplication().openURL(url!)
                 }
-                
             }))
             alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: { alertAction in
                 alert.dismissViewControllerAnimated(true, completion: nil)
@@ -215,6 +275,7 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
     func paymentQueue(queue: SKPaymentQueue!, restoreCompletedTransactionsFailedWithError error: NSError!) {
         println("restore Failed")
         println(error.userInfo)
+        isPurchasing = false
     }
     
     func paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue!) {
@@ -241,8 +302,15 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
                 }
     }
     
+    func paymentQueue(queue: SKPaymentQueue!, removedTransactions transactions: [AnyObject]!) {
+        isPurchasing = false
+        stopActivityIndicator()
+    }
+    
     func notLoggedIntoRightAccount(){
         let notLoggedInToRightAccount: UIAlertController = UIAlertController(title: "You are logged into a different account", message: "Please login to the account you made the purchase with to restore the purchase.", preferredStyle: .Alert)
+        notLoggedInToRightAccount.view.tintColor = redColor
+        notLoggedInToRightAccount.view.backgroundColor = oneFiftyGrayColor
         //Create and add the Cancel action
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
         }
@@ -260,32 +328,61 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! StoreTableViewCell
-        cell.selectionStyle = UITableViewCellSelectionStyle.None
         
-        if productsArray[indexPath.row].price != nil{
-            let numberFormatter = NSNumberFormatter()
-            numberFormatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
+        var cell = StoreTableViewCell()
+        var cellTitle = StoreTableViewCell()
+        var cellUnlimited = StoreTableViewCell()
+        var cellCrownStore = StoreTableViewCell()
+        var cellFilter = StoreTableViewCell()
+        var cellComment = StoreTableViewCell()
+        var cellDocument = StoreTableViewCell()
+        
+        if tableView == self.tableView{
             
-            let price = numberFormatter.stringFromNumber(productsArray[indexPath.row].price)
-            let currencySymbol = numberFormatter.currencySymbol
+            cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! StoreTableViewCell
+            cell = StoreTableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "Cell")
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
             
-            if productsArray[indexPath.row].productIdentifier == "Pro_Lifetime"{
-                cell.textLabel!.text = "Lifetime" 
-            }else if productsArray[indexPath.row].productIdentifier == "Pro_One_Month"{
-                cell.textLabel!.text = "One Month"
-            }else if productsArray[indexPath.row].productIdentifier == "Pro_One_Year"{
-                cell.textLabel!.text = "One Year"
-            }else if productsArray[indexPath.row].productIdentifier == "Pro_Three_Month"{
-                cell.textLabel!.text = "Three Months"
-            }
-            
-            cell.textLabel!.font = UIFont(name: "HelveticaNeue", size: 14)
-            
-            
-            if let user = PFUser.currentUser(){
-            if let isProForever = user["isProForever"] as? Bool{
-                if isProForever == false{
+        
+            if productsArray[indexPath.row].price != nil{
+                let numberFormatter = NSNumberFormatter()
+                numberFormatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
+                
+                let price = numberFormatter.stringFromNumber(productsArray[indexPath.row].price)
+                let currencySymbol = numberFormatter.currencySymbol
+                
+                if productsArray[indexPath.row].productIdentifier == "Pro_Lifetime"{
+                    cell.textLabel!.text = "Pro Lifetime"
+                }else if productsArray[indexPath.row].productIdentifier == "Pro_One_Month"{
+                    cell.textLabel!.text = "Pro One Month"
+                    cell.detailTextLabel!.text = "(Does not auto-renew)"
+                }else if productsArray[indexPath.row].productIdentifier == "Pro_One_Year"{
+                    cell.textLabel!.text = "Pro One Year"
+                    cell.detailTextLabel!.text = "(Does not auto-renew)"
+                }else if productsArray[indexPath.row].productIdentifier == "Pro_Three_Month"{
+                    cell.textLabel!.text = "Pro Three Months"
+                    cell.detailTextLabel!.text = "(Does not auto-renew)"
+                }
+                
+                cell.textLabel!.font = UIFont(name: "HelveticaNeue", size: 14)
+                
+                if let user = PFUser.currentUser(){
+                if let isProForever = user["isProForever"] as? Bool{
+                    if isProForever == false{
+                        cell.buyButton.backgroundColor = redColor
+                        cell.buyButton.setTitle("Buy", forState: .Normal)
+                        cell.buyButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+                        cell.buyButton.setTitleColor(fiftyGrayColor, forState: .Highlighted)
+                        cell.buyButton.frame = CGRectMake(cell.frame.maxX - 65, 5, 60, cell.frame.height - 10)
+                        cell.buyButton.addTarget(self, action: "buy:", forControlEvents: .TouchUpInside)
+                        cell.buyButton.tag = indexPath.row
+                    }else{
+                        cell.buyButton.backgroundColor = twoHundredGrayColor
+                        cell.buyButton.enabled = false
+                        cell.buyButton.setTitle("Already Pro", forState: .Normal)
+                        cell.buyButton.frame = CGRectMake(cell.frame.maxX - 125, 5, 120, cell.frame.height - 10)
+                    }
+                }else{
                     cell.buyButton.backgroundColor = redColor
                     cell.buyButton.setTitle("Buy", forState: .Normal)
                     cell.buyButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
@@ -293,38 +390,88 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
                     cell.buyButton.frame = CGRectMake(cell.frame.maxX - 65, 5, 60, cell.frame.height - 10)
                     cell.buyButton.addTarget(self, action: "buy:", forControlEvents: .TouchUpInside)
                     cell.buyButton.tag = indexPath.row
-                }else{
-                    cell.buyButton.backgroundColor = twoHundredGrayColor
-                    cell.buyButton.enabled = false
-                    cell.buyButton.setTitle("Already Pro", forState: .Normal)
-                    cell.buyButton.frame = CGRectMake(cell.frame.maxX - 125, 5, 120, cell.frame.height - 10)
                 }
+                }
+                
+                
+                
+                cell.priceLabel.frame = CGRectMake(cell.buyButton.frame.minX - 60, cell.frame.height/2 - 15, 60, 30)
+                cell.priceLabel.text = currencySymbol! + price!
+                cell.priceLabel.font = UIFont(name: "HelveticaNeue", size: 14)
+                
+            }
+            
+            return cell
+            
+        }else if tableView == self.descriptionTable{
+            
+            if indexPath.row == 0{
+                cellUnlimited.iconImage.frame = CGRectMake(5, 27.5, 45, 20)
+                cellUnlimited.iconImage.image = UIImage(named: "unlimited")
+                cellUnlimited.selectionStyle = UITableViewCellSelectionStyle.None
+                cellUnlimited.featureDescriptionLabel.frame = CGRectMake(55, 5, cellUnlimited.frame.width - 65, 75)
+                cellUnlimited.featureDescriptionLabel.text = "Compose unlimited public or private ideas & topics."
+                cellUnlimited.featureDescriptionLabel.font = UIFont(name: "Avenir", size: 13)
+                cellUnlimited.featureDescriptionLabel.numberOfLines = 0
+                return cellUnlimited
+            }
+            else if indexPath.row == 1{
+                cellCrownStore.iconImage.frame = CGRectMake(5, 15.75, 45, 43.5)
+                cellCrownStore.iconImage.image = UIImage(named: "crownStore")
+                cellCrownStore.selectionStyle = UITableViewCellSelectionStyle.None
+                cellCrownStore.featureDescriptionLabel.frame = CGRectMake(55, 5, cellUnlimited.frame.width - 65, 75)
+                cellCrownStore.featureDescriptionLabel.text = "Access to the leaderboard where you can view your world rank, your friend ranking, and other user's rankings."
+                cellCrownStore.featureDescriptionLabel.font = UIFont(name: "Avenir", size: 13)
+                cellCrownStore.featureDescriptionLabel.numberOfLines = 0
+                return cellCrownStore
+            }
+            else if indexPath.row == 2{
+                cellFilter.iconImage.frame = CGRectMake(5, 12.75, 45, 49.5)
+                cellFilter.iconImage.image = UIImage(named: "filter")
+                cellFilter.selectionStyle = UITableViewCellSelectionStyle.None
+                cellFilter.featureDescriptionLabel.frame = CGRectMake(55, 5, cellUnlimited.frame.width - 65, 75)
+                cellFilter.featureDescriptionLabel.text = "Ability to use the different time period filters for top ideas and topics."
+                cellFilter.featureDescriptionLabel.font = UIFont(name: "Avenir", size: 13)
+                cellFilter.featureDescriptionLabel.numberOfLines = 0
+                return cellFilter
+            }
+            else if indexPath.row == 3{
+                cellComment.iconImage.frame = CGRectMake(5, 16.75, 45, 41.5)
+                cellComment.iconImage.image = UIImage(named: "comment")
+                cell.selectionStyle = UITableViewCellSelectionStyle.None
+                cellComment.featureDescriptionLabel.frame = CGRectMake(55, 5, cellUnlimited.frame.width - 65, 75)
+                cellComment.featureDescriptionLabel.text = "You can join the conversation and comment on ideas."
+                cellComment.featureDescriptionLabel.font = UIFont(name: "Avenir", size: 13)
+                cellComment.featureDescriptionLabel.numberOfLines = 0
+                return cellComment
+            }
+            else if indexPath.row == 4{
+                cellDocument.iconImage.frame = CGRectMake(5, 9, 45, 57)
+                cellDocument.iconImage.image = UIImage(named: "document")
+                cellDocument.selectionStyle = UITableViewCellSelectionStyle.None
+                cellDocument.featureDescriptionLabel.frame = CGRectMake(55, 5, cellUnlimited.frame.width - 65, 75)
+                cellDocument.featureDescriptionLabel.text = "Save drafts so you don't lose unsaved ideas."
+                cellDocument.featureDescriptionLabel.font = UIFont(name: "Avenir", size: 13)
+                cellDocument.featureDescriptionLabel.numberOfLines = 0
+                return cellDocument
             }else{
-                cell.buyButton.backgroundColor = redColor
-                cell.buyButton.setTitle("Buy", forState: .Normal)
-                cell.buyButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-                cell.buyButton.setTitleColor(fiftyGrayColor, forState: .Highlighted)
-                cell.buyButton.frame = CGRectMake(cell.frame.maxX - 65, 5, 60, cell.frame.height - 10)
-                cell.buyButton.addTarget(self, action: "buy:", forControlEvents: .TouchUpInside)
-                cell.buyButton.tag = indexPath.row
-            }
+                return cell
             }
             
-            
-            
-            cell.priceLabel.frame = CGRectMake(cell.buyButton.frame.minX - 60, cell.frame.height/2 - 15, 60, 30)
-            cell.priceLabel.text = currencySymbol! + price!
-            cell.priceLabel.font = UIFont(name: "HelveticaNeue", size: 14)
-            
+        }else{
+            return cell
         }
-        
-        
-        return cell
         
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return productsArray.count
+        if tableView == self.tableView{
+            return productsArray.count
+        }else if tableView == self.descriptionTable{
+            return 5
+        }else{
+            return 0
+        }
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -369,14 +516,31 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
         if PFUser.currentUser() != nil{
             let payment = SKPayment(product: productsArray[sender.tag])
             SKPaymentQueue.defaultQueue().addPayment(payment)
+            isPurchasing = true
         }else{
             println("You Must Login To Buy")
         }
     }
     
+
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
+    }
+    
+    func startActivityIndicator(){
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.frame = CGRectMake(self.view.frame.width/2 - 25, tableView.frame.minY - 15, 50, 50)
+        tableView.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+    }
+    
+    func stopActivityIndicator(){
+        
+        activityIndicator.stopAnimating()
+        tableView.reloadData()
     }
     
 

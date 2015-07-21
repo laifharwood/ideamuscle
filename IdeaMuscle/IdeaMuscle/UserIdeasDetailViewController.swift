@@ -1,8 +1,8 @@
 //
-//  TopicsDetailViewController.swift
+//  UserIdeasDetailViewController.swift
 //  IdeaMuscle
 //
-//  Created by Laif Harwood on 6/5/15.
+//  Created by Laif Harwood on 7/20/15.
 //  Copyright (c) 2015 Parse. All rights reserved.
 //
 
@@ -11,7 +11,7 @@ import Parse
 import MessageUI
 import Social
 
-class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMailComposeViewControllerDelegate {
+class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMailComposeViewControllerDelegate {
     
     var tableView: UITableView = UITableView()
     var activeTopic = PFObject(className: "Topic")
@@ -19,13 +19,13 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
     var hasUpvoted = [Bool](count: 100, repeatedValue: false)
     var shouldReloadTable = false
     var activityIndicator = UIActivityIndicatorView()
-    let activityIndicatorContainer = UIView()
     var shareContainer = UIView()
+    var topicLabelView = UIView()
     
     func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
         dismissViewControllerAnimated(true, completion: nil)
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         startActivityIndicator()
@@ -35,7 +35,6 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         
         //MARK: - Topic Label
         var topicLabel = UILabel()
-        var topicLabelView = UIView()
         topicLabelView.frame = CGRectMake(0, 69, self.view.frame.width, 70)
         topicLabelView.backgroundColor = UIColor.whiteColor()
         self.view.addSubview(topicLabelView)
@@ -51,7 +50,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
             //let height = topicLabel.frame.height
             //topicLabel.frame = CGRectMake(0, 69, self.view.frame.width, height + 5)
         }
-
+        
         topicLabelView.addSubview(topicLabel)
         
         // MARK: - Table View Configuration
@@ -191,7 +190,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
         println("share Cancel")
     }
-
+    
     
     override func viewWillAppear(animated: Bool) {
         self.tabBarController!.tabBar.hidden = true
@@ -207,102 +206,79 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func ideaQuery(){
-        
-        let query = PFQuery(className: "Idea")
-        query.whereKey("topicPointer", equalTo: activeTopic)
-        query.whereKey("isPublic", equalTo: true)
-        query.includeKey("owner")
-        query.includeKey("usersWhoUpvoted")
-        query.orderByAscending("createdAt")
-        query.orderByDescending("numberOfUpvotes")
-        query.limit = 100
-        query.findObjectsInBackgroundWithTarget(self, selector: "ideaSelector:error:")
-        
+        if let user = PFUser.currentUser(){
+            let query = PFQuery(className: "Idea")
+            query.whereKey("topicPointer", equalTo: activeTopic)
+            query.whereKey("owner", equalTo: user)
+            query.includeKey("owner")
+            query.includeKey("usersWhoUpvoted")
+            query.orderByAscending("createdAt")
+            query.orderByDescending("numberOfUpvotes")
+            query.limit = 1000
+            query.findObjectsInBackgroundWithTarget(self, selector: "ideaSelector:error:")
+        }
     }
     
     func ideaSelector(objects: [AnyObject]!, error: NSError!){
         if error == nil{
             ideaObjects = objects as! [PFObject]
+            stopActivityIndicator()
         }else{
             println("Error: \(error.userInfo)")
         }
-        stopActivityIndicator()
+        
+        
     }
-
-
+    
+    
     // MARK: - Table view data source
-
+    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
         // Return the number of sections.
         return 1
     }
-
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
         return ideaObjects.count
     }
-
+    
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! TopicTableViewCell
-
+        
         cell.frame = CGRectMake(0, 0, self.view.frame.width, 120)
         
         //MARK: - Number Of Upvotes Button Config
         if ideaObjects[indexPath.row]["numberOfUpvotes"] != nil{
             let idea = ideaObjects[indexPath.row]
-            hasUpvoted[indexPath.row] = getUpvotes(idea, cell.numberOfUpvotesButton, cell)
+            if let isPublic = idea["isPublic"] as? Bool{
+                if isPublic == true{
+                    hasUpvoted[indexPath.row] = getUpvotes(idea, cell.numberOfUpvotesButton, cell)
+                }else if isPublic == false{
+                    ideaIsNotPublic(cell)
+                }
+            }else{
+                ideaIsNotPublic(cell)
+            }
+            cell.numberOfUpvotesButton.addTarget(self, action: "upvote:", forControlEvents: .TouchUpInside)
         }
-        cell.numberOfUpvotesButton.addTarget(self, action: "upvote:", forControlEvents: .TouchUpInside)
+        
         cell.numberOfUpvotesButton.tag = indexPath.row
         
         //MARK: - Idea Label Config
         cell.ideaTitleLabel.numberOfLines = 0
-        cell.ideaTitleLabel.frame = CGRectMake(25, 5, cell.frame.width - cell.numberOfUpvotesButton.frame.width - 40, 70)
+        cell.ideaTitleLabel.frame = CGRectMake(25, 5, cell.frame.width - cell.numberOfUpvotesButton.frame.width - 40, cell.frame.height - 10)
         cell.ideaTitleLabel.font = UIFont(name: "Avenir-Light", size: 12)
         cell.ideaTitleLabel.textColor = oneFiftyGrayColor
         if ideaObjects[indexPath.row]["content"] != nil{
             cell.ideaTitleLabel.text = (ideaObjects[indexPath.row]["content"] as! String)
         }
         
-        //MARK: - Profile Button
-        var pfUser = PFUser()
-        if ideaObjects[indexPath.row]["owner"] != nil{
-            pfUser = ideaObjects[indexPath.row]["owner"] as! PFUser
-            if PFUser.currentUser() == pfUser{
-                cell.profileButton.layer.borderColor = redColor.CGColor
-                cell.profileButton.layer.borderWidth = 2
-            }else{
-                cell.profileButton.layer.borderColor = UIColor.whiteColor().CGColor
-                cell.profileButton.layer.borderWidth = 0
-            }
-            
-            getAvatar(pfUser, nil, cell.profileButton)
-            
-        }
-        
-        cell.profileButton.tag = indexPath.row
-        let gestureRec = UITapGestureRecognizer(target: self, action: "profileTapped:")
-        cell.profileButton.addGestureRecognizer(gestureRec)
-        cell.profileButton.userInteractionEnabled = true
-        cell.profileButton.frame = CGRectMake(10, 75, 40, 40)
-        cell.profileButton.layer.cornerRadius = 20
-        cell.profileButton.layer.masksToBounds = true
-        
-        //MARK: - Username Label Config
-        var usernameLabelWidth = CGFloat()
-        usernameLabelWidth = 190
-        cell.usernameLabel.frame = CGRectMake(cell.profileButton.frame.maxX + 2, cell.profileButton.frame.maxY - cell.profileButton.frame.height/2, usernameLabelWidth, 20)
-        cell.usernameLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 12)
-        cell.usernameLabel.textColor = twoHundredGrayColor
-        if ideaObjects[indexPath.row]["owner"] != nil{
-            let username = pfUser["username"] as! String
-            cell.usernameLabel.text = username
-        }
-        
-        cell.usernameLabel.tag = indexPath.row + 400
+
+    
         
         //MARK: - TimeStamp
         var createdAt = NSDate()
@@ -311,13 +287,43 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
             createdAt = ideaObjects[indexPath.row].createdAt!
             cell.timeStamp.text = createdAt.timeAgoSimple
         }
-        cell.timeStamp.frame = CGRectMake(cell.frame.maxX - 30, cell.usernameLabel.frame.minY, 20, 20)
+        cell.timeStamp.frame = CGRectMake(cell.frame.maxX - 30, cell.numberOfUpvotesButton.frame.maxY + 3, 20, 20)
         cell.timeStamp.font = UIFont(name: "Avenir", size: 10)
         cell.timeStamp.textColor = oneFiftyGrayColor
         cell.timeStamp.textAlignment = NSTextAlignment.Right
         
-
+        
         return cell
+    }
+    
+    func ideaIsNotPublic(cell: TopicTableViewCell){
+        cell.numberOfUpvotesButton.frame =  CGRectMake(cell.frame.maxX - (40) - 10, cell.frame.height/2 - 30, 40, 60)
+        cell.numberOfUpvotesButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 10)
+        cell.numberOfUpvotesButton.layer.cornerRadius = 3
+        cell.numberOfUpvotesButton.backgroundColor = oneFiftyGrayColor
+        cell.numberOfUpvotesButton.setTitle("Make Public", forState: .Normal)
+        cell.numberOfUpvotesButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        cell.numberOfUpvotesButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        cell.numberOfUpvotesButton.titleLabel?.textAlignment = NSTextAlignment.Center
+    }
+    
+    func makePublic(sender: UIButton){
+        if let user = PFUser.currentUser(){
+            if let isPro = user["isPro"] as? Bool{
+                if isPro{
+                    let idea = ideaObjects[sender.tag]
+                    idea.ACL?.setPublicReadAccess(true)
+                    idea.ACL?.setPublicWriteAccess(true)
+                    idea["isPublic"] = true
+                    idea.saveEventually()
+                    hasUpvoted[sender.tag] = getUpvotes(idea, sender, nil)
+                }else{
+                    upgradeAlert()
+                }
+            }else{
+                upgradeAlert()
+        }
+        }
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -343,15 +349,44 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         
         let ideaObject = ideaObjects[sender.tag]
         
-        if hasUpvoted[sender.tag] == true{
-            //Remove Upvote
-            upvoteGlobal(ideaObject, false, sender)
-            hasUpvoted[sender.tag] = false
+        if let isPublic = ideaObject["isPublic"] as? Bool{
+            if isPublic{
+                if hasUpvoted[sender.tag] == true{
+                    //Remove Upvote
+                    upvoteGlobal(ideaObject, false, sender)
+                    hasUpvoted[sender.tag] = false
+                }else{
+                    //Add Upvote
+                    upvoteGlobal(ideaObject, true, sender)
+                    hasUpvoted[sender.tag] = true
+                }
+            }else{
+               makePublic(sender)
+            }
         }else{
-            //Add Upvote
-            upvoteGlobal(ideaObject, true, sender)
-            hasUpvoted[sender.tag] = true
+            makePublic(sender)
         }
+        
+    }
+    
+    func upgradeAlert(){
+        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "You must upgrade to Pro to make ideas public after posting.", preferredStyle: .Alert)
+        upgradeAlert.view.tintColor = redColor
+        upgradeAlert.view.backgroundColor = oneFiftyGrayColor
+        //Create and add the Cancel action
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+        }
+        upgradeAlert.addAction(cancelAction)
+        
+        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
+            let storeVC = StoreViewController()
+            let navVC = UINavigationController(rootViewController: storeVC)
+            self.presentViewController(navVC, animated: true, completion: nil)
+            
+        })
+        
+        upgradeAlert.addAction(goToStore)
+        self.presentViewController(upgradeAlert, animated: true, completion: nil)
     }
     
     func startActivityIndicator(){
@@ -382,3 +417,4 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
     }
     
 }
+

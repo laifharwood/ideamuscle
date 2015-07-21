@@ -22,6 +22,11 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     var publicBoolArray = [false, false, false, false, false, false, false, false, false, false]
     var topicLabel = UILabel()
     var numberOfPublic = 0
+    var saveDraftContainer = UIView()
+    var shouldStartEditing = true
+    var draftObject = PFObject(className: "Draft")
+    var isADraft = Bool()
+    var hasAddedTopic = Bool()
     
     
     
@@ -65,7 +70,9 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         topicLabel.text = activeComposeTopicObject["title"] as? String
         }
         
-        textViewOne.becomeFirstResponder()
+        if shouldStartEditing == true{
+            textViewOne.becomeFirstResponder()
+        }
 
    }
     
@@ -85,6 +92,18 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         textViewEight.delegate = self
         textViewNine.delegate = self
         textViewTen.delegate = self
+        
+        textViewOne.text = textViewValues[0]
+        textViewTwo.text = textViewValues[1]
+        textViewThree.text = textViewValues[2]
+        textViewFour.text = textViewValues[3]
+        textViewFive.text = textViewValues[4]
+        textViewSix.text = textViewValues[5]
+        textViewSeven.text = textViewValues[6]
+        textViewEight.text = textViewValues[7]
+        textViewNine.text = textViewValues[8]
+        textViewTen.text = textViewValues[9]
+        
         
         // MARK: - Top Bar Config
         var topBar = UIView()
@@ -142,9 +161,78 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         //tableView.contentInset = UIEdgeInsetsMake(5, 0, 0, 0)
         self.view.addSubview(tableView)
         
+        //MARK: - Save Draft Popup
+        saveDraftContainer.frame = CGRectMake(0, self.view.frame.maxY, self.view.frame.width, 140)
+        saveDraftContainer.backgroundColor = UIColor.whiteColor()
+        self.view.addSubview(saveDraftContainer)
+        
+        let deleteDraftButton = UIButton(frame: CGRectMake(5, 5, self.view.frame.width - 10, 40))
+        let saveDraftButton = UIButton(frame: CGRectMake(5, deleteDraftButton.frame.maxY + 5, self.view.frame.width - 10, 40))
+        let cancelExitButton = UIButton(frame: CGRectMake(5, saveDraftButton.frame.maxY + 5, self.view.frame.width - 10, 40))
+        
+        deleteDraftButton.setTitle("Delete Draft", forState: .Normal)
+        saveDraftButton.setTitle("Save Draft", forState: .Normal)
+        cancelExitButton.setTitle("Cancel", forState: .Normal)
+        
+        deleteDraftButton.backgroundColor = oneFiftyGrayColor
+        saveDraftButton.backgroundColor = oneFiftyGrayColor
+        cancelExitButton.backgroundColor = oneFiftyGrayColor
+        
+        deleteDraftButton.setTitleColor(redColor, forState: .Normal)
+        saveDraftButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        cancelExitButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        
+        deleteDraftButton.addTarget(self, action: "deleteDraft:", forControlEvents: .TouchUpInside)
+        saveDraftButton.addTarget(self, action: "saveDraft:", forControlEvents: .TouchUpInside)
+        cancelExitButton.addTarget(self, action: "cancelExit:", forControlEvents: .TouchUpInside)
+        
+        saveDraftContainer.addSubview(deleteDraftButton)
+        saveDraftContainer.addSubview(saveDraftButton)
+        saveDraftContainer.addSubview(cancelExitButton)
+        
+        
+        
     }
     
+    func deleteDraft(sender: UIButton){
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
     
+    func saveDraft(sender: UIButton){
+        if let user = PFUser.currentUser(){
+            if let isPro = user["isPro"] as? Bool{
+                if isPro == true{
+                    //Save the draft
+                    let draftObject = PFObject(className: "Draft")
+                    draftObject["userPointer"] = user
+                    draftObject["topicPointer"] = activeComposeTopicObject
+                    draftObject["isPublicArray"] = publicBoolArray
+                    draftObject.ACL?.setPublicReadAccess(false)
+                    var ideaArray = [String]()
+                    for textView in textViewArray{
+                        ideaArray.append(textView.text)
+                    }
+                    draftObject["ideaArray"] = ideaArray
+                    draftObject.saveEventually()
+                    
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                }else{
+                    upgradeToSaveDraftAlert()
+                }
+            }else{
+                upgradeToSaveDraftAlert()
+            }
+        }
+
+    }
+    
+    func cancelExit(sender: UIButton){
+        saveDraftContainer.frame = CGRectMake(0, self.view.frame.maxY, self.view.frame.width, 140)
+    }
+    
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        self.view.endEditing(true)
+    }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
@@ -211,7 +299,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             textView.layer.masksToBounds = true
             textView.textColor = fiftyGrayColor
             textView.font = UIFont(name: "HelveticaNeue-Light", size: 10)
-            textView.returnKeyType = UIReturnKeyType.Done
+            textView.returnKeyType = UIReturnKeyType.Default
             textView.tintColor = redColor
             //textView.text = textViewValues[indexPath.row]
             
@@ -348,12 +436,12 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         })
     }
     
+
+    
     func submit(sender: UIButton!){
         
         if let user = PFUser.currentUser(){
-        
             var counter = 0
-            
             if let isPro = user["isPro"] as? Bool{
                 if isPro == false{
                     setHasPosted(user)
@@ -361,110 +449,94 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             }else{
                 setHasPosted(user)
             }
-            
             for textV in textViewArray{
                 if publicBoolArray[counter] == true{
-                    
-                    var ideaObject = PFObject(className: "Idea")
-                    ideaObject["content"] = textV.text
-                    ideaObject["topicPointer"] = activeComposeTopicObject
-                    ideaObject["owner"] = user
-                    ideaObject["isPublic"] = true
-                    let publicACL = PFACL()
-                    publicACL.setPublicReadAccess(true)
-                    publicACL.setPublicWriteAccess(true)
-                    
-                    ideaObject["ACL"] = publicACL
-                    ideaObject.incrementKey("numberOfUpvotes")
-                    ideaObject.addObject(user, forKey: "usersWhoUpvoted")
-                    ideaObject.saveInBackgroundWithBlock({ (success, error) -> Void in
-                        if success{
-                            println("Saved Idea Publically")
-                            
-                            var upvoteObject = PFObject(className: "Upvote")
-                            upvoteObject["userWhoUpvoted"] = user
-                            upvoteObject["ideaUpvoted"] = ideaObject
-                            upvoteObject.saveInBackground()
-                            
-                            let ideaOwner = ideaObject["owner"] as! PFUser
-                            var leaderboardQuery = PFQuery(className: "Leaderboard")
-                            leaderboardQuery.whereKey("userPointer", equalTo: ideaOwner)
-                            leaderboardQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
-                                
-                                if error == nil{
-                                    var leaderboardObject = PFObject(className: "Leaderboard")
-                                    leaderboardObject = object!
-                                    leaderboardObject.incrementKey("numberOfUpvotes", byAmount: 1)
-                                    leaderboardObject.saveInBackground()
-                                }
-                            })
-                            self.activeComposeTopicObject.incrementKey("numberOfIdeas")
-                            self.activeComposeTopicObject.saveInBackgroundWithBlock({ (success, error) -> Void in
-                                if success{
-                                    println("numberOfIdeas Updated Successfully")
-                                }else{
-                                    println("Could not save number of ideas")
-                                }
-                            })
-                            
-                        }else{
-                            println("Could Not Save Idea Publically")
-                        }
-                    })
-                    
-                    if publicAlreadyEncountered == false{
-                        
-                        let publicACLTopic = PFACL()
-                        
-                        publicACLTopic.setPublicReadAccess(true)
-                        publicACLTopic.setPublicWriteAccess(true)
-                        publicACLTopic.setWriteAccess(true, forUser: user)
-                        activeComposeTopicObject["ACL"] = publicACLTopic
-                        activeComposeTopicObject["isPublic"] = true
-                        
-                        activeComposeTopicObject.saveInBackgroundWithBlock({ (success, error) -> Void in
-                            if success{
-                                println("Topic Saved Publically")
-                            }else{
-                                println("Topic Could not be saved publically")
-                            }
-                            
-                            self.publicAlreadyEncountered = true
-                        })
-                    }
+                    saveIdea(textV, user: user, isPublic: true)
                 }else{
-                    
-                    var ideaObject = PFObject(className: "Idea")
-                    ideaObject["content"] = textV.text
-                    ideaObject["topicPointer"] = activeComposeTopicObject
-                    ideaObject["owner"] = user
-                    ideaObject["isPublic"] = false
-                    
-                    let privateACL = PFACL()
-                    privateACL.setPublicReadAccess(false)
-                    privateACL.setPublicWriteAccess(false)
-                    privateACL.setWriteAccess(true, forUser: user)
-                    privateACL.setReadAccess(true, forUser: user)
-                    
-                    ideaObject["ACL"] = privateACL
-                    
-                    ideaObject.saveInBackgroundWithBlock({ (success, error) -> Void in
-                        if success{
-                            println("Idea Saved Privately")
-                        }else{
-                            println("Idea Could not be saved privately")
-                        }
-                    })
-                
+                    saveIdea(textV, user: user, isPublic: false)
                 }
-                
                 ++counter
-            
             }
             publicAlreadyEncountered = false
+        
+            if isADraft == true{
+                    draftObject.deleteInBackgroundWithBlock({ (success, error) -> Void in
+                    println("should dismiss")
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                })
+            }else{
+                println("should dismiss")
+               self.dismissViewControllerAnimated(true, completion: nil)
+            }
+        }
+    }
+    
+    func saveIdea(textV: UITextView, user: PFUser, isPublic: Bool){
+        var ideaObject = PFObject(className: "Idea")
+        ideaObject["content"] = textV.text
+        ideaObject["topicPointer"] = activeComposeTopicObject
+        ideaObject["owner"] = user
+        if isPublic == true{
+            ideaObject["isPublic"] = true
+            ideaObject.ACL?.setPublicReadAccess(true)
+            ideaObject.ACL?.setPublicWriteAccess(true)
+        }else if isPublic == false{
+            ideaObject["isPublic"] = false
+            ideaObject.ACL?.setPublicWriteAccess(false)
+            ideaObject.ACL?.setPublicReadAccess(false)
         }
         
-        self.dismissViewControllerAnimated(true, completion: nil)
+        ideaObject.incrementKey("numberOfUpvotes")
+        ideaObject.addObject(user, forKey: "usersWhoUpvoted")
+        ideaObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+            if success{
+                
+                var upvoteObject = PFObject(className: "Upvote")
+                upvoteObject["userWhoUpvoted"] = user
+                upvoteObject["ideaUpvoted"] = ideaObject
+                upvoteObject.saveInBackground()
+                
+                if isPublic == true{
+                    self.activeComposeTopicObject.incrementKey("numberOfIdeas")
+                    self.activeComposeTopicObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                        if success{
+                            if self.hasAddedTopic == false{
+                                self.addTopicsComposedFor(user)
+                            }
+                        }else{
+                            
+                        }
+                    })
+                }else{
+                    if self.hasAddedTopic == false{
+                        self.addTopicsComposedFor(user)
+                    }
+                }
+            }
+        })
+        if isPublic == true{
+            if publicAlreadyEncountered == false{
+                
+                activeComposeTopicObject["isPublic"] = true
+                activeComposeTopicObject.ACL?.setPublicReadAccess(true)
+                activeComposeTopicObject.ACL?.setPublicWriteAccess(true)
+                activeComposeTopicObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                    if success{
+                        self.publicAlreadyEncountered = true
+                    }
+                })
+            }
+        }
+    }
+    
+    func addTopicsComposedFor(user: PFUser){
+        let topicComposedFor = PFObject(className: "TopicsComposedFor")
+        topicComposedFor["userPointer"] = user
+        topicComposedFor["topicPointer"] = activeComposeTopicObject
+        topicComposedFor.ACL?.setPublicWriteAccess(false)
+        topicComposedFor.ACL?.setPublicReadAccess(false)
+        topicComposedFor.saveEventually()
+        hasAddedTopic = true
     }
     
     func makePublic(sender: UIButton){
@@ -506,6 +578,8 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     
     func upgradeAlert(){
         let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "As a free user you are only allowed 1 public idea per group of 10. Upgrade to Pro to post unlimited public ideas.", preferredStyle: .Alert)
+            upgradeAlert.view.tintColor = redColor
+            upgradeAlert.view.backgroundColor = oneFiftyGrayColor
         //Create and add the Cancel action
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
         }
@@ -522,11 +596,35 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         self.presentViewController(upgradeAlert, animated: true, completion: nil)
     }
     
+    func upgradeToSaveDraftAlert(){
+        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "You must upgrade to IdeaMuscle Pro to save drafts.", preferredStyle: .Alert)
+        upgradeAlert.view.tintColor = redColor
+        upgradeAlert.view.backgroundColor = oneFiftyGrayColor
+        //Create and add the Cancel action
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+        }
+        upgradeAlert.addAction(cancelAction)
+        
+        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
+            let storeVC = StoreViewController()
+            self.shouldStartEditing = false
+            let navVC = UINavigationController(rootViewController: storeVC)
+            self.presentViewController(navVC, animated: true, completion: nil)
+            
+        })
+        
+        upgradeAlert.addAction(goToStore)
+        self.presentViewController(upgradeAlert, animated: true, completion: nil)
+    }
+    
     
     
     func cancel(sender: UIButton!){
         
-        self.dismissViewControllerAnimated(true, completion: nil)
+        //self.dismissViewControllerAnimated(true, completion: nil)
+        self.view.endEditing(true)
+        saveDraftContainer.frame = CGRectMake(0, self.view.frame.maxY - 140, self.view.frame.width, 140)
+        self.view.bringSubviewToFront(saveDraftContainer)
         
     }
     
@@ -536,17 +634,5 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         // Dispose of any resources that can be recreated.
     }
     
-    
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

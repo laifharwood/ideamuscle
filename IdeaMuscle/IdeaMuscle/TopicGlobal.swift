@@ -16,7 +16,7 @@ func topicQueryGlobal(daysInPast: Int, query: PFQuery){
     query.orderByAscending("createdAt")
     query.orderByDescending("numberOfIdeas")
     query.limit = 100
-    query.whereKeyExists("numberOfIdeas")
+    //query.whereKeyExists("numberOfIdeas")
     query.whereKey("isPublic", equalTo: true)
     query.includeKey("creator")
     if daysInPast < 0{

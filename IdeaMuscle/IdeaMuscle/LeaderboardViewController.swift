@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 class LeaderboardViewController: UIViewController {
     
@@ -14,6 +15,7 @@ class LeaderboardViewController: UIViewController {
     
     let friendsVC = FriendsLeaderboardTableViewController()
     let worldVC = WorldLeaderboardTableViewController()
+    let upgradeVC = UpgradeToProViewController()
     let tableSelectionFrame = UIView()
     
     override func viewDidLoad() {
@@ -21,7 +23,7 @@ class LeaderboardViewController: UIViewController {
         
         self.view.backgroundColor = UIColor.whiteColor()
         
-        self.title = "Leaderboard"
+        self.title = "Leaderboards"
         
         //Right Compose Button
         let composeOriginalButton = UIButton()
@@ -56,7 +58,20 @@ class LeaderboardViewController: UIViewController {
         //customSC.layer.masksToBounds = true
         tableSelectionSC.addTarget(self, action: "changeTableSelection:", forControlEvents: .ValueChanged)
         tableSelectionFrame.addSubview(tableSelectionSC)
-        activeViewController = friendsVC
+        
+        
+        if let user = PFUser.currentUser(){
+            if let isPro = user["isPro"] as? Bool{
+                if isPro == true{
+                    activeViewController = friendsVC
+                }else{
+                    activeViewController = upgradeVC
+                }
+            }else{
+                activeViewController = upgradeVC
+            }
+        }
+        
         
 
     }
@@ -108,11 +123,23 @@ class LeaderboardViewController: UIViewController {
     
     func changeTableSelection(sender: UISegmentedControl){
         
-        if sender.selectedSegmentIndex == 0{
-            activeViewController = friendsVC
-        }else{
-            activeViewController = worldVC
+        if let user = PFUser.currentUser(){
+            if let isPro = user["isPro"] as? Bool{
+                if isPro == true{
+                    if sender.selectedSegmentIndex == 0{
+                        activeViewController = friendsVC
+                    }else{
+                        activeViewController = worldVC
+                    }
+                }else{
+                    activeViewController = upgradeVC
+                }
+            }else{
+                activeViewController = upgradeVC
+            }
         }
+        
+
         
 
     }

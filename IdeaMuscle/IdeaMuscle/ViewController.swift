@@ -170,6 +170,8 @@ class ViewController: UIViewController{
                 self.stopActivityIndicator()
                 
                 let noTwitterAccountController: UIAlertController = UIAlertController(title: "No Twitter Account Linked", message: "You must have a twitter account setup on your phone. Go to your Settings App/Twitter/Sign In or Create New Account", preferredStyle: .Alert)
+                noTwitterAccountController.view.tintColor = redColor
+                noTwitterAccountController.view.backgroundColor = oneFiftyGrayColor
                 //Create and add the Cancel action
                 let cancelAction: UIAlertAction = UIAlertAction(title: "Okay", style: .Cancel) { action -> Void in
                 }
@@ -206,6 +208,8 @@ class ViewController: UIViewController{
                     //Could Not Link User
                     
                     let couldNotLinkTwitterAccountController: UIAlertController = UIAlertController(title: "Could Not Link Twitter Account", message: "There was an error in linking your Twitter Account, Please Try Again.", preferredStyle: .Alert)
+                    couldNotLinkTwitterAccountController.view.tintColor = redColor
+                    couldNotLinkTwitterAccountController.view.backgroundColor = oneFiftyGrayColor
                     //Create and add the Cancel action
                     let cancelAction: UIAlertAction = UIAlertAction(title: "Okay", style: .Cancel) { action -> Void in
                     }

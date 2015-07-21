@@ -24,6 +24,8 @@ class TopicAndIdeaContainerViewController: UIViewController {
     let topicThirtyVC = TopicThirtyTableViewController()
     let topicAllVC = TopicAllTableViewController()
     
+    let upgradeVC = UpgradeToProViewController()
+    
     let periodFrame = UIView()
 
     override func viewDidLoad() {
@@ -78,7 +80,7 @@ class TopicAndIdeaContainerViewController: UIViewController {
         periodSC.insertSegmentWithTitle("7", atIndex: 1, animated: false)
         periodSC.insertSegmentWithTitle("30", atIndex: 2, animated: false)
         periodSC.insertSegmentWithTitle("All", atIndex: 3, animated: false)
-        periodSC.selectedSegmentIndex = 0
+        periodSC.selectedSegmentIndex = 1
         periodSC.frame = CGRectMake(5, 5, periodFrame.frame.width - 10, 20)
         periodSC.tintColor = UIColor.whiteColor()
         periodSC.backgroundColor = seventySevenGrayColor
@@ -88,7 +90,7 @@ class TopicAndIdeaContainerViewController: UIViewController {
         periodSC.addTarget(self, action: "changePeriodView:", forControlEvents: .ValueChanged)
         periodFrame.addSubview(periodSC)
         
-        activeViewController = ideaTodayVC
+        activeViewController = ideaSevenVC
 
         // Do any additional setup after loading the view.
     }
@@ -140,20 +142,21 @@ class TopicAndIdeaContainerViewController: UIViewController {
     
     func changeTableSelection(sender: UISegmentedControl){
         
-        
-        
         if sender.selectedSegmentIndex == 0{
             
             self.title = "Top Ideas"
             
             if periodSC.selectedSegmentIndex == 0{
-            activeViewController = ideaTodayVC
+                //activeViewController = ideaTodayVC
+                checkForPro(ideaTodayVC)
             }else if periodSC.selectedSegmentIndex == 1{
                 activeViewController = ideaSevenVC
             }else if periodSC.selectedSegmentIndex == 2{
-                activeViewController = ideaThirtyVC
+                //activeViewController = ideaThirtyVC
+                checkForPro(ideaThirtyVC)
             }else if periodSC.selectedSegmentIndex == 3{
-                activeViewController = ideaAllVC
+                //activeViewController = ideaAllVC
+                checkForPro(ideaAllVC)
             }
             
         }else{
@@ -161,15 +164,32 @@ class TopicAndIdeaContainerViewController: UIViewController {
             self.title = "Top Topics"
             
             if periodSC.selectedSegmentIndex == 0{
-                activeViewController = topicTodayVC
+                //activeViewController = topicTodayVC
+                checkForPro(topicTodayVC)
             }else if periodSC.selectedSegmentIndex == 1{
                 activeViewController = topicSevenVC
             }else if periodSC.selectedSegmentIndex == 2{
-                activeViewController = topicThirtyVC
+                //activeViewController = topicThirtyVC
+                checkForPro(topicThirtyVC)
             }else if periodSC.selectedSegmentIndex == 3{
-                activeViewController = topicAllVC
+                //activeViewController = topicAllVC
+                checkForPro(topicAllVC)
             }
             
+        }
+    }
+    
+    func checkForPro(selectedController: UIViewController){
+        if let user = PFUser.currentUser(){
+            if let isPro = user["isPro"] as? Bool{
+                if isPro == true{
+                    activeViewController = selectedController
+                }else{
+                    activeViewController = upgradeVC
+                }
+            }else{
+                activeViewController = upgradeVC
+            }
         }
     }
     
@@ -177,9 +197,11 @@ class TopicAndIdeaContainerViewController: UIViewController {
         
         if sender.selectedSegmentIndex == 0{
             if tableSelectionSC.selectedSegmentIndex == 0{
-                activeViewController = ideaTodayVC
+                //activeViewController = ideaTodayVC
+                checkForPro(ideaTodayVC)
             }else{
-                activeViewController = topicTodayVC
+                //activeViewController = topicTodayVC
+                checkForPro(topicTodayVC)
             }
         }else if sender.selectedSegmentIndex == 1{
             if tableSelectionSC.selectedSegmentIndex == 0{
@@ -190,21 +212,22 @@ class TopicAndIdeaContainerViewController: UIViewController {
             
         }else if sender.selectedSegmentIndex == 2{
             if tableSelectionSC.selectedSegmentIndex == 0{
-                activeViewController = ideaThirtyVC
+                //activeViewController = ideaThirtyVC
+                checkForPro(ideaThirtyVC)
             }else{
-                activeViewController = topicThirtyVC
+                //activeViewController = topicThirtyVC
+                checkForPro(topicThirtyVC)
             }
             
         }else if sender.selectedSegmentIndex == 3{
             if tableSelectionSC.selectedSegmentIndex == 0{
-                activeViewController = ideaAllVC
+                //activeViewController = ideaAllVC
+                checkForPro(ideaAllVC)
             }else{
-                activeViewController = topicAllVC
+                //activeViewController = topicAllVC
+                checkForPro(topicAllVC)
             }
-            
         }
-        
-        
     }
     
 

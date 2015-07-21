@@ -44,6 +44,13 @@ class TopicTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
+    
+    override func prepareForReuse() {
+        self.numberOfUpvotesButton.tintColor = nil
+        self.numberOfUpvotesButton.setTitleColor(nil, forState: .Normal)
+        self.numberOfUpvotesButton.setImage(nil, forState: .Normal)
+        self.numberOfUpvotesButton.titleEdgeInsets = UIEdgeInsetsZero
+    }
 
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

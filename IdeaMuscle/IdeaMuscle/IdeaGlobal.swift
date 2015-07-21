@@ -66,7 +66,7 @@ topicLabel.tag = row
 func ideaLabelGlobal(labelWidth: CGFloat, ideaLabel: UILabel, ideaObjects: [PFObject], row: Int, topicLabel: UILabel){
     ideaLabel.numberOfLines = 0
     ideaLabel.frame = CGRectMake(25, topicLabel.frame.maxY + 2, labelWidth - 15, 70)
-    ideaLabel.font = UIFont(name: "Avenir-Light", size: 10)
+    ideaLabel.font = UIFont(name: "Avenir-Light", size: 12)
     ideaLabel.textColor = oneFiftyGrayColor
     if ideaObjects[row]["content"] != nil{
         ideaLabel.text = (ideaObjects[row]["content"] as! String)
@@ -262,6 +262,8 @@ func notProCheckIfCanPostFromDetail(user: PFUser, sender: AnyObject!, activeTopi
                                 }else{
                                     //Prompt For Upgrade
                                     let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "As a free user you are limited to composing once every two days. Upgrade to Pro to compose unlimited ideas and topics.", preferredStyle: .Alert)
+                                    upgradeAlert.view.tintColor = redColor
+                                    upgradeAlert.view.backgroundColor = oneFiftyGrayColor
                                     //Create and add the Cancel action
                                     let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
                                     }

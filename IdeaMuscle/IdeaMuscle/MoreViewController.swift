@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 class MoreViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -60,7 +61,7 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return 1
+        return 3
     }
     
     func composeOriginal(sender: UIButton!){
@@ -73,10 +74,16 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
          var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! UITableViewCell
+        
+        cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
 
         // Configure the cell...
         if indexPath.row == 0 {
             cell.textLabel!.text = "Store"
+        }else if indexPath.row == 1{
+            cell.textLabel!.text = "Drafts"
+        }else if indexPath.row == 2{
+            cell.textLabel!.text = "Your Ideas"
         }
         
 
@@ -85,8 +92,47 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        let storeVC = StoreViewController()
-        navigationController?.pushViewController(storeVC, animated: true)
+        
+        if indexPath.row == 0{
+            let storeVC = StoreViewController()
+            navigationController?.pushViewController(storeVC, animated: true)
+        }else if indexPath.row == 1{
+            if let user = PFUser.currentUser(){
+                if let isPro = user["isPro"] as? Bool{
+                    if isPro == true{
+                        let draftsVC = DraftsTableViewController()
+                        navigationController?.pushViewController(draftsVC, animated: true)
+                    }else{
+                        upgradeAlert()
+                    }
+                }else{
+                    upgradeAlert()
+                }
+            }
+            
+        }else if indexPath.row == 2{
+            let userIdeasVC = UserIdeasTableViewController()
+            navigationController?.pushViewController(userIdeasVC, animated: true)
+        }
+    }
+    
+    func upgradeAlert(){
+        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "An upgrade to Pro is requird to view or save drafts.", preferredStyle: .Alert)
+        upgradeAlert.view.tintColor = redColor
+        upgradeAlert.view.backgroundColor = oneFiftyGrayColor
+        //Create and add the Cancel action
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+        }
+        upgradeAlert.addAction(cancelAction)
+        
+        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
+            let storeVC = StoreViewController()
+            self.navigationController!.pushViewController(storeVC, animated: true)
+            
+        })
+        
+        upgradeAlert.addAction(goToStore)
+        self.presentViewController(upgradeAlert, animated: true, completion: nil)
     }
     
 }

@@ -28,6 +28,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     var ideaOwner = PFUser()
     var shareContainer = UIView()
     let gestureRecTextField = UITapGestureRecognizer()
+    var ideaIsPublic = Bool()
     
     func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
         dismissViewControllerAnimated(true, completion: nil)
@@ -38,18 +39,29 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if var isPublic = activeIdea["isPublic"] as? Bool{
+            if isPublic{
+                ideaIsPublic = true
+            }else{
+                ideaIsPublic = false
+            }
+        }else{
+            ideaIsPublic = false
+        }
         
-        self.commentsTableView.registerClass(IdeaDetailTableViewCell.self, forCellReuseIdentifier: "Cell")
-        self.commentsTableView.dataSource = self
-        self.commentsTableView.delegate = self
-        self.commentsTableView.rowHeight = 85
-        self.commentsTableView.contentInset = UIEdgeInsetsMake(0, 0, 50, 0)
-        self.view.backgroundColor = UIColor.whiteColor()
+        if ideaIsPublic == true{
+            self.commentsTableView.registerClass(IdeaDetailTableViewCell.self, forCellReuseIdentifier: "Cell")
+            self.commentsTableView.dataSource = self
+            self.commentsTableView.delegate = self
+            self.commentsTableView.rowHeight = 85
+            self.commentsTableView.contentInset = UIEdgeInsetsMake(0, 0, 50, 0)
+            self.view.backgroundColor = UIColor.whiteColor()
+            self.ideaTextView.delegate = self
+            self.commentTextField.delegate = self
+            commentsQuery()
+        }
+        
         let topicContainerY = self.navigationController?.navigationBar.frame.maxY
-        self.ideaTextView.delegate = self
-        self.commentTextField.delegate = self
-        
-        commentsQuery()
         
         //MARK: Logo
         
@@ -72,7 +84,11 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         numberOfUpvotesButton.frame =  CGRectMake(5, topicLabel.frame.maxY + 5, 40, 60)
         if activeIdea["numberOfUpvotes"] != nil{
             
-          hasUpvoted = getUpvotes(activeIdea, numberOfUpvotesButton, nil)
+            if ideaIsPublic{
+                hasUpvoted = getUpvotes(activeIdea, numberOfUpvotesButton, nil)
+            }else{
+                
+            }
 
         }
 
@@ -106,7 +122,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         if activeIdea["content"] != nil{
             ideaTextView.text = activeIdea["content"] as! String
         }
-        ideaTextView.font = UIFont(name: "Avenir-Light", size: 10)
+        ideaTextView.font = UIFont(name: "Avenir-Light", size: 12)
         ideaTextView.layer.borderColor = oneFiftyGrayColor.CGColor
         ideaTextView.layer.borderWidth = 1
         ideaTextView.layer.cornerRadius = 3
@@ -228,11 +244,13 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     }
     
     func upgradeAlert(sender: UITextField){
-        upgradeAlert()
+        upgradeAlertShow()
     }
     
-    func upgradeAlert(){
+    func upgradeAlertShow(){
         let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "You must upgrade to Pro to comment on ideas.", preferredStyle: .Alert)
+        upgradeAlert.view.tintColor = redColor
+        upgradeAlert.view.backgroundColor = oneFiftyGrayColor
         //Create and add the Cancel action
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
         }
@@ -508,9 +526,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     
     
     func share(sender: UIButton!){
-        
-        
-        
+
        shareContainer.frame = CGRectMake(0, self.view.frame.maxY - 180, self.view.frame.width, 180)
         self.view.bringSubviewToFront(shareContainer)
         

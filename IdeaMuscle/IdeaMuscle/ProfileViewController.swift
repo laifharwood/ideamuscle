@@ -131,11 +131,43 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func viewRank(sender: AnyObject){
-        self.worldRankLabel.backgroundColor = UIColor.whiteColor()
-        worldRankLabel.text = ""
-        startActivityIndicator()
-        worldRankQuery()
+        if let user = PFUser.currentUser(){
+            if let isPro = user["isPro"] as? Bool{
+                if isPro == true{
+                    self.worldRankLabel.backgroundColor = UIColor.whiteColor()
+                    worldRankLabel.text = ""
+                    startActivityIndicator()
+                    worldRankQuery()
+                }else{
+                    upgradeAlert()
+                }
+            }else{
+                upgradeAlert()
+            }
+        }
         
+        
+    }
+    
+    func upgradeAlert(){
+        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "An upgrade to IdeaMuscle Pro is required to view World Rankings", preferredStyle: .Alert)
+        upgradeAlert.view.tintColor = redColor
+        upgradeAlert.view.backgroundColor = oneFiftyGrayColor
+        //Create and add the Cancel action
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+        }
+        upgradeAlert.addAction(cancelAction)
+        
+        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
+            let storeVC = StoreViewController()
+            //let navVC = UINavigationController(rootViewController: storeVC)
+            //self.presentViewController(navVC, animated: true, completion: nil)
+            self.navigationController?.pushViewController(storeVC, animated: true)
+            
+        })
+        
+        upgradeAlert.addAction(goToStore)
+        self.presentViewController(upgradeAlert, animated: true, completion: nil)
     }
     
     func follow(sender: UIButton!){

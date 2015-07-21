@@ -14,6 +14,8 @@ class StoreTableViewCell: UITableViewCell {
     
     var buyButton = UIButton()
     var priceLabel = UILabel()
+    var iconImage = UIImageView()
+    var featureDescriptionLabel = UILabel()
     
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -21,6 +23,8 @@ class StoreTableViewCell: UITableViewCell {
         
         self.contentView.addSubview(buyButton)
         self.contentView.addSubview(priceLabel)
+        self.contentView.addSubview(iconImage)
+        self.contentView.addSubview(featureDescriptionLabel)
         
     }
     
