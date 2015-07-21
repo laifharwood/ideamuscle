@@ -208,56 +208,10 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
         
         var newTopic = PFObject(className: "Topic")
         
-        
         if isPublic == true{
-            var creator = PFUser.currentUser()
-            newTopic["title"] = textView.text
-            newTopic["creator"] = creator
-            newTopic["isPublic"] = true
-            
-            let publicAcl = PFACL()
-            publicAcl.setPublicReadAccess(true)
-            publicAcl.setPublicWriteAccess(true)
-            publicAcl.setWriteAccess(true, forUser: creator!)
-            newTopic["ACL"] = publicAcl
-            
-            newTopic.saveInBackgroundWithBlock { (success, error) -> Void in
-                if success{
-                
-                }else{
-                    
-                    println("\(error?.userInfo)")
-                }
-            }
-            
-            
+            saveTopic(true, newTopic: newTopic)
         }else{
-            
-            var newTopic = PFObject(className: "Topic")
-            var creator = PFUser.currentUser()
-            newTopic["title"] = textView.text
-            newTopic["creator"] = creator
-            newTopic["isPublic"] = false
-            
-            let privateAcl = PFACL()
-            privateAcl.setPublicWriteAccess(false)
-            privateAcl.setPublicReadAccess(false)
-            privateAcl.setReadAccess(true, forUser: creator!)
-            privateAcl.setWriteAccess(true, forUser: creator!)
-            newTopic["ACL"] = privateAcl
-            
-            newTopic.saveInBackgroundWithBlock { (success, error) -> Void in
-                if success{
-                    
-                    println("Topic Saved Privately Successfully")
-                    //activeComposeTopicObject = newTopic
-                    
-                    
-                }else{
-                    
-                    println("error Private Save")
-                }
-            }
+            saveTopic(false, newTopic: newTopic)
         }
         
         shouldDismissCompose = true
@@ -266,6 +220,25 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
         composeVC.activeComposeTopicObject = newTopic
         self.presentViewController(composeVC, animated: true, completion: nil)
         
+    }
+    
+    func saveTopic(topicIsPublic: Bool, newTopic: PFObject){
+        
+        if let user = PFUser.currentUser(){
+            newTopic["title"] = textView.text
+            newTopic["creator"] = user
+            
+            if topicIsPublic{
+                newTopic["isPublic"] = true
+                newTopic.ACL?.setPublicReadAccess(true)
+                newTopic.ACL?.setPublicWriteAccess(true)
+            }else{
+                newTopic["isPublic"] = false
+                newTopic.ACL?.setPublicReadAccess(false)
+                newTopic.ACL?.setPublicWriteAccess(false)
+            }
+            newTopic.saveInBackground()
+        }
         
     }
     

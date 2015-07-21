@@ -65,11 +65,23 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
         //MARK: - Share Button
         var shareButton = UIButton()
         shareButton.frame = CGRectMake(0, self.view.frame.maxY - 30, self.view.frame.width/2 - 0.5, 30)
-        shareButton.setTitle("Share", forState: .Normal)
-        shareButton.backgroundColor = sixtyThreeGrayColor
-        shareButton.addTarget(self, action: "share:", forControlEvents: .TouchUpInside)
-        shareButton.titleLabel?.font = UIFont(name: "Helvetica-Light", size: 14)
-        self.view.addSubview(shareButton)
+        var topicIsPublic = Bool()
+        if let isPublic = activeTopic["isPublic"] as? Bool{
+            if isPublic{
+                topicIsPublic = true
+            }else{
+                topicIsPublic = false
+            }
+        }else{
+            topicIsPublic = false
+        }
+        if topicIsPublic{
+            shareButton.setTitle("Share", forState: .Normal)
+            shareButton.backgroundColor = sixtyThreeGrayColor
+            shareButton.addTarget(self, action: "share:", forControlEvents: .TouchUpInside)
+            shareButton.titleLabel?.font = UIFont(name: "Helvetica-Light", size: 14)
+            self.view.addSubview(shareButton)
+        }
         
         //MARK: - Compose Button
         var composeButton = UIButton()
@@ -409,6 +421,29 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
         shareContainer.frame = CGRectMake(0, self.view.frame.maxY - 180, self.view.frame.width, 180)
         self.view.bringSubviewToFront(shareContainer)
         
+    }
+    
+    // Override to support conditional editing of the table view.
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        // Return NO if you do not want the specified item to be editable.
+        return true
+    }
+    
+    
+    
+    // Override to support editing the table view.
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete {
+            
+            
+            var ideaObject = ideaObjects[indexPath.row] as PFObject
+            ideaObjects.removeAtIndex(indexPath.row)
+            ideaObject.deleteEventually()
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            
+        } else if editingStyle == .Insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        }
     }
     
     override func didReceiveMemoryWarning() {

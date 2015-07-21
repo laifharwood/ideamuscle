@@ -20,6 +20,7 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
     var restorePurchaseButton = UIButton()
     var descriptionTable = UITableView()
     var activityIndicator = UIActivityIndicatorView()
+    var buyActivityIndicator = UIActivityIndicatorView()
     var isPurchasing = false
     
     override func viewDidLayoutSubviews() {
@@ -112,13 +113,13 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
     func applicationDidBecomeActive()
     {
         if isPurchasing{
-            startActivityIndicator()
+            startBuyActivityIndicator()
         }
     }
     
     func applicationWillResignActive()
     {
-        stopActivityIndicator()
+        stopBuyActivityIndicator()
     }
     
     func dismiss(sender: UIButton){
@@ -208,7 +209,6 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func productsRequest(request: SKProductsRequest!, didReceiveResponse response: SKProductsResponse!) {
-        stopActivityIndicator()
         var products = response.products
         var unsortedArray = Array<SKProduct>()
         if products.count != 0 {
@@ -237,7 +237,7 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
         {
             println("Product not found: \(product)")
         }
-        
+        stopActivityIndicator()
     }
     
     func requestProductData(){
@@ -304,7 +304,7 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     func paymentQueue(queue: SKPaymentQueue!, removedTransactions transactions: [AnyObject]!) {
         isPurchasing = false
-        stopActivityIndicator()
+        stopBuyActivityIndicator()
     }
     
     func notLoggedIntoRightAccount(){
@@ -522,8 +522,6 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
     }
     
-
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
@@ -543,7 +541,17 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
         tableView.reloadData()
     }
     
-
-
-
+    func startBuyActivityIndicator(){
+        buyActivityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+        buyActivityIndicator.hidesWhenStopped = true
+        buyActivityIndicator.backgroundColor = fiftyGrayColor
+        buyActivityIndicator.layer.cornerRadius = 5
+        buyActivityIndicator.frame = CGRectMake(self.view.frame.width/2 - 75, self.view.frame.height/2 - 75, 150, 150)
+        self.view.addSubview(buyActivityIndicator)
+        buyActivityIndicator.startAnimating()
+    }
+    
+    func stopBuyActivityIndicator(){
+        buyActivityIndicator.stopAnimating()
+    }
 }

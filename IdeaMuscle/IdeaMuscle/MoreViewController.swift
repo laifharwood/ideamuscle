@@ -61,7 +61,7 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return 3
+        return 4
     }
     
     func composeOriginal(sender: UIButton!){
@@ -84,6 +84,8 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.textLabel!.text = "Drafts"
         }else if indexPath.row == 2{
             cell.textLabel!.text = "Your Ideas"
+        }else if indexPath.row == 3{
+            cell.textLabel!.text = "Your Topics"
         }
         
 
@@ -113,6 +115,9 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
         }else if indexPath.row == 2{
             let userIdeasVC = UserIdeasTableViewController()
             navigationController?.pushViewController(userIdeasVC, animated: true)
+        }else if indexPath.row == 3{
+            let userTopicsVC = UserTopicsTableViewController()
+            navigationController?.pushViewController(userTopicsVC, animated: true)
         }
     }
     

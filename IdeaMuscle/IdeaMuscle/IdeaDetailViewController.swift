@@ -49,14 +49,20 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
             ideaIsPublic = false
         }
         
+        reloadView()
+        self.view.backgroundColor = UIColor.whiteColor()
+        self.ideaTextView.delegate = self
+
+    }
+    
+    func reloadView(){
+        
         if ideaIsPublic == true{
             self.commentsTableView.registerClass(IdeaDetailTableViewCell.self, forCellReuseIdentifier: "Cell")
             self.commentsTableView.dataSource = self
             self.commentsTableView.delegate = self
             self.commentsTableView.rowHeight = 85
             self.commentsTableView.contentInset = UIEdgeInsetsMake(0, 0, 50, 0)
-            self.view.backgroundColor = UIColor.whiteColor()
-            self.ideaTextView.delegate = self
             self.commentTextField.delegate = self
             commentsQuery()
         }
@@ -69,7 +75,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         //MARK: - Topic Label
         var topicLabel = UILabel()
         if activeTopic["title"] != nil{
-        topicLabel.text = activeTopic["title"] as? String
+            topicLabel.text = activeTopic["title"] as? String
         }
         topicLabel.font = UIFont(name: "Avenir-Heavy", size: 12)
         topicLabel.textColor = UIColor.blackColor()
@@ -87,18 +93,17 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
             if ideaIsPublic{
                 hasUpvoted = getUpvotes(activeIdea, numberOfUpvotesButton, nil)
             }else{
-                
+                ideaIsNotPublic(numberOfUpvotesButton)
             }
-
         }
-
+        
         self.view.addSubview(numberOfUpvotesButton)
         
         //MARK: - Avatar Button
         var avatarButton = UIImageView()
         
         if let ideaOwner = activeIdea["owner"] as? PFUser{
-        getAvatar(ideaOwner, avatarButton, nil)
+            getAvatar(ideaOwner, avatarButton, nil)
         }
         avatarButton.frame = CGRectMake(5, numberOfUpvotesButton.frame.maxY + 5, 40, 40)
         avatarButton.layer.cornerRadius = 20
@@ -132,23 +137,27 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         self.view.addSubview(ideaTextView)
         
         //MARK: - Comments Table View
-        let commentDescriptionLabel = UILabel(frame: CGRectMake(ideaTextView.frame.minX, ideaTextView.frame.maxY + 2, 65, 20))
-        commentDescriptionLabel.text = "Comments:"
-        commentDescriptionLabel.font = UIFont(name: "Helvetica-Light", size: 11)
-        self.view.addSubview(commentDescriptionLabel)
-        
-        commentsTableView.frame = CGRectMake(ideaTextView.frame.minX, commentDescriptionLabel.frame.maxY, ideaTextView.frame.width, 200)
-        self.view.addSubview(commentsTableView)
+        if ideaIsPublic{
+            let commentDescriptionLabel = UILabel(frame: CGRectMake(ideaTextView.frame.minX, ideaTextView.frame.maxY + 2, 65, 20))
+            commentDescriptionLabel.text = "Comments:"
+            commentDescriptionLabel.font = UIFont(name: "Helvetica-Light", size: 11)
+            self.view.addSubview(commentDescriptionLabel)
+            
+            commentsTableView.frame = CGRectMake(ideaTextView.frame.minX, commentDescriptionLabel.frame.maxY, ideaTextView.frame.width, 200)
+            self.view.addSubview(commentsTableView)
+        }
         
         
         //MARK: - Share Button
         var shareButton = UIButton()
         shareButton.frame = CGRectMake(0, self.view.frame.maxY - 30, self.view.frame.width/2 - 0.5, 30)
-        shareButton.setTitle("Share", forState: .Normal)
-        shareButton.backgroundColor = sixtyThreeGrayColor
-        shareButton.addTarget(self, action: "share:", forControlEvents: .TouchUpInside)
-        shareButton.titleLabel?.font = UIFont(name: "Helvetica-Light", size: 14)
-        self.view.addSubview(shareButton)
+        if ideaIsPublic{
+            shareButton.setTitle("Share", forState: .Normal)
+            shareButton.backgroundColor = sixtyThreeGrayColor
+            shareButton.addTarget(self, action: "share:", forControlEvents: .TouchUpInside)
+            shareButton.titleLabel?.font = UIFont(name: "Helvetica-Light", size: 14)
+            self.view.addSubview(shareButton)
+        }
         
         //MARK: - Compose Button
         composeButton.frame = CGRectMake(shareButton.frame.maxX + 1, self.view.frame.maxY - 30, self.view.frame.width/2 - 0.5, 30)
@@ -158,89 +167,140 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         composeButton.titleLabel?.font = UIFont(name: "Helvetica-Light", size: 14)
         self.view.addSubview(composeButton)
         
-        //MARK: - Comment container and Text Field
-        commentTextFieldContainter.backgroundColor = oneFiftyGrayColor
-        commentTextFieldContainter.frame = CGRectMake(0, composeButton.frame.minY - 40, self.view.frame.width, 40)
-        self.view.addSubview(commentTextFieldContainter)
-    
-        commentTextField.layer.cornerRadius = 3
-        commentTextField.backgroundColor = UIColor.whiteColor()
-        commentTextField.font = UIFont (name: "Avenir", size: 10)
-        commentTextField.frame = CGRectMake(5, 5, self.view.frame.width - 55, commentTextFieldContainter.frame.height - 10)
-        commentTextField.placeholder = "  Write a comment"
-        commentTextField.tintColor = redColor
-        let paddingView = UIView(frame: CGRectMake(0, 0, 50, commentTextField.frame.height))
-        commentTextField.rightView = paddingView
-        commentTextField.rightViewMode = UITextFieldViewMode.Always
-        //commentTextField.returnKeyType = UIReturnKeyType.Done
-        if let user = PFUser.currentUser(){
-            if let isPro = user["isPro"] as? Bool{
-                if isPro == false{
-                    
-                    gestureRecTextField.addTarget(self, action: "upgradeAlert:")
-                    gestureRecTextField.delegate = self
-                    commentTextField.addGestureRecognizer(gestureRecTextField)
+        if ideaIsPublic{
+        
+            //MARK: - Comment container and Text Field
+            commentTextFieldContainter.backgroundColor = oneFiftyGrayColor
+            commentTextFieldContainter.frame = CGRectMake(0, composeButton.frame.minY - 40, self.view.frame.width, 40)
+            self.view.addSubview(commentTextFieldContainter)
+            
+            commentTextField.layer.cornerRadius = 3
+            commentTextField.backgroundColor = UIColor.whiteColor()
+            commentTextField.font = UIFont (name: "Avenir", size: 10)
+            commentTextField.frame = CGRectMake(5, 5, self.view.frame.width - 55, commentTextFieldContainter.frame.height - 10)
+            commentTextField.placeholder = "  Write a comment"
+            commentTextField.tintColor = redColor
+            let paddingView = UIView(frame: CGRectMake(0, 0, 50, commentTextField.frame.height))
+            commentTextField.rightView = paddingView
+            commentTextField.rightViewMode = UITextFieldViewMode.Always
+            //commentTextField.returnKeyType = UIReturnKeyType.Done
+            if let user = PFUser.currentUser(){
+                if let isPro = user["isPro"] as? Bool{
+                    if isPro == false{
+                        
+                        gestureRecTextField.addTarget(self, action: "upgradeAlert:")
+                        gestureRecTextField.delegate = self
+                        commentTextField.addGestureRecognizer(gestureRecTextField)
+                    }
                 }
             }
+            
+            
+            commentTextFieldContainter.addSubview(commentTextField)
+            
+            //MARK: - Post comment button
+            postCommentButton.frame = CGRectMake(commentTextField.frame.maxX + 5, commentTextFieldContainter.frame.height/2 - 10, 40, 20)
+            postCommentButton.setTitle("Post", forState: .Normal)
+            postCommentButton.titleLabel!.font = UIFont(name: "Helvetica-Light", size: 13)
+            postCommentButton.addTarget(self, action: "postComment:", forControlEvents: .TouchUpInside)
+            postCommentButton.enabled = false
+            postCommentButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+            commentTextFieldContainter.addSubview(postCommentButton)
+            
+            //MARK: - character Count Label
+            characterCountLabel.frame = CGRectMake(commentTextField.frame.maxX - 42, commentTextFieldContainter.frame.height/2 - 10, 100, 20)
+            characterCountLabel.font = UIFont(name: "Helvetica-Light", size: 11)
+            characterCountLabel.textColor = fiftyGrayColor
+            characterCountLabel.text = "\(characterCount)" + "/118"
+            commentTextFieldContainter.addSubview(characterCountLabel)
+            
+            //MARK: - Share Container and Buttons
+            shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 105, self.view.frame.width, 180)
+            shareContainer.backgroundColor = UIColor.whiteColor()
+            self.view.addSubview(shareContainer)
+            
+            let twitterShareButton = UIButton()
+            let facebookShareButton = UIButton()
+            let emailShareButton = UIButton()
+            let cancelShareButton = UIButton()
+            
+            twitterShareButton.frame = CGRectMake(5, 0, shareContainer.frame.width - 10, 40)
+            facebookShareButton.frame = CGRectMake(5, twitterShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
+            emailShareButton.frame = CGRectMake(5, facebookShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
+            cancelShareButton.frame = CGRectMake(5, emailShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
+            
+            twitterShareButton.backgroundColor = fiftyGrayColor
+            facebookShareButton.backgroundColor = fiftyGrayColor
+            emailShareButton.backgroundColor = fiftyGrayColor
+            cancelShareButton.backgroundColor = fiftyGrayColor
+            
+            twitterShareButton.setTitle("Twitter", forState: .Normal)
+            facebookShareButton.setTitle("Facebook", forState: .Normal)
+            emailShareButton.setTitle("Email", forState: .Normal)
+            cancelShareButton.setTitle("Cancel", forState: .Normal)
+            
+            twitterShareButton.addTarget(self, action: "shareTwitter:", forControlEvents: .TouchUpInside)
+            facebookShareButton.addTarget(self, action: "shareFacebook:", forControlEvents: .TouchUpInside)
+            emailShareButton.addTarget(self, action: "shareEmail:", forControlEvents: .TouchUpInside)
+            cancelShareButton.addTarget(self, action: "shareCancel:", forControlEvents: .TouchUpInside)
+            
+            shareContainer.addSubview(twitterShareButton)
+            shareContainer.addSubview(facebookShareButton)
+            shareContainer.addSubview(emailShareButton)
+            shareContainer.addSubview(cancelShareButton)
         }
         
+    }
+    
+    func ideaIsNotPublic(button: UIButton){
+        button.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 10)
+        button.layer.cornerRadius = 3
+        button.backgroundColor = oneFiftyGrayColor
+        button.setTitle("Make Public", forState: .Normal)
+        button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        button.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        button.titleLabel?.textAlignment = NSTextAlignment.Center
+    }
+    
+    func makePublic(button: UIButton){
+        if let user = PFUser.currentUser(){
+            if let isPro = user["isPro"] as? Bool{
+                if isPro{
+                    let idea = activeIdea
+                    idea.ACL?.setPublicReadAccess(true)
+                    idea.ACL?.setPublicWriteAccess(true)
+                    idea["isPublic"] = true
+                    ideaIsPublic = true
+                    idea.saveEventually()
+                    hasUpvoted = getUpvotes(idea, button, nil)
+                    reloadView()
+                }else{
+                    upgradeAlertMakePublic()
+                }
+            }else{
+                upgradeAlertMakePublic()
+            }
+        }
+    }
+    
+    func upgradeAlertMakePublic(){
+        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "You must upgrade to Pro to make ideas public after posting", preferredStyle: .Alert)
+        upgradeAlert.view.tintColor = redColor
+        upgradeAlert.view.backgroundColor = oneFiftyGrayColor
+        //Create and add the Cancel action
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+        }
+        upgradeAlert.addAction(cancelAction)
         
-        commentTextFieldContainter.addSubview(commentTextField)
+        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
+            let storeVC = StoreViewController()
+            let navVC = UINavigationController(rootViewController: storeVC)
+            self.presentViewController(navVC, animated: true, completion: nil)
+            
+        })
         
-        //MARK: - Post comment button
-        postCommentButton.frame = CGRectMake(commentTextField.frame.maxX + 5, commentTextFieldContainter.frame.height/2 - 10, 40, 20)
-        postCommentButton.setTitle("Post", forState: .Normal)
-        postCommentButton.titleLabel!.font = UIFont(name: "Helvetica-Light", size: 13)
-        postCommentButton.addTarget(self, action: "postComment:", forControlEvents: .TouchUpInside)
-        postCommentButton.enabled = false
-        postCommentButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        commentTextFieldContainter.addSubview(postCommentButton)
-        
-        //MARK: - character Count Label
-        characterCountLabel.frame = CGRectMake(commentTextField.frame.maxX - 42, commentTextFieldContainter.frame.height/2 - 10, 100, 20)
-        characterCountLabel.font = UIFont(name: "Helvetica-Light", size: 11)
-        characterCountLabel.textColor = fiftyGrayColor
-        characterCountLabel.text = "\(characterCount)" + "/118"
-        commentTextFieldContainter.addSubview(characterCountLabel)
-        
-        //MARK: - Share Container and Buttons
-        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 105, self.view.frame.width, 180)
-        shareContainer.backgroundColor = UIColor.whiteColor()
-        self.view.addSubview(shareContainer)
-        
-        let twitterShareButton = UIButton()
-        let facebookShareButton = UIButton()
-        let emailShareButton = UIButton()
-        let cancelShareButton = UIButton()
-        
-        twitterShareButton.frame = CGRectMake(5, 0, shareContainer.frame.width - 10, 40)
-        facebookShareButton.frame = CGRectMake(5, twitterShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
-        emailShareButton.frame = CGRectMake(5, facebookShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
-        cancelShareButton.frame = CGRectMake(5, emailShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
-        
-        twitterShareButton.backgroundColor = fiftyGrayColor
-        facebookShareButton.backgroundColor = fiftyGrayColor
-        emailShareButton.backgroundColor = fiftyGrayColor
-        cancelShareButton.backgroundColor = fiftyGrayColor
-        
-        twitterShareButton.setTitle("Twitter", forState: .Normal)
-        facebookShareButton.setTitle("Facebook", forState: .Normal)
-        emailShareButton.setTitle("Email", forState: .Normal)
-        cancelShareButton.setTitle("Cancel", forState: .Normal)
-        
-        twitterShareButton.addTarget(self, action: "shareTwitter:", forControlEvents: .TouchUpInside)
-        facebookShareButton.addTarget(self, action: "shareFacebook:", forControlEvents: .TouchUpInside)
-        emailShareButton.addTarget(self, action: "shareEmail:", forControlEvents: .TouchUpInside)
-        cancelShareButton.addTarget(self, action: "shareCancel:", forControlEvents: .TouchUpInside)
-        
-        shareContainer.addSubview(twitterShareButton)
-        shareContainer.addSubview(facebookShareButton)
-        shareContainer.addSubview(emailShareButton)
-        shareContainer.addSubview(cancelShareButton)
-        
-        
-        
-        // Do any additional setup after loading the view.
+        upgradeAlert.addAction(goToStore)
+        self.presentViewController(upgradeAlert, animated: true, completion: nil)
     }
     
     func upgradeAlert(sender: UITextField){
@@ -513,14 +573,19 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     
     func upvote(sender: UIButton!){
         
-        if hasUpvoted == true{
-            //Remove Upvote
-                    upvoteGlobal(activeIdea, false, sender)
-                    hasUpvoted = false
+        if ideaIsPublic == true{
+        
+            if hasUpvoted == true{
+                //Remove Upvote
+                        upvoteGlobal(activeIdea, false, sender)
+                        hasUpvoted = false
+            }else{
+                //Add Upvote
+                    upvoteGlobal(activeIdea, true, sender)
+                    hasUpvoted = true
+            }
         }else{
-            //Add Upvote
-                upvoteGlobal(activeIdea, true, sender)
-                hasUpvoted = true
+            makePublic(sender)
         }
     }
     

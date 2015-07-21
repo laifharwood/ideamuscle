@@ -25,8 +25,6 @@ class UserIdeasTableViewController: UITableViewController {
         self.title = "Topics You Have Ideas For"
         startActivityIndicator()
         topicsComposedForQuery()
-        
-        
     }
     
     func topicsComposedForQuery(){
@@ -74,7 +72,8 @@ class UserIdeasTableViewController: UITableViewController {
                 cell.textLabel!.text = title
             }
         }
-
+        
+        cell.textLabel!.textColor = UIColor.blackColor()
         cell.textLabel!.font = UIFont(name: "Avenir", size: 12)
         cell.textLabel!.frame = CGRectMake(5, 5, self.view.frame.width - 40 - 5, cell.frame.height - 10)
         cell.textLabel!.numberOfLines = 0
