@@ -82,6 +82,9 @@
 		EEB320321B5D9451005D1334 /* UserIdeasTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB320311B5D9451005D1334 /* UserIdeasTableViewController.swift */; };
 		EEB320351B5DBB08005D1334 /* UserIdeasDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB320341B5DBB08005D1334 /* UserIdeasDetailViewController.swift */; };
 		EEB320371B5F0C58005D1334 /* UserTopicsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB320361B5F0C58005D1334 /* UserTopicsTableViewController.swift */; };
+		EEB320391B6053FA005D1334 /* FollowingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB320381B6053FA005D1334 /* FollowingTableViewController.swift */; };
+		EEB3203B1B60540E005D1334 /* FollowersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB3203A1B60540E005D1334 /* FollowersTableViewController.swift */; };
+		EEB3203D1B605837005D1334 /* FriendshipTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB3203C1B605837005D1334 /* FriendshipTableViewCell.swift */; };
 		EEC89CBD1B507A56009720CE /* StoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBC1B507A56009720CE /* StoreViewController.swift */; };
 		EEC89CC01B507BA1009720CE /* StoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */; };
 		EED08A211B386DC5002FAE19 /* IdeaDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A201B386DC5002FAE19 /* IdeaDetailViewController.swift */; };
@@ -216,6 +219,9 @@
 		EEB320311B5D9451005D1334 /* UserIdeasTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserIdeasTableViewController.swift; sourceTree = "<group>"; };
 		EEB320341B5DBB08005D1334 /* UserIdeasDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserIdeasDetailViewController.swift; sourceTree = "<group>"; };
 		EEB320361B5F0C58005D1334 /* UserTopicsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTopicsTableViewController.swift; sourceTree = "<group>"; };
+		EEB320381B6053FA005D1334 /* FollowingTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowingTableViewController.swift; sourceTree = "<group>"; };
+		EEB3203A1B60540E005D1334 /* FollowersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowersTableViewController.swift; sourceTree = "<group>"; };
+		EEB3203C1B605837005D1334 /* FriendshipTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendshipTableViewCell.swift; sourceTree = "<group>"; };
 		EEC89CBB1B50390C009720CE /* IdeaMuscle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = IdeaMuscle.entitlements; sourceTree = "<group>"; };
 		EEC89CBC1B507A56009720CE /* StoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreViewController.swift; sourceTree = "<group>"; };
 		EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreTableViewCell.swift; sourceTree = "<group>"; };
@@ -475,6 +481,9 @@
 			children = (
 				EED08A281B3C7507002FAE19 /* ProfileViewController.swift */,
 				EED08A2B1B3CC0EB002FAE19 /* ProfileIdeaCell.swift */,
+				EEB320381B6053FA005D1334 /* FollowingTableViewController.swift */,
+				EEB3203A1B60540E005D1334 /* FollowersTableViewController.swift */,
+				EEB3203C1B605837005D1334 /* FriendshipTableViewCell.swift */,
 			);
 			name = "Profile Controllers";
 			sourceTree = "<group>";
@@ -685,9 +694,11 @@
 				EEB320351B5DBB08005D1334 /* UserIdeasDetailViewController.swift in Sources */,
 				EEC89CC01B507BA1009720CE /* StoreTableViewCell.swift in Sources */,
 				EE8085211B1E1AE300BFC07C /* SharedCode.swift in Sources */,
+				EEB320391B6053FA005D1334 /* FollowingTableViewController.swift in Sources */,
 				EEB320371B5F0C58005D1334 /* UserTopicsTableViewController.swift in Sources */,
 				EED08A441B432E16002FAE19 /* WorldLeaderboardTableViewController.swift in Sources */,
 				EE1A7F9B1B4C97B3004EBD8B /* HOKObserver.m in Sources */,
+				EEB3203D1B605837005D1334 /* FriendshipTableViewCell.swift in Sources */,
 				EE1A7F961B4C97B3004EBD8B /* HOKNetworkOperation.m in Sources */,
 				EE1A7FA01B4C97B3004EBD8B /* HOKURL.m in Sources */,
 				EEB320321B5D9451005D1334 /* UserIdeasTableViewController.swift in Sources */,
@@ -699,6 +710,7 @@
 				EE8EE4A81B228EF30093A62A /* MoreViewController.swift in Sources */,
 				EE8EE4A41B228E260093A62A /* FeedViewController.swift in Sources */,
 				EE1A7F8B1B4C97B3004EBD8B /* HOKDeeplinking.m in Sources */,
+				EEB3203B1B60540E005D1334 /* FollowersTableViewController.swift in Sources */,
 				EE1A7F9E1B4C97B3004EBD8B /* HOKRouting.m in Sources */,
 				EE1A7F911B4C97B3004EBD8B /* HOKHandling.m in Sources */,
 				81BA814B1A49DA1800E65899 /* AppDelegate.swift in Sources */,

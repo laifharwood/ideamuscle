@@ -24,6 +24,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     var hasUpvoted = [Bool](count: 100, repeatedValue: false)
     var totalUsersLabel = UILabel()
     var shouldReloadTable = false
+    var numberOfUpvotes = UILabel()
+    var numberFollowing = UILabel()
+    var numberOfFollowers = UILabel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +38,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         if activeUser != PFUser.currentUser(){
         followingQuery()
         }
+        queryNumberFollowing()
+        queryNumberOfFollowers()
+        queryNumberOfUpvotes()
         
         ideaTableView.delegate = self
         ideaTableView.dataSource = self
@@ -63,8 +69,69 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         usernameLabel.textColor = fiftyGrayColor
         self.view.addSubview(usernameLabel)
         
+        //MARK: - Number Of Section
+        var width = CGFloat()
+        var height = CGFloat()
+        width = 60.0
+        height = 30.0
+        let upvotes = UILabel(frame: CGRectMake(20, usernameLabel.frame.maxY + 3, width, height))
+        let following = UILabel(frame: CGRectMake(self.view.frame.width/2 - width/2, usernameLabel.frame.maxY + 3, width, height))
+        let followers = UILabel(frame: CGRectMake(self.view.frame.maxX - width - 20, usernameLabel.frame.maxY + 3, width, height))
+        
+        upvotes.font = UIFont(name: "HelveticaNeue", size: 12)
+        following.font = UIFont(name: "HelveticaNeue", size: 12)
+        followers.font = UIFont(name: "HelveticaNeue", size: 12)
+        
+        upvotes.text = "Upvotes"
+        following.text = "Following"
+        followers.text = "Followers"
+        
+        upvotes.textAlignment = NSTextAlignment.Center
+        following.textAlignment = NSTextAlignment.Center
+        followers.textAlignment = NSTextAlignment.Center
+        
+        upvotes.textColor = oneFiftyGrayColor
+        following.textColor = oneFiftyGrayColor
+        followers.textColor = oneFiftyGrayColor
+    
+        
+        numberOfUpvotes.frame = CGRectMake(20, upvotes.frame.maxY - 8, width, height)
+        numberFollowing.frame = CGRectMake(self.view.frame.width/2 - width/2, following.frame.maxY - 8, width, height)
+        numberOfFollowers.frame = CGRectMake(self.view.frame.maxX - width - 20, followers.frame.maxY - 8, width, height)
+        
+        numberOfUpvotes.textAlignment = NSTextAlignment.Center
+        numberFollowing.textAlignment = NSTextAlignment.Center
+        numberOfFollowers.textAlignment = NSTextAlignment.Center
+        
+        numberOfUpvotes.textColor = fiftyGrayColor
+        numberFollowing.textColor = fiftyGrayColor
+        numberOfFollowers.textColor = fiftyGrayColor
+        
+        numberOfUpvotes.font = UIFont(name: "HelveticaNeue", size: 15)
+        numberFollowing.font = UIFont(name: "HelveticaNeue", size: 15)
+        numberOfFollowers.font = UIFont(name: "HelveticaNeue", size: 15)
+        
+        let followingGestureRec = UITapGestureRecognizer(target: self, action: "goToFollowing:")
+        let followersGestureRec = UITapGestureRecognizer(target: self, action: "goToFollowers:")
+        numberFollowing.addGestureRecognizer(followingGestureRec)
+        following.addGestureRecognizer(followingGestureRec)
+        numberOfFollowers.addGestureRecognizer(followersGestureRec)
+        followers.addGestureRecognizer(followersGestureRec)
+        following.userInteractionEnabled = true
+        followers.userInteractionEnabled = true
+        numberOfFollowers.userInteractionEnabled = true
+        numberFollowing.userInteractionEnabled = true
+        
+        self.view.addSubview(upvotes)
+        self.view.addSubview(numberOfUpvotes)
+        self.view.addSubview(numberFollowing)
+        self.view.addSubview(following)
+        self.view.addSubview(numberOfFollowers)
+        self.view.addSubview(followers)
+        
+        
         //MARK: - World Rank Label
-        worldRankTitleLabel.frame = CGRectMake(self.view.frame.width/3 - 50 - 30, usernameLabel.frame.maxY + 2, 100, 20)
+        worldRankTitleLabel.frame = CGRectMake(self.view.frame.width/3 - 50 - 30, numberOfUpvotes.frame.maxY + 7, 100, 20)
         worldRankTitleLabel.text = "World Ranking"
         worldRankTitleLabel.font = UIFont(name: "Helvetica", size: 14)
         worldRankTitleLabel.textColor = UIColor.blackColor()
@@ -121,6 +188,63 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         self.view.addSubview(ideaTableView)
         
     }
+    
+    func queryNumberOfUpvotes(){
+        let query = PFQuery(className: "Leaderboard")
+        query.whereKey("userPointer", equalTo: activeUser)
+        query.getFirstObjectInBackgroundWithBlock { (object, error) -> Void in
+            if error == nil{
+                var leaderboardObject = PFObject(className: "Leaderboard")
+                leaderboardObject = object!
+                if let numberOfUpvotes = leaderboardObject["numberOfUpvotes"] as? Int{
+                    let string = abbreviateNumber(numberOfUpvotes) as! String
+                    self.numberOfUpvotes.text = string
+                }else{
+                    self.numberOfUpvotes.text = "0"
+                }
+            }
+        }
+    }
+    
+    func queryNumberFollowing(){
+        if let numberFollowingNumber = activeUser["numberFollowing"] as? Int{
+            let string = abbreviateNumber(numberFollowingNumber) as! String
+            numberFollowing.text = string
+        }else{
+            numberFollowing.text = "0"
+        }
+    }
+    
+    func queryNumberOfFollowers(){
+        let query = PFQuery(className: "NumberOfFollowers")
+        query.whereKey("userPointer", equalTo: activeUser)
+        query.getFirstObjectInBackgroundWithBlock { (object, error) -> Void in
+            if error == nil{
+                var numberOfFollowersObject = PFObject(className: "NumberOfFollowers")
+                numberOfFollowersObject = object!
+                if let numberOfFollowers = numberOfFollowersObject["numberOfFollowers"] as? Int{
+                    let string = abbreviateNumber(numberOfFollowers) as! String
+                    self.numberOfFollowers.text = string
+                }else{
+                    self.numberOfFollowers.text = "0"
+                }
+            }
+        }
+    }
+    
+    
+    
+    func goToFollowing(sender: UITapGestureRecognizer){
+        println("goToFollowing")
+    }
+    
+    func goToFollowers(sender: UITapGestureRecognizer){
+       let followersVC = FollowersTableViewController()
+        followersVC.activeUser = activeUser
+        navigationController?.pushViewController(followersVC, animated: true)
+    }
+    
+    
     
     override func viewWillAppear(animated: Bool) {
         self.tabBarController!.tabBar.hidden = true
