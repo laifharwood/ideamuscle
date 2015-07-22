@@ -46,8 +46,8 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
         if self === vcs?.first{
             let cancelButton = UIButton()
             cancelButton.setTitle("Close", forState: .Normal)
-            cancelButton.setTitleColor(redColor, forState: .Normal)
-            cancelButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 12)
+            cancelButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+            cancelButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 15)
             cancelButton.addTarget(self, action: "dismiss:", forControlEvents: .TouchUpInside)
             cancelButton.sizeToFit()
             let cancelBarItem = UIBarButtonItem(customView: cancelButton)
@@ -317,10 +317,7 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
         notLoggedInToRightAccount.addAction(cancelAction)
         
         let logoutAction: UIAlertAction = UIAlertAction(title: "Logout", style: .Default, handler: { (action) -> Void in
-            PFUser.logOut()
-            let loginVC = ViewController()
-            let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-            appDelegate.window?.rootViewController = loginVC
+            logout()
         })
         
         notLoggedInToRightAccount.addAction(logoutAction)

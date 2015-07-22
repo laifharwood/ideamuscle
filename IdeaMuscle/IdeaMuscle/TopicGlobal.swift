@@ -50,16 +50,17 @@ func numberOfIdeasGlobal(topicObjects: [PFObject], indexPath: NSIndexPath, ideaT
         
         let abbreviatedNumber = abbreviateNumber(numberOfIdeas) as String
         ideaTotalButton.setTitle(abbreviatedNumber, forState: .Normal)
-        ideaTotalButton.frame =  CGRectMake(cell.frame.maxX - (40 + 10), 20, 40, cell.frame.height - 40)
-        ideaTotalButton.layer.cornerRadius = 3.0
-        ideaTotalButton.layer.borderColor = oneFiftyGrayColor.CGColor
-        ideaTotalButton.backgroundColor = oneFiftyGrayColor
-        ideaTotalButton.layer.borderWidth = 1
-        ideaTotalButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        ideaTotalButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 15)
-        ideaTotalButton.enabled = true
-        ideaTotalButton.tag = indexPath.row
+    }else{
+        ideaTotalButton.setTitle("0", forState: .Normal)
     }
+    ideaTotalButton.frame =  CGRectMake(cell.frame.maxX - (40 + 10), 20, 40, cell.frame.height - 40)
+    ideaTotalButton.layer.cornerRadius = 3.0
+    ideaTotalButton.layer.borderColor = oneFiftyGrayColor.CGColor
+    ideaTotalButton.backgroundColor = oneFiftyGrayColor
+    ideaTotalButton.layer.borderWidth = 1
+    ideaTotalButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+    ideaTotalButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 15)
+    ideaTotalButton.tag = indexPath.row
 }
 
 func ideaTitleLabelGlobal(ideaTitleLabel: UILabel, ideaTotalButton: UIButton){

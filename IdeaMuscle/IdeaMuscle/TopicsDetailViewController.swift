@@ -66,11 +66,17 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         //MARK: - Share Button
         var shareButton = UIButton()
         shareButton.frame = CGRectMake(0, self.view.frame.maxY - 30, self.view.frame.width/2 - 0.5, 30)
-        shareButton.setTitle("Share", forState: .Normal)
-        shareButton.backgroundColor = sixtyThreeGrayColor
-        shareButton.addTarget(self, action: "share:", forControlEvents: .TouchUpInside)
-        shareButton.titleLabel?.font = UIFont(name: "Helvetica-Light", size: 14)
-        self.view.addSubview(shareButton)
+        if let user = PFUser.currentUser(){
+            if let isPublic =  activeTopic["isPublic"] as? Bool{
+                if isPublic{
+                    shareButton.setTitle("Share", forState: .Normal)
+                    shareButton.backgroundColor = sixtyThreeGrayColor
+                    shareButton.addTarget(self, action: "share:", forControlEvents: .TouchUpInside)
+                    shareButton.titleLabel?.font = UIFont(name: "Helvetica-Light", size: 14)
+                    self.view.addSubview(shareButton)
+                }
+            }
+        }
         
         //MARK: - Compose Button
         var composeButton = UIButton()

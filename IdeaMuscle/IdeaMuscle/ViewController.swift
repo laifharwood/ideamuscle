@@ -212,6 +212,9 @@ class ViewController: UIViewController{
                     couldNotLinkTwitterAccountController.view.backgroundColor = oneFiftyGrayColor
                     //Create and add the Cancel action
                     let cancelAction: UIAlertAction = UIAlertAction(title: "Okay", style: .Cancel) { action -> Void in
+                        //Add Logout User
+                        self.stopActivityIndicator()
+                        logout()
                     }
                     couldNotLinkTwitterAccountController.addAction(cancelAction)
                     //Present the AlertController
@@ -230,10 +233,6 @@ class ViewController: UIViewController{
         }
     }
     
-    func proceedWithoutAccount(sender: UIButton!){
-        
-        //goToTabBar()
-    }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -319,53 +318,61 @@ class ViewController: UIViewController{
     
         
         if let currentUser = PFUser.currentUser(){
-            var isOnLeaderboard = Bool()
-            if let isOnLeaderboard = currentUser["isOnLeaderboard"] as? Bool{
+                var isOnLeaderboard = Bool()
+                if let isOnLeaderboard = currentUser["isOnLeaderboard"] as? Bool{
+                }else{
+                var leaderboardObject = PFObject(className: "Leaderboard")
+                leaderboardObject["userPointer"] = currentUser
+                leaderboardObject["numberOfUpvotes"] = 0
+                leaderboardObject.ACL?.setPublicWriteAccess(true)
+                leaderboardObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                    if success{
+                        currentUser["isOnLeaderboard"] = true
+                        currentUser.saveInBackground()
+                    }
+                })
+                }
+            var hasIncUserTotal = Bool()
+            if let hasIncUserTotal = currentUser["hasIncTotalUserCount"] as? Bool{
             }else{
-            var leaderboardObject = PFObject(className: "Leaderboard")
-            leaderboardObject["userPointer"] = currentUser
-            leaderboardObject["numberOfUpvotes"] = 0
-            leaderboardObject.ACL?.setPublicWriteAccess(true)
-            leaderboardObject.saveInBackgroundWithBlock({ (success, error) -> Void in
-                if success{
-                    currentUser["isOnLeaderboard"] = true
-                    currentUser.saveInBackground()
-                }
-            })
-        }
-        var hasIncUserTotal = Bool()
-        if let hasIncUserTotal = currentUser["hasIncTotalUserCount"] as? Bool{
-            
-        }else{
-            let totalUsers = PFObject(withoutDataWithClassName: "TotalUsers", objectId: "RjDIi23LNW")
-            totalUsers.incrementKey("numberOfUsers")
-            totalUsers.saveInBackgroundWithBlock({ (success, error) -> Void in
-                if success{
-                    currentUser["hasIncTotalUserCount"] = true
-                    currentUser.saveInBackground()
-                }
-            })
-        }
+                let totalUsers = PFObject(withoutDataWithClassName: "TotalUsers", objectId: "RjDIi23LNW")
+                totalUsers.incrementKey("numberOfUsers")
+                totalUsers.saveInBackgroundWithBlock({ (success, error) -> Void in
+                    if success{
+                        currentUser["hasIncTotalUserCount"] = true
+                        currentUser.saveInBackground()
+                    }
+                })
+            }
             var isInLastPosted = Bool()
             if let isInLastPosted = currentUser["isInLastPosted"] as? Bool{
-                
             }else{
                 var lastPostedObject = PFObject(className: "LastPosted")
                 lastPostedObject["userPointer"] = currentUser
                 lastPostedObject["update"] = 0
                 lastPostedObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                if success{
+                    currentUser["isInLastPosted"] = true
+                    currentUser.saveInBackground()
+                }
+                })
+            }
+            var isInNumberOfFollowers = Bool()
+            if let isInNumberOfFollowers = currentUser["isInNumberOfFollowers"] as? Bool{
+            }else{
+                var numberOfFollowersObject = PFObject(className: "NumberOfFollowers")
+                numberOfFollowersObject["userPointer"] = currentUser
+                numberOfFollowersObject["numberOfFollowers"] = 0
+                numberOfFollowersObject.ACL?.setPublicWriteAccess(true)
+                numberOfFollowersObject.saveInBackgroundWithBlock({ (success, error) -> Void in
                     if success{
-                        currentUser["isInLastPosted"] = true
+                        currentUser["isInNumberOfFollowers"] = true
                         currentUser.saveInBackground()
                     }
                 })
             }
-        
-        
         }
         
-    
-    
     stopActivityIndicator()
     let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     appDelegate.window?.rootViewController = tabBarController

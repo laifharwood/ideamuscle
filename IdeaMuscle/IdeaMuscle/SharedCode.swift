@@ -278,16 +278,40 @@ func followGlobal(userToFollow: PFUser, shouldFollow: Bool){
         if let currentUser = PFUser.currentUser(){
             let relation = currentUser.relationForKey("following")
             relation.removeObject(userToFollow)
+            currentUser.incrementKey("numberFollowing", byAmount: -1)
             currentUser.saveInBackground()
+            queryNumberOfFollowers(-1, userToFollow)
         }
     }else{
         //Follow
         if let currentUser = PFUser.currentUser(){
             let relation = currentUser.relationForKey("following")
             relation.addObject(userToFollow)
+            currentUser.incrementKey("numberFollowing", byAmount: 1)
             currentUser.saveInBackground()
+            queryNumberOfFollowers(1, userToFollow)
         }
     }
+}
+
+func queryNumberOfFollowers(amount: NSNumber, userToFollow: PFUser){
+    let query = PFQuery(className: "NumberOfFollowers")
+    query.whereKey("userPointer", equalTo: userToFollow)
+    query.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
+        if error == nil{
+            var numberOfFollowersObject = PFObject(className: "NumberOfFollowers")
+            numberOfFollowersObject = object!
+            numberOfFollowersObject.incrementKey("numberOfFollowers", byAmount: amount)
+            numberOfFollowersObject.saveEventually()
+        }
+    })
+}
+
+func logout(){
+    PFUser.logOut()
+    let loginVC = ViewController()
+    let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    appDelegate.window?.rootViewController = loginVC
 }
 
 func getAvatar(user: PFUser, imageView: UIImageView?, parseImageView: PFImageView?){

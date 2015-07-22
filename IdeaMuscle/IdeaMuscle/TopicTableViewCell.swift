@@ -50,6 +50,8 @@ class TopicTableViewCell: UITableViewCell {
         self.numberOfUpvotesButton.setTitleColor(nil, forState: .Normal)
         self.numberOfUpvotesButton.setImage(nil, forState: .Normal)
         self.numberOfUpvotesButton.titleEdgeInsets = UIEdgeInsetsZero
+        
+        
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

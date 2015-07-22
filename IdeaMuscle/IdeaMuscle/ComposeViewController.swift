@@ -124,8 +124,8 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             var cancelButton = UIButton()
             cancelButton.frame = CGRectMake(0, topBar.frame.height/2, 60, 16)
             cancelButton.setTitle("Cancel", forState: .Normal)
-            cancelButton.titleLabel!.font = UIFont(name: "HelveticaNeue", size: 12)
-            cancelButton.setTitleColor(redColor, forState: .Normal)
+            cancelButton.titleLabel!.font = UIFont(name: "HelveticaNeue", size: 15)
+            cancelButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
             cancelButton.addTarget(nil, action: "cancel:", forControlEvents: .TouchUpInside)
             topBar.addSubview(cancelButton)
         

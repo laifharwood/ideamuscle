@@ -173,17 +173,21 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     func follow(sender: UIButton!){
         if isFollowing == true{
             //Unfollow
+            if let user = PFUser.currentUser(){
                 followGlobal(activeUser, false)
                 self.followButton.setTitle("Follow", forState: .Normal)
                 self.followButton.backgroundColor = redColor
                 self.isFollowing = false
+            }
             
         }else{
             //Follow
+            if let user = PFUser.currentUser(){
                 followGlobal(activeUser, true)
                 self.followButton.setTitle("Following", forState: .Normal)
                 self.followButton.backgroundColor = oneFiftyGrayColor
                 isFollowing = true
+            }
         }
         
     }
