@@ -64,7 +64,7 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return 6
+        return 7
     }
     
     func composeOriginal(sender: UIButton!){
@@ -94,6 +94,8 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.textLabel!.text = "Your Profile"
         }else if indexPath.row == 5{
             cell.textLabel!.text = "Ideas You've Upvoted"
+        }else if indexPath.row == 6{
+            cell.textLabel!.text = "Notifications"
         }
         
 
@@ -145,6 +147,9 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
                     upgradeUpvotedAlert()
                 }
             }
+        }else if indexPath.row == 6{
+            let notificationVC = NotificationsTableViewController()
+            navigationController?.pushViewController(notificationVC, animated: true)
         }
     }
     

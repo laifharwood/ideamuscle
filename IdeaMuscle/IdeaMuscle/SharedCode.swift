@@ -28,6 +28,7 @@ let fiftyGrayColor : UIColor = UIColor(red: 50/255, green: 50/255, blue: 50/255,
 let oneFiftyGrayColor : UIColor = UIColor(red: 150/255, green: 150/255, blue: 150/255, alpha: 1)
 let tenGrayColor : UIColor = UIColor(red: 10/255, green: 10/255, blue: 10/255, alpha: 1)
 let transparentColor : UIColor = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 0)
+let twoThirtyGrayColor : UIColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
 
 let sixtyThreeGrayColor : UIColor = UIColor(red: 63/255, green: 63/255, blue: 63/255, alpha: 1)
 
@@ -393,8 +394,10 @@ func updateMoreBadge(tabBarController: UITabBarController){
     let tabArray = tabBarController.tabBar.items as NSArray!
     let tabItem = tabArray.objectAtIndex(3) as! UITabBarItem
     var currentInstall = PFInstallation.currentInstallation()
-    if currentInstall != 0{
+    if currentInstall.badge != 0{
         tabItem.badgeValue = abbreviateNumber(currentInstall.badge) as String
+    }else if currentInstall.badge == 0{
+        tabItem.badgeValue = nil
     }
 }
 

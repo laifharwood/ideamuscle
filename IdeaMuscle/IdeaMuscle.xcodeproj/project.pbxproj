@@ -86,6 +86,8 @@
 		EEB3203B1B60540E005D1334 /* FollowersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB3203A1B60540E005D1334 /* FollowersTableViewController.swift */; };
 		EEB3203D1B605837005D1334 /* FriendshipTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB3203C1B605837005D1334 /* FriendshipTableViewCell.swift */; };
 		EEB3203F1B617920005D1334 /* IdeasUserUpvotedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB3203E1B617920005D1334 /* IdeasUserUpvotedTableViewController.swift */; };
+		EEB320411B6836BB005D1334 /* NotificationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB320401B6836BB005D1334 /* NotificationsTableViewController.swift */; };
+		EEB320441B6845D5005D1334 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB320431B6845D5005D1334 /* NotificationTableViewCell.swift */; };
 		EEC89CBD1B507A56009720CE /* StoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBC1B507A56009720CE /* StoreViewController.swift */; };
 		EEC89CC01B507BA1009720CE /* StoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */; };
 		EED08A211B386DC5002FAE19 /* IdeaDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A201B386DC5002FAE19 /* IdeaDetailViewController.swift */; };
@@ -224,6 +226,8 @@
 		EEB3203A1B60540E005D1334 /* FollowersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowersTableViewController.swift; sourceTree = "<group>"; };
 		EEB3203C1B605837005D1334 /* FriendshipTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendshipTableViewCell.swift; sourceTree = "<group>"; };
 		EEB3203E1B617920005D1334 /* IdeasUserUpvotedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeasUserUpvotedTableViewController.swift; sourceTree = "<group>"; };
+		EEB320401B6836BB005D1334 /* NotificationsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsTableViewController.swift; sourceTree = "<group>"; };
+		EEB320431B6845D5005D1334 /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
 		EEC89CBB1B50390C009720CE /* IdeaMuscle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = IdeaMuscle.entitlements; sourceTree = "<group>"; };
 		EEC89CBC1B507A56009720CE /* StoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreViewController.swift; sourceTree = "<group>"; };
 		EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreTableViewCell.swift; sourceTree = "<group>"; };
@@ -457,6 +461,7 @@
 				EEC89CBE1B507B4F009720CE /* Store Controllers */,
 				EEB320361B5F0C58005D1334 /* UserTopicsTableViewController.swift */,
 				EEB3203E1B617920005D1334 /* IdeasUserUpvotedTableViewController.swift */,
+				EEB320421B6845B5005D1334 /* Notification Controllers */,
 			);
 			name = "More Controllers";
 			sourceTree = "<group>";
@@ -468,6 +473,15 @@
 				EEB320341B5DBB08005D1334 /* UserIdeasDetailViewController.swift */,
 			);
 			name = "User Ideas";
+			sourceTree = "<group>";
+		};
+		EEB320421B6845B5005D1334 /* Notification Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				EEB320401B6836BB005D1334 /* NotificationsTableViewController.swift */,
+				EEB320431B6845D5005D1334 /* NotificationTableViewCell.swift */,
+			);
+			name = "Notification Controllers";
 			sourceTree = "<group>";
 		};
 		EEC89CBE1B507B4F009720CE /* Store Controllers */ = {
@@ -694,6 +708,7 @@
 				EED08A391B41D7C8002FAE19 /* TopicGlobal.swift in Sources */,
 				EED08A291B3C7507002FAE19 /* ProfileViewController.swift in Sources */,
 				EE1A7F8F1B4C97B3004EBD8B /* HOKGZip.m in Sources */,
+				EEB320411B6836BB005D1334 /* NotificationsTableViewController.swift in Sources */,
 				EEB320351B5DBB08005D1334 /* UserIdeasDetailViewController.swift in Sources */,
 				EEC89CC01B507BA1009720CE /* StoreTableViewCell.swift in Sources */,
 				EE8085211B1E1AE300BFC07C /* SharedCode.swift in Sources */,
@@ -714,6 +729,7 @@
 				EE8EE4A81B228EF30093A62A /* MoreViewController.swift in Sources */,
 				EE8EE4A41B228E260093A62A /* FeedViewController.swift in Sources */,
 				EE1A7F8B1B4C97B3004EBD8B /* HOKDeeplinking.m in Sources */,
+				EEB320441B6845D5005D1334 /* NotificationTableViewCell.swift in Sources */,
 				EEB3203B1B60540E005D1334 /* FollowersTableViewController.swift in Sources */,
 				EE1A7F9E1B4C97B3004EBD8B /* HOKRouting.m in Sources */,
 				EE1A7F911B4C97B3004EBD8B /* HOKHandling.m in Sources */,
