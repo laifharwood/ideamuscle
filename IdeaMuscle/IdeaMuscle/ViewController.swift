@@ -11,7 +11,7 @@ import FBSDKCoreKit
 import FBSDKLoginKit
 import FBSDKShareKit
 
-
+let tabBarControllerK = UITabBarController()
 
 class ViewController: UIViewController{
     
@@ -21,6 +21,7 @@ class ViewController: UIViewController{
     var logo = UIImage()
     var activityIndicator = UIActivityIndicatorView()
     let permissions = ["public_profile", "email", "user_friends"]
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -268,7 +269,7 @@ class ViewController: UIViewController{
         
     checkIfPro()
     
-    let tabBarController = UITabBarController()
+    
     
     UITabBar.appearance().barTintColor = fiftyGrayColor
     UITabBar.appearance().tintColor = redColor
@@ -286,7 +287,7 @@ class ViewController: UIViewController{
     let moreNav = UINavigationController(rootViewController: moreController)
     
     let controllers = [topicsNav, feedNav, leaderboardNav, moreNav]
-    tabBarController.viewControllers = controllers
+    tabBarControllerK.viewControllers = controllers
     
     
     let offset = UIOffsetMake(0, 1)
@@ -314,6 +315,9 @@ class ViewController: UIViewController{
     moreController.tabBarItem = UITabBarItem(title: nil, image: more, tag: 4)
     moreController.tabBarItem.imageInsets = UIEdgeInsetsMake(5.5, 0, -5.5, 0)
     moreController.tabBarItem.setTitlePositionAdjustment(offset)
+    if PFInstallation.currentInstallation().badge != 0{
+        moreController.tabBarItem.badgeValue = abbreviateNumber(PFInstallation.currentInstallation().badge) as String
+    }
     moreController.tabBarItem.title = "More"
     
         
@@ -371,11 +375,28 @@ class ViewController: UIViewController{
                     }
                 })
             }
+            
+            if let hasSetNotificationSettings = currentUser["hasSetNotificationSettings"] as? Bool{
+                
+            }else{
+                currentUser["getCommentNotifications"] = true
+                currentUser["getTopicNotifications"] = true
+                currentUser["getUpvoteNotifications"] = true
+                currentUser["hasSetNotificationSettings"] = true
+            }
         }
+        
+        if let user = PFUser.currentUser(){
+            let installation = PFInstallation.currentInstallation()
+            installation.setObject(user, forKey: "user")
+            installation.saveInBackground()
+        }
+        
+        
         
     stopActivityIndicator()
     let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-    appDelegate.window?.rootViewController = tabBarController
+    appDelegate.window?.rootViewController = tabBarControllerK
     
 }
 
@@ -448,13 +469,11 @@ class ViewController: UIViewController{
                     timeNowObject = object!
                     timeNowObject.incrementKey("update")
                     timeNowObject.saveInBackgroundWithBlock({ (success, error) -> Void in
-                        println("timeNowObject Saved")
                         if success{
                             timeNowObject.fetchInBackgroundWithBlock({ (object, error) -> Void in
                                 let timeNow = timeNowObject.updatedAt
                                 let expiration = user["proExpiration"] as! NSDate
                                 if timeNow!.isGreaterThanDate(expiration){
-                                    println("user should not be pro")
                                     user["isPro"] = false
                                     user.saveInBackground()
                                 }

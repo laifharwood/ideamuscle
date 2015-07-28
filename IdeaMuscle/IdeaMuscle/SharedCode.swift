@@ -272,7 +272,7 @@ func upvoteGlobal(idea: PFObject, shouldUpvote: Bool, button: UIButton){
     }
 }
 
-func followGlobal(userToFollow: PFUser, shouldFollow: Bool){
+func followGlobal(userToFollow: PFUser, shouldFollow: Bool, sender: AnyObject!){
     if shouldFollow == false{
         //Unfollow
         if let currentUser = PFUser.currentUser(){
@@ -285,13 +285,30 @@ func followGlobal(userToFollow: PFUser, shouldFollow: Bool){
     }else{
         //Follow
         if let currentUser = PFUser.currentUser(){
-            let relation = currentUser.relationForKey("following")
-            relation.addObject(userToFollow)
-            currentUser.incrementKey("numberFollowing", byAmount: 1)
-            currentUser.saveInBackground()
-            queryNumberOfFollowers(1, userToFollow)
+            if let numberFollowing = currentUser["numberFollowing"] as? Int{
+                if numberFollowing < 1000{
+                    let relation = currentUser.relationForKey("following")
+                    relation.addObject(userToFollow)
+                    currentUser.incrementKey("numberFollowing", byAmount: 1)
+                    currentUser.saveInBackground()
+                    queryNumberOfFollowers(1, userToFollow)
+                }else{
+                    followLimitAlert(sender)
+                }
+            }
         }
     }
+}
+
+func followLimitAlert(sender: AnyObject!){
+    let followLimitAlert: UIAlertController = UIAlertController(title: "Limit Reached", message: "You are limited to following 1,000 people.", preferredStyle: .Alert)
+    followLimitAlert.view.tintColor = redColor
+    followLimitAlert.view.backgroundColor = oneFiftyGrayColor
+    //Create and add the Cancel action
+    let cancelAction: UIAlertAction = UIAlertAction(title: "Okay", style: .Cancel) { action -> Void in
+    }
+    followLimitAlert.addAction(cancelAction)
+    sender.presentViewController(followLimitAlert, animated: true, completion: nil)
 }
 
 func queryNumberOfFollowers(amount: NSNumber, userToFollow: PFUser){
@@ -369,6 +386,15 @@ extension NSDate
         
         //Return Result
         return isGreater
+    }
+}
+
+func updateMoreBadge(tabBarController: UITabBarController){
+    let tabArray = tabBarController.tabBar.items as NSArray!
+    let tabItem = tabArray.objectAtIndex(3) as! UITabBarItem
+    var currentInstall = PFInstallation.currentInstallation()
+    if currentInstall != 0{
+        tabItem.badgeValue = abbreviateNumber(currentInstall.badge) as String
     }
 }
 

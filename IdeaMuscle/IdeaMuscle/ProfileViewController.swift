@@ -16,7 +16,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     var worldRankLabel = UILabel()
     var isFollowing = Bool()
     var followButton = UIButton()
-    var following = [PFObject(className: "following")]
+    var following = [PFUser()]
     var activityIndicator = UIActivityIndicatorView()
     let worldRankTitleLabel = UILabel()
     var ideaTableView = UITableView()
@@ -36,7 +36,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         totalUsersQuery()
         queryForIdeaObjects()
         if activeUser != PFUser.currentUser(){
-        followingQuery()
+            followingQuery()
         }
         queryNumberFollowing()
         queryNumberOfFollowers()
@@ -48,6 +48,13 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         ideaTableView.rowHeight = 100
         ideaTableView.contentInset = UIEdgeInsetsMake(0, 0, 50, 0)
         
+        //MARK: - Top Background Container
+        var topBackgroundContainer = UIView(frame: CGRectMake(0, 0, self.view.frame.width, 250))
+        topBackgroundContainer.backgroundColor = twoHundredGrayColor
+        self.view.addSubview(topBackgroundContainer)
+        
+        
+        
         
         //MARK: - Avatar
         var imageView = UIImageView()
@@ -55,28 +62,17 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         getAvatar(activeUser, imageView, nil)
         imageView.layer.cornerRadius = 50
         imageView.layer.masksToBounds = true
-        self.view.addSubview(imageView)
+        topBackgroundContainer.addSubview(imageView)
         
-        //MARK: - Username
-        var username = String()
-        var usernameLabel = UILabel(frame: CGRectMake(5, imageView.frame.maxY + 2, self.view.frame.width - 10, 20))
-        usernameLabel.textAlignment = NSTextAlignment.Center
-        if activeUser["username"] != nil{
-            
-            usernameLabel.text = activeUser["username"] as? String
-        }
-        usernameLabel.font = UIFont(name: "Avenir-Light", size: 14)
-        usernameLabel.textColor = fiftyGrayColor
-        self.view.addSubview(usernameLabel)
-        
+    
         //MARK: - Number Of Section
         var width = CGFloat()
         var height = CGFloat()
         width = 60.0
         height = 30.0
-        let upvotes = UILabel(frame: CGRectMake(20, usernameLabel.frame.maxY + 3, width, height))
-        let following = UILabel(frame: CGRectMake(self.view.frame.width/2 - width/2, usernameLabel.frame.maxY + 3, width, height))
-        let followers = UILabel(frame: CGRectMake(self.view.frame.maxX - width - 20, usernameLabel.frame.maxY + 3, width, height))
+        let upvotes = UILabel(frame: CGRectMake(20, imageView.frame.maxY + 3, width, height))
+        let following = UILabel(frame: CGRectMake(self.view.frame.width/2 - width/2, imageView.frame.maxY + 3, width, height))
+        let followers = UILabel(frame: CGRectMake(self.view.frame.maxX - width - 20, imageView.frame.maxY + 3, width, height))
         
         upvotes.font = UIFont(name: "HelveticaNeue", size: 12)
         following.font = UIFont(name: "HelveticaNeue", size: 12)
@@ -122,27 +118,22 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         numberOfFollowers.userInteractionEnabled = true
         numberFollowing.userInteractionEnabled = true
         
-        self.view.addSubview(upvotes)
-        self.view.addSubview(numberOfUpvotes)
-        self.view.addSubview(numberFollowing)
-        self.view.addSubview(following)
-        self.view.addSubview(numberOfFollowers)
-        self.view.addSubview(followers)
+        topBackgroundContainer.addSubview(upvotes)
+        topBackgroundContainer.addSubview(numberOfUpvotes)
+        topBackgroundContainer.addSubview(numberFollowing)
+        topBackgroundContainer.addSubview(following)
+        topBackgroundContainer.addSubview(numberOfFollowers)
+        topBackgroundContainer.addSubview(followers)
+        
+
         
         
         //MARK: - World Rank Label
-        worldRankTitleLabel.frame = CGRectMake(self.view.frame.width/3 - 50 - 30, numberOfUpvotes.frame.maxY + 7, 100, 20)
-        worldRankTitleLabel.text = "World Ranking"
-        worldRankTitleLabel.font = UIFont(name: "Helvetica", size: 14)
-        worldRankTitleLabel.textColor = UIColor.blackColor()
-        worldRankTitleLabel.textAlignment = NSTextAlignment.Center
-        self.view.addSubview(worldRankTitleLabel)
+        let worldRankContainer = UIView(frame: CGRectMake(0, topBackgroundContainer.frame.maxY + 2, self.view.frame.width/2 - 1, 80))
+        worldRankContainer.backgroundColor = twoHundredGrayColor
+        self.view.addSubview(worldRankContainer)
         
-        
-        worldRankLabel.frame = CGRectMake(self.view.frame.width/3 - 75 - 20, worldRankTitleLabel.frame.maxY + 3, 60, 20)
-        //worldRankLabel.font = UIFont(name: "HelveticaNeue", size: 20)
-        //worldRankLabel.textColor = redColor
-        //worldRankLabel.frame = CGRectMake(self.view.frame.width/3 - 75 - 30, worldRankTitleLabel.frame.maxY - 3, 150, 40)
+        worldRankLabel.frame = CGRectMake(worldRankContainer.frame.width/2 - 35, worldRankContainer.frame.height/2 - 10, 70, 20)
         worldRankLabel.font = UIFont(name: "HelveticaNeue", size: 11)
         worldRankLabel.textAlignment = NSTextAlignment.Center
         let gestureRec = UITapGestureRecognizer(target: self, action: "viewRank:")
@@ -152,39 +143,64 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         worldRankLabel.backgroundColor = oneFiftyGrayColor
         worldRankLabel.textColor = UIColor.whiteColor()
         worldRankLabel.layer.cornerRadius = 3
-        self.view.addSubview(worldRankLabel)
+        worldRankLabel.layer.masksToBounds = true
+        worldRankContainer.addSubview(worldRankLabel)
+        
+        worldRankTitleLabel.frame = CGRectMake(5, worldRankLabel.frame.minY - 25, worldRankContainer.frame.width - 10, 20)
+        worldRankTitleLabel.text = "World Ranking"
+        worldRankTitleLabel.font = UIFont(name: "HelveticaNeue", size: 12)
+        worldRankTitleLabel.textColor = oneFiftyGrayColor
+        worldRankTitleLabel.textAlignment = NSTextAlignment.Center
+        worldRankContainer.addSubview(worldRankTitleLabel)
         
         //MARK: - Total User Label
-        totalUsersLabel.frame = CGRectMake(worldRankLabel.frame.maxX + 3, worldRankLabel.frame.minY, 150, 20)
+        totalUsersLabel.frame = CGRectMake(5, worldRankLabel.frame.maxY + 5, worldRankContainer.frame.width - 10, 20)
         totalUsersLabel.font = UIFont(name: "HelveticaNeue", size: 12)
         totalUsersLabel.textColor = oneFiftyGrayColor
-        totalUsersLabel.textAlignment = NSTextAlignment.Left
-        self.view.addSubview(totalUsersLabel)
+        totalUsersLabel.textAlignment = NSTextAlignment.Center
+        worldRankContainer.addSubview(totalUsersLabel)
+
+        
+        //MARK: - Idea title label
+        let ideaTitleLabelContainter = UIView(frame: CGRectMake(0, worldRankContainer.frame.maxY + 2, self.view.frame.width, 30))
+        ideaTitleLabelContainter.backgroundColor = fiftyGrayColor
+        self.view.addSubview(ideaTitleLabelContainter)
+        
+        let ideaTitleLabel = UILabel(frame: CGRectMake(10, 0, self.view.frame.width - 20, 30))
+        
+        if let username = activeUser.username{
+            self.title = username
+            ideaTitleLabel.text = username + "'s Ideas:"
+        }
+        
+        ideaTitleLabel.font = UIFont(name: "Helvetica-Light", size: 12)
+        ideaTitleLabel.textColor = UIColor.whiteColor()
+        ideaTitleLabel.textAlignment = NSTextAlignment.Left
+        ideaTitleLabelContainter.addSubview(ideaTitleLabel)
         
         //MARK: - Follow Button
-        followButton.frame = CGRectMake(self.view.frame.width/3 * 2 - 40 + 30, worldRankTitleLabel.frame.minY, 80, 40)
-        let currentUser = PFUser.currentUser()
+        let followButtonContainter = UIView(frame: CGRectMake(worldRankContainer.frame.maxX + 2, topBackgroundContainer.frame.maxY + 2, self.view.frame.width/2 - 1, 80))
+        followButtonContainter.backgroundColor = twoHundredGrayColor
+        self.view.addSubview(followButtonContainter)
+        
+        followButton.frame = CGRectMake(followButtonContainter.frame.width/2 - 40, worldRankContainer.frame.height/2 - 20, 80, 40)
         followButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         followButton.addTarget(self, action: "follow:", forControlEvents: .TouchUpInside)
         followButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 15)
         followButton.layer.cornerRadius = 3
         
-        if activeUser != currentUser{
-        self.view.addSubview(followButton)
+        if let currentUser = PFUser.currentUser(){
+            if activeUser != currentUser{
+            followButtonContainter.addSubview(followButton)
+            }
         }
         
-        //MARK: - Idea title label
-        let ideaTitleLabel = UILabel(frame: CGRectMake(10, followButton.frame.maxY + 15, self.view.frame.width - 20, 20))
-        if usernameLabel.text != nil{
-        ideaTitleLabel.text = usernameLabel.text! + "'s Ideas:"
-        }
-        ideaTitleLabel.font = UIFont(name: "Helvetica-Light", size: 10)
-        ideaTitleLabel.textColor = UIColor.blackColor()
-        ideaTitleLabel.textAlignment = NSTextAlignment.Left
-        self.view.addSubview(ideaTitleLabel)
         
-        //Table View Config
-        ideaTableView.frame = CGRectMake(0, ideaTitleLabel.frame.maxY, self.view.frame.width, self.view.frame.height - followButton.frame.maxY - 20)
+        
+        
+        
+        //MARK: - Table View Config
+        ideaTableView.frame = CGRectMake(0, ideaTitleLabelContainter.frame.maxY, self.view.frame.width, self.view.frame.height - ideaTitleLabelContainter.frame.maxY)
         self.view.addSubview(ideaTableView)
         
     }
@@ -235,7 +251,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     
     
     func goToFollowing(sender: UITapGestureRecognizer){
-        println("goToFollowing")
+        let followingVC = FollowingTableViewController()
+        followingVC.activeUser = activeUser
+        navigationController?.pushViewController(followingVC, animated: true)
     }
     
     func goToFollowers(sender: UITapGestureRecognizer){
@@ -258,7 +276,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         if let user = PFUser.currentUser(){
             if let isPro = user["isPro"] as? Bool{
                 if isPro == true{
-                    self.worldRankLabel.backgroundColor = UIColor.whiteColor()
+                    self.worldRankLabel.backgroundColor = twoHundredGrayColor
                     worldRankLabel.text = ""
                     startActivityIndicator()
                     worldRankQuery()
@@ -298,7 +316,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         if isFollowing == true{
             //Unfollow
             if let user = PFUser.currentUser(){
-                followGlobal(activeUser, false)
+                followGlobal(activeUser, false, self)
                 self.followButton.setTitle("Follow", forState: .Normal)
                 self.followButton.backgroundColor = redColor
                 self.isFollowing = false
@@ -307,10 +325,14 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         }else{
             //Follow
             if let user = PFUser.currentUser(){
-                followGlobal(activeUser, true)
-                self.followButton.setTitle("Following", forState: .Normal)
-                self.followButton.backgroundColor = oneFiftyGrayColor
-                isFollowing = true
+                followGlobal(activeUser, true, self)
+                if let numberFollowing = user["numberFollowing"] as? Int{
+                    if numberFollowing < 1000{
+                        self.followButton.setTitle("Following", forState: .Normal)
+                        self.followButton.backgroundColor = oneFiftyGrayColor
+                        isFollowing = true
+                    }
+                }
             }
         }
         
@@ -337,8 +359,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                         self.worldRank = Int(rank) + 1
                         self.worldRankLabel.font = UIFont(name: "HelveticaNeue", size: 20)
                         self.worldRankLabel.textColor = redColor
-                        self.worldRankLabel.frame = CGRectMake(self.totalUsersLabel.frame.minX - 155, self.totalUsersLabel.frame.minY, 150, 20)
-                        self.worldRankLabel.textAlignment = NSTextAlignment.Right
+                        
                         self.worldRankLabel.text = abbreviateNumber(self.worldRank) as String
                         self.worldRankLabel.userInteractionEnabled = false
                         
@@ -361,7 +382,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         query.findObjectsInBackgroundWithBlock({ (objects, error) -> Void in
             if error == nil{
                 
-                self.following = objects as! [PFObject]
+                self.following = objects as! [PFUser]
                 if contains(self.following, self.activeUser){
                     self.followButton.setTitle("Following", forState: .Normal)
                     self.followButton.backgroundColor = oneFiftyGrayColor
@@ -384,7 +405,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 let totalUsersObject = object!
                 var totalUsersInt = Int()
                 totalUsersInt = totalUsersObject["numberOfUsers"] as! Int
-                self.totalUsersLabel.text = "out of " + (abbreviateNumber(totalUsersInt) as String) + " users"
+                self.totalUsersLabel.text = "out of " + (abbreviateNumber(totalUsersInt) as! String) + " users"
             }
         })
     }
@@ -414,9 +435,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
 
     func startActivityIndicator(){
         
-        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.White
         activityIndicator.frame = CGRectMake(worldRankLabel.frame.width/2 - 10, 0, 20, 20)
-        activityIndicator.backgroundColor = UIColor.whiteColor()
+        activityIndicator.backgroundColor = twoHundredGrayColor
         worldRankLabel.addSubview(activityIndicator)
         activityIndicator.hidesWhenStopped = true
         activityIndicator.startAnimating()

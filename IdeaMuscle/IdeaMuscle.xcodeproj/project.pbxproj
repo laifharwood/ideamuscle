@@ -85,6 +85,7 @@
 		EEB320391B6053FA005D1334 /* FollowingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB320381B6053FA005D1334 /* FollowingTableViewController.swift */; };
 		EEB3203B1B60540E005D1334 /* FollowersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB3203A1B60540E005D1334 /* FollowersTableViewController.swift */; };
 		EEB3203D1B605837005D1334 /* FriendshipTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB3203C1B605837005D1334 /* FriendshipTableViewCell.swift */; };
+		EEB3203F1B617920005D1334 /* IdeasUserUpvotedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB3203E1B617920005D1334 /* IdeasUserUpvotedTableViewController.swift */; };
 		EEC89CBD1B507A56009720CE /* StoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBC1B507A56009720CE /* StoreViewController.swift */; };
 		EEC89CC01B507BA1009720CE /* StoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */; };
 		EED08A211B386DC5002FAE19 /* IdeaDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A201B386DC5002FAE19 /* IdeaDetailViewController.swift */; };
@@ -222,6 +223,7 @@
 		EEB320381B6053FA005D1334 /* FollowingTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowingTableViewController.swift; sourceTree = "<group>"; };
 		EEB3203A1B60540E005D1334 /* FollowersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowersTableViewController.swift; sourceTree = "<group>"; };
 		EEB3203C1B605837005D1334 /* FriendshipTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendshipTableViewCell.swift; sourceTree = "<group>"; };
+		EEB3203E1B617920005D1334 /* IdeasUserUpvotedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeasUserUpvotedTableViewController.swift; sourceTree = "<group>"; };
 		EEC89CBB1B50390C009720CE /* IdeaMuscle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = IdeaMuscle.entitlements; sourceTree = "<group>"; };
 		EEC89CBC1B507A56009720CE /* StoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreViewController.swift; sourceTree = "<group>"; };
 		EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreTableViewCell.swift; sourceTree = "<group>"; };
@@ -454,6 +456,7 @@
 				EEB320331B5DBADC005D1334 /* User Ideas */,
 				EEC89CBE1B507B4F009720CE /* Store Controllers */,
 				EEB320361B5F0C58005D1334 /* UserTopicsTableViewController.swift */,
+				EEB3203E1B617920005D1334 /* IdeasUserUpvotedTableViewController.swift */,
 			);
 			name = "More Controllers";
 			sourceTree = "<group>";
@@ -695,6 +698,7 @@
 				EEC89CC01B507BA1009720CE /* StoreTableViewCell.swift in Sources */,
 				EE8085211B1E1AE300BFC07C /* SharedCode.swift in Sources */,
 				EEB320391B6053FA005D1334 /* FollowingTableViewController.swift in Sources */,
+				EEB3203F1B617920005D1334 /* IdeasUserUpvotedTableViewController.swift in Sources */,
 				EEB320371B5F0C58005D1334 /* UserTopicsTableViewController.swift in Sources */,
 				EED08A441B432E16002FAE19 /* WorldLeaderboardTableViewController.swift in Sources */,
 				EE1A7F9B1B4C97B3004EBD8B /* HOKObserver.m in Sources */,

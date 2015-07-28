@@ -52,6 +52,10 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         reloadView()
         self.view.backgroundColor = UIColor.whiteColor()
         self.ideaTextView.delegate = self
+        
+//        if activeTopic["title"] == nil{
+//            activeTopic = activeIdea["topicPointer"] as! PFObject
+//        }
 
     }
     

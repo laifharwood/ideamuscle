@@ -38,13 +38,16 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        //tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height - tabBarController!.tabBar.frame.height)
         self.view.addSubview(tableView)
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.tabBarController!.tabBar.hidden = false
+        if self.tabBarController != nil{
+            self.tabBarController!.tabBar.hidden = false
+            //updateMoreBadge(self.tabBarController!)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -61,7 +64,7 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return 4
+        return 6
     }
     
     func composeOriginal(sender: UIButton!){
@@ -73,19 +76,24 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-         var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! UITableViewCell
+         //var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! UITableViewCell
+        var cell = UITableViewCell()
         
         cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
 
         // Configure the cell...
         if indexPath.row == 0 {
-            cell.textLabel!.text = "Store"
+            cell.textLabel!.text = "IdeaMuscle Pro Store"
         }else if indexPath.row == 1{
             cell.textLabel!.text = "Drafts"
         }else if indexPath.row == 2{
             cell.textLabel!.text = "Your Ideas"
         }else if indexPath.row == 3{
             cell.textLabel!.text = "Your Topics"
+        }else if indexPath.row == 4{
+            cell.textLabel!.text = "Your Profile"
+        }else if indexPath.row == 5{
+            cell.textLabel!.text = "Ideas You've Upvoted"
         }
         
 
@@ -118,11 +126,49 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
         }else if indexPath.row == 3{
             let userTopicsVC = UserTopicsTableViewController()
             navigationController?.pushViewController(userTopicsVC, animated: true)
+        }else if indexPath.row == 4{
+            let profileVC = ProfileViewController()
+            if let user = PFUser.currentUser(){
+                profileVC.activeUser = user
+                navigationController?.pushViewController(profileVC, animated: true)
+            }
+        }else if indexPath.row == 5{
+            if let user = PFUser.currentUser(){
+                if let isPro = user["isPro"] as? Bool{
+                    if isPro{
+                        let ideasUserUpvotedVC = IdeasUserUpvotedTableViewController()
+                        navigationController?.pushViewController(ideasUserUpvotedVC, animated: true)
+                    }else{
+                        upgradeUpvotedAlert()
+                    }
+                }else{
+                    upgradeUpvotedAlert()
+                }
+            }
         }
     }
     
     func upgradeAlert(){
         let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "An upgrade to Pro is requird to view or save drafts.", preferredStyle: .Alert)
+        upgradeAlert.view.tintColor = redColor
+        upgradeAlert.view.backgroundColor = oneFiftyGrayColor
+        //Create and add the Cancel action
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+        }
+        upgradeAlert.addAction(cancelAction)
+        
+        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
+            let storeVC = StoreViewController()
+            self.navigationController!.pushViewController(storeVC, animated: true)
+            
+        })
+        
+        upgradeAlert.addAction(goToStore)
+        self.presentViewController(upgradeAlert, animated: true, completion: nil)
+    }
+    
+    func upgradeUpvotedAlert(){
+        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "An upgrade to Pro is requird to view ideas you've upvoted.", preferredStyle: .Alert)
         upgradeAlert.view.tintColor = redColor
         upgradeAlert.view.backgroundColor = oneFiftyGrayColor
         //Create and add the Cancel action

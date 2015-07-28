@@ -64,7 +64,10 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     override func viewWillAppear(animated: Bool) {
         
-        self.tabBarController!.tabBar.hidden = false
+        if self.tabBarController != nil{
+            self.tabBarController!.tabBar.hidden = false
+            //updateMoreBadge(self.tabBarController!)
+        }
         if shouldReloadTable == true{
             tableView.reloadData()
             shouldReloadTable == false

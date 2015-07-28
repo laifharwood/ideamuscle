@@ -11,17 +11,17 @@ import Parse
 
 class FollowersTableViewController: UITableViewController {
     var activeUser = PFUser()
-    var followers = [PFUser()]
+    var activeUserFollowers = [PFUser()]
     var activityIndicator = UIActivityIndicatorView()
     var isFollowing = [Bool?](count: 1000, repeatedValue: nil)
-    var following = [PFObject(className: "following")]
+    var currentUserFollowing = [PFUser()]
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         startActivityIndicator()
-        queryFollowers()
+        queryActiveUserFollowers()
         
         if let username = activeUser.username{
             self.title = username + "'s" + " Followers"
@@ -34,30 +34,30 @@ class FollowersTableViewController: UITableViewController {
 
     }
     
-    func followingQuery(){
+    func queryCurrentUserFollowing(){
         if let currentUser = PFUser.currentUser(){
             var relation = PFRelation()
-            var query = PFQuery()
+            var query = PFQuery(className: "_User")
             relation = currentUser.relationForKey("following")
             query = relation.query()!
             query.limit = 1000
             query.findObjectsInBackgroundWithBlock({ (objects, error) -> Void in
                 if error == nil{
-                    self.following = objects as! [PFObject]
+                    self.currentUserFollowing = objects as! [PFUser]
                 }
                 self.stopActivityIndicator()
             })
         }
     }
     
-    func queryFollowers(){
+    func queryActiveUserFollowers(){
         let query = PFQuery(className: "_User")
         query.whereKey("following", equalTo: activeUser)
         query.orderByAscending("username")
         query.findObjectsInBackgroundWithBlock { (objects, error) -> Void in
             if error == nil{
-                self.followers = objects as! [PFUser]
-                self.followingQuery()
+                self.activeUserFollowers = objects as! [PFUser]
+                self.queryCurrentUserFollowing()
             }
             
         }
@@ -77,14 +77,14 @@ class FollowersTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return followers.count
+        return activeUserFollowers.count
     }
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! FriendshipTableViewCell
 
-        let user = followers[indexPath.row]
+        let user = activeUserFollowers[indexPath.row]
         
         getAvatar(user, nil, cell.profileButton)
         let gestureRec = UITapGestureRecognizer(target: self, action: "profileTapped:")
@@ -100,8 +100,9 @@ class FollowersTableViewController: UITableViewController {
             cell.followButton.addTarget(self, action: "follow:", forControlEvents: .TouchUpInside)
             cell.followButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 15)
             cell.followButton.layer.cornerRadius = 3
+            cell.followButton.tag = indexPath.row
             
-            if contains(following, user){
+            if contains(currentUserFollowing, user){
                 cell.followButton.setTitle("Following", forState: .Normal)
                 cell.followButton.backgroundColor = oneFiftyGrayColor
                 isFollowing[indexPath.row] = true
@@ -131,6 +132,33 @@ class FollowersTableViewController: UITableViewController {
         return cell
     }
     
+    func follow(sender: UIButton!){
+        if isFollowing[sender.tag] == true{
+            //Unfollow
+            if let user = PFUser.currentUser(){
+                let userToFollow = activeUserFollowers[sender.tag]
+                followGlobal(userToFollow, false, self)
+                sender.setTitle("Follow", forState: .Normal)
+                sender.backgroundColor = redColor
+                isFollowing[sender.tag] = false
+            }
+            
+        }else{
+            //Follow
+            if let user = PFUser.currentUser(){
+                let userToFollow = activeUserFollowers[sender.tag]
+                followGlobal(userToFollow, true, self)
+                if let numberFollowing = user["isFollowing"] as? Int{
+                    if numberFollowing < 1000{
+                        sender.setTitle("Following", forState: .Normal)
+                        sender.backgroundColor = oneFiftyGrayColor
+                        isFollowing[sender.tag] = true
+                    }
+                }
+            }
+        }
+    }
+    
     
     func startActivityIndicator(){
         activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
@@ -148,7 +176,7 @@ class FollowersTableViewController: UITableViewController {
     
     func profileTapped(sender: AnyObject){
         let profileVC = ProfileViewController()
-        profileVC.activeUser = followers[sender.view!.tag]
+        profileVC.activeUser = activeUserFollowers[sender.view!.tag]
         navigationController?.pushViewController(profileVC, animated: true)
     }
     

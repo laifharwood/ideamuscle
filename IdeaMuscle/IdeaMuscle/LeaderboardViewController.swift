@@ -77,7 +77,10 @@ class LeaderboardViewController: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.tabBarController!.tabBar.hidden = false
+        if self.tabBarController != nil{
+            self.tabBarController!.tabBar.hidden = false
+            //updateMoreBadge(self.tabBarController!)
+        }
     }
     
     

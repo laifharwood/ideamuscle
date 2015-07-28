@@ -159,7 +159,7 @@ func timeStampGlobal(ideaObjects: [PFObject], timeStamp: UILabel, row: Int, user
         createdAt = ideaObjects[row].createdAt!
         timeStamp.text = createdAt.timeAgoSimple
     }
-    timeStamp.frame = CGRectMake(cell.frame.maxX - 30, usernameLabel.frame.minY, 20, 20)
+    timeStamp.frame = CGRectMake(cell.frame.maxX - 60, usernameLabel.frame.minY, 50, 20)
     timeStamp.font = UIFont(name: "Avenir", size: 10)
     timeStamp.textColor = oneFiftyGrayColor
     timeStamp.textAlignment = NSTextAlignment.Right
