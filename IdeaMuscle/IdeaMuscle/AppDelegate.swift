@@ -136,20 +136,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         if let remoteNotification = launchOptions?[UIApplicationLaunchOptionsRemoteNotificationKey] as? NSDictionary {
-            --PFInstallation.currentInstallation().badge
-            PFInstallation.currentInstallation().saveEventually()
-            if let ideaId = remoteNotification["ideaId"] as? String{
-                let idea = PFObject(withoutDataWithClassName: "Idea", objectId: ideaId)
-                idea.fetchIfNeededInBackgroundWithBlock({ (object, error) -> Void in
-                    let activeTopic = idea["topicPointer"] as! PFObject
-                    activeTopic.fetchIfNeededInBackgroundWithBlock({ (object, error) -> Void in
-                        let ideaDetailVC = IdeaDetailViewController()
-                        ideaDetailVC.activeIdea = idea
-                        ideaDetailVC.activeTopic = activeTopic
-                        HOKNavigation.pushViewController(ideaDetailVC, animated: true)
-                    })
-                })
-            }
+            openedFromNotification(remoteNotification as [NSObject : AnyObject])
         }
     
         navigationBarAppearance.barTintColor = fiftyGrayColor
@@ -192,50 +179,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         //PFPush.handlePush(userInfo)
         if application.applicationState == UIApplicationState.Inactive{
-            println("is inactive")
-            --PFInstallation.currentInstallation().badge
-            PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
-            if PFUser.currentUser() != nil{
-            if let ideaId = userInfo["ideaId"] as? String{
-                let idea = PFObject(withoutDataWithClassName: "Idea", objectId: ideaId)
-                idea.fetchIfNeededInBackgroundWithBlock({ (object, error) -> Void in
-                    let activeTopic = idea["topicPointer"] as! PFObject
-                    activeTopic.fetchIfNeededInBackgroundWithBlock({ (object, error) -> Void in
-                        let ideaDetailVC = IdeaDetailViewController()
-                        ideaDetailVC.activeIdea = idea
-                        ideaDetailVC.activeTopic = activeTopic
-                        HOKNavigation.pushViewController(ideaDetailVC, animated: true)
-                    })
-                })
-            }
-            }
+            openedFromNotification(userInfo)
         }else if application.applicationState == UIApplicationState.Background{
-            println("is in background")
-            --PFInstallation.currentInstallation().badge
-            if let ideaId = userInfo["ideaId"] as? String{
-                let idea = PFObject(withoutDataWithClassName: "Idea", objectId: ideaId)
-                idea.fetchIfNeededInBackgroundWithBlock({ (object, error) -> Void in
-                    let activeTopic = idea["topicPointer"] as! PFObject
-                    activeTopic.fetchIfNeededInBackgroundWithBlock({ (object, error) -> Void in
-                        let ideaDetailVC = IdeaDetailViewController()
-                        ideaDetailVC.activeIdea = idea
-                        ideaDetailVC.activeTopic = activeTopic
-                        HOKNavigation.pushViewController(ideaDetailVC, animated: true)
-                    })
-                })
-            }
+            openedFromNotification(userInfo)
         }else if application.applicationState == UIApplicationState.Active{
-            println("is active")
             ++PFInstallation.currentInstallation().badge
-            
-        }else{
-            println("is not active, inactive, or in background")
-            --PFInstallation.currentInstallation().badge
         }
        
         PFInstallation.currentInstallation().saveEventually()
         
         updateMoreBadge(tabBarControllerK)
+    }
+    
+    func openedFromNotification(userInfo: [NSObject : AnyObject]){
+        --PFInstallation.currentInstallation().badge
+        if let ideaId = userInfo["ideaId"] as? String{
+            let idea = PFObject(withoutDataWithClassName: "Idea", objectId: ideaId)
+            idea.fetchIfNeededInBackgroundWithBlock({ (object, error) -> Void in
+                if error == nil{
+                    let activeTopic = idea["topicPointer"] as! PFObject
+                    activeTopic.fetchIfNeededInBackgroundWithBlock({ (object, error) -> Void in
+                        if error == nil{
+                            let ideaDetailVC = IdeaDetailViewController()
+                            ideaDetailVC.activeIdea = idea
+                            ideaDetailVC.activeTopic = activeTopic
+                            
+                            if let notificationId = userInfo["notificationId"] as? String{
+                                let notification = PFObject(withoutDataWithClassName: "Notification", objectId: notificationId)
+                                notification["hasRead"] = true
+                                notification.saveEventually()
+                            }
+                            HOKNavigation.pushViewController(ideaDetailVC, animated: true)
+                        }
+                    })
+                }
+            })
+        }
     }
 
     ///////////////////////////////////////////////////////////
