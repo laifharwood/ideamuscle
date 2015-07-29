@@ -13,6 +13,7 @@ class DraftsTableViewController: UITableViewController {
     
     var draftObjects = [PFObject(className: "Draft")]
     var shouldQuery = false
+    var activityIndicator = UIActivityIndicatorView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +21,7 @@ class DraftsTableViewController: UITableViewController {
         tableView.delegate = self
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         self.title = "Drafts"
-        
+        startActivityIndicator()
         draftsQuery()
 
 
@@ -28,6 +29,7 @@ class DraftsTableViewController: UITableViewController {
     
     override func viewWillAppear(animated: Bool) {
         if shouldQuery{
+            startActivityIndicator()
             draftsQuery()
         }
     }
@@ -48,7 +50,7 @@ class DraftsTableViewController: UITableViewController {
         if error == nil{
             
             draftObjects = objects as! [PFObject]
-            tableView.reloadData()
+            stopActivityIndicator()
         
         }else{
             println("Error: \(error.userInfo)")
@@ -132,6 +134,20 @@ class DraftsTableViewController: UITableViewController {
         } else if editingStyle == .Insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
+    }
+    
+    func startActivityIndicator(){
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.frame = CGRectMake(self.view.frame.width/2 - 25, tableView.frame.minY - 15, 50, 50)
+        tableView.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+    }
+    
+    func stopActivityIndicator(){
+        
+        activityIndicator.stopAnimating()
+        tableView.reloadData()
     }
     
 }

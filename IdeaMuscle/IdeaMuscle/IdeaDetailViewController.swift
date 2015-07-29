@@ -77,15 +77,17 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         
         
         //MARK: - Topic Label
-        var topicLabel = UILabel()
+        var topicLabel = UIButton()
         if activeTopic["title"] != nil{
-            topicLabel.text = activeTopic["title"] as? String
+            let title = activeTopic["title"] as? String
+            topicLabel.setTitle(title, forState: .Normal)
         }
-        topicLabel.font = UIFont(name: "Avenir-Heavy", size: 12)
-        topicLabel.textColor = UIColor.blackColor()
-        topicLabel.numberOfLines = 0
-        topicLabel.textAlignment = NSTextAlignment.Center
-        topicLabel.frame = CGRectMake(5, topicContainerY!, self.view.frame.width - 10, 60)
+        topicLabel.titleLabel!.font = UIFont(name: "Avenir-Heavy", size: 12)
+        topicLabel.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        topicLabel.titleLabel?.numberOfLines = 0
+        topicLabel.titleLabel?.textAlignment = NSTextAlignment.Center
+        topicLabel.frame = CGRectMake(5, topicContainerY!, self.view.frame.width - 30, 65)
+        topicLabel.addTarget(self, action: "viewTopic:", forControlEvents: .TouchUpInside)
         self.view.addSubview(topicLabel)
         
         //MARK: - Upvote Button
@@ -254,6 +256,12 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
             shareContainer.addSubview(cancelShareButton)
         }
         
+    }
+    
+    func viewTopic(sender: UIButton){
+        let topicDetailVC = TopicsDetailViewController()
+        topicDetailVC.activeTopic = activeTopic
+        navigationController?.pushViewController(topicDetailVC, animated: true)
     }
     
     func ideaIsNotPublic(button: UIButton){

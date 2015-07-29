@@ -317,7 +317,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
             createdAt = ideaObjects[indexPath.row].createdAt!
             cell.timeStamp.text = createdAt.timeAgoSimple
         }
-        cell.timeStamp.frame = CGRectMake(cell.frame.maxX - 30, cell.usernameLabel.frame.minY, 20, 20)
+        cell.timeStamp.frame = CGRectMake(cell.frame.maxX - 40, cell.usernameLabel.frame.minY, 30, 20)
         cell.timeStamp.font = UIFont(name: "Avenir", size: 10)
         cell.timeStamp.textColor = oneFiftyGrayColor
         cell.timeStamp.textAlignment = NSTextAlignment.Right

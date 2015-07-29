@@ -48,6 +48,8 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.tabBarController!.tabBar.hidden = false
             //updateMoreBadge(self.tabBarController!)
         }
+        
+        tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -77,9 +79,11 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
          //var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! UITableViewCell
-        var cell = UITableViewCell()
+        var cell = MoreTableViewCell()
         
         cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+        
+        cell.textLabel!.font = UIFont(name: "HelveticaNeue", size: 13)
 
         // Configure the cell...
         if indexPath.row == 0 {
@@ -96,6 +100,30 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.textLabel!.text = "Ideas You've Upvoted"
         }else if indexPath.row == 6{
             cell.textLabel!.text = "Notifications"
+            
+            let badgeValue = PFInstallation.currentInstallation().badge
+        
+            if badgeValue != 0{
+                
+                var width = CGFloat()
+                
+                if badgeValue < 10{
+                    
+                    width = 20
+                    
+                }else{
+                    width = 40
+                }
+                
+                cell.badgeLabel.layer.cornerRadius = 10
+                cell.badgeLabel.layer.masksToBounds = true
+                cell.badgeLabel.frame = CGRectMake(cell.frame.maxX - width - 30, cell.frame.height/2 - 10, width, 20)
+                cell.badgeLabel.backgroundColor = notificationRedColor
+                cell.badgeLabel.font = UIFont(name: "HelveticaNeue", size: 11)
+                cell.badgeLabel.textColor = UIColor.whiteColor()
+                cell.badgeLabel.text = abbreviateNumber(badgeValue) as String
+                cell.badgeLabel.textAlignment = NSTextAlignment.Center
+            }
         }
         
 
@@ -149,6 +177,7 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }else if indexPath.row == 6{
             let notificationVC = NotificationsTableViewController()
+            //tableView.reloadData()
             navigationController?.pushViewController(notificationVC, animated: true)
         }
     }

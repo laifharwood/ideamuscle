@@ -1,33 +1,25 @@
 //
-//  NotificationTableViewCell.swift
+//  NotificationSettingsTableViewCell.swift
 //  IdeaMuscle
 //
-//  Created by Laif Harwood on 7/28/15.
-//  Copyright (c) 2015 Parse. All rights reserved.
-//
-
-//
-//  TopicTableViewCell.swift
-//  IdeaMuscle
-//
-//  Created by Laif Harwood on 6/18/15.
+//  Created by Laif Harwood on 7/29/15.
 //  Copyright (c) 2015 Parse. All rights reserved.
 //
 
 import UIKit
 
 
-class NotificationTableViewCell: UITableViewCell {
+class NotificationSettingsTableViewCell: UITableViewCell {
     
     
     var messageLabel = UILabel()
-    var hasReadView = UIView()
+    var switchButton = UISwitch()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.contentView.addSubview(messageLabel)
-        self.contentView.addSubview(hasReadView)
+        self.contentView.addSubview(switchButton)
         
     }
     

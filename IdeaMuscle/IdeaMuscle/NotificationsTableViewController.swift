@@ -23,6 +23,15 @@ class NotificationsTableViewController: UITableViewController {
         tableView.registerClass(NotificationTableViewCell.self, forCellReuseIdentifier: "Cell")
         self.title =  "Notifications"
         
+        let settingsButton = UIButton()
+        settingsButton.setTitle("Settings", forState: .Normal)
+        settingsButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        settingsButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 15)
+        settingsButton.addTarget(self, action: "settings:", forControlEvents: .TouchUpInside)
+        settingsButton.sizeToFit()
+        let settingsBarItem = UIBarButtonItem(customView: settingsButton)
+        self.navigationItem.rightBarButtonItem = settingsBarItem
+        
     }
     override func viewWillAppear(animated: Bool) {
         if PFInstallation.currentInstallation().badge != 0{
@@ -34,6 +43,11 @@ class NotificationsTableViewController: UITableViewController {
                 updateMoreBadge(tabBarController!)
             }
         }
+    }
+    
+    func settings(sender: UIButton){
+        let settingsVC = NotificationSettingsTableViewController()
+        navigationController?.pushViewController(settingsVC, animated: true)
     }
     
     func queryNotificationObjects(){
@@ -71,10 +85,11 @@ class NotificationsTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! NotificationTableViewCell
-        cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+        
         
         
         if let message = notificationObjects[indexPath.row]["message"] as? String{
+            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
             cell.messageLabel.text = message
             cell.messageLabel.font = UIFont(name: "HelveticaNeue", size: 13)
             cell.messageLabel.frame = CGRectMake(10, 5, self.view.frame.width - 45, cell.frame.height - 10)
@@ -91,10 +106,6 @@ class NotificationsTableViewController: UITableViewController {
                 }
             }
         }
-        
-        
-        
-
 
         return cell
     }
