@@ -73,8 +73,13 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         
         let topicContainerY = self.navigationController?.navigationBar.frame.maxY
         
-        //MARK: Logo
         
+        var disclosureButton = UIButton()
+        disclosureButton.frame = CGRectMake(self.view.frame.maxX - 15, topicContainerY! + 22.5, 10, 20)
+        let disclosureImage = UIImage(named: "disclosure")
+        disclosureButton.setImage(disclosureImage, forState: .Normal)
+        disclosureButton.addTarget(self, action: "viewTopic:", forControlEvents: .TouchUpInside)
+        self.view.addSubview(disclosureButton)
         
         //MARK: - Topic Label
         var topicLabel = UIButton()
@@ -85,10 +90,12 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         topicLabel.titleLabel!.font = UIFont(name: "Avenir-Heavy", size: 12)
         topicLabel.setTitleColor(UIColor.blackColor(), forState: .Normal)
         topicLabel.titleLabel?.numberOfLines = 0
-        topicLabel.titleLabel?.textAlignment = NSTextAlignment.Center
-        topicLabel.frame = CGRectMake(5, topicContainerY!, self.view.frame.width - 30, 65)
+        //topicLabel.titleLabel?.textAlignment = NSTextAlignment.Center
+        topicLabel.frame = CGRectMake(5, topicContainerY!, self.view.frame.width - disclosureButton.frame.width - 15, 65)
         topicLabel.addTarget(self, action: "viewTopic:", forControlEvents: .TouchUpInside)
         self.view.addSubview(topicLabel)
+        
+        
         
         //MARK: - Upvote Button
         var numberOfUpvotesButton = UIButton()

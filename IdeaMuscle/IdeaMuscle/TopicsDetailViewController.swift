@@ -46,10 +46,6 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         topicLabel.frame = CGRectMake(5, 0, self.view.frame.width - 10, 70)
         if activeTopic["title"] != nil{
             topicLabel.text = activeTopic["title"] as? String
-            //topicLabel.sizeToFit()
-            println(topicLabel.frame.height)
-            //let height = topicLabel.frame.height
-            //topicLabel.frame = CGRectMake(0, 69, self.view.frame.width, height + 5)
         }
 
         topicLabelView.addSubview(topicLabel)
