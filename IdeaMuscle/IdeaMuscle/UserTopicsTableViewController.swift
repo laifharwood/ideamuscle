@@ -76,7 +76,7 @@ class UserTopicsTableViewController: UITableViewController, UITableViewDataSourc
                 topicIsNotPublicK(cell)
             }
         }else{
-            topicIsNotPublicK(cell)
+            //topicIsNotPublicK(cell)
         }
         
         

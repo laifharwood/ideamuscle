@@ -33,6 +33,10 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
         dismissViewControllerAnimated(true, completion: nil)
     }
+    
+    override func viewDidLayoutSubviews() {
+        ideaTextView.flashScrollIndicators()
+    }
   
    
 
@@ -436,8 +440,11 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     }
     
     func shareCancel(sender: UIButton!){
-        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
-        println("share Cancel")
+        
+        UIView.animateWithDuration(0.5, animations: { () -> Void in
+            self.shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
+        })
+        
     }
     
     
@@ -610,10 +617,11 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     
     
     func share(sender: UIButton!){
-
-       shareContainer.frame = CGRectMake(0, self.view.frame.maxY - 180, self.view.frame.width, 180)
-        self.view.bringSubviewToFront(shareContainer)
         
+       UIView.animateWithDuration(0.5, animations: { () -> Void in
+            self.shareContainer.frame = CGRectMake(0, self.view.frame.maxY - 180, self.view.frame.width, 180)
+            self.view.bringSubviewToFront(self.shareContainer)
+       })
     }
     
     func postComment(sender: UIButton!){
