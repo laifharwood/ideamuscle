@@ -30,17 +30,17 @@ class ReportAbuseViewController: UIViewController {
         }
         
         if let idea = activeIdea{
-            container.frame = CGRectMake(0, self.navigationController!.navigationBar.frame.maxY, self.view.frame.width, 90)
+            container.frame = CGRectMake(0, self.navigationController!.navigationBar.frame.maxY, self.view.frame.width, 130)
             container.backgroundColor = twoThirtyGrayColor
             self.view.addSubview(container)
             
-            reportIdeaButton.frame = CGRectMake(self.view.frame.width/2 - 30, 10, 20, 20)
-            reportTopicButton.frame = CGRectMake(self.view.frame.width/2 - 30, reportIdeaButton.frame.maxY + 5, 20, 20)
-            reportBothButton.frame = CGRectMake(self.view.frame.width/2 - 30, reportTopicButton.frame.maxY + 5, 20, 20)
+            reportIdeaButton.frame = CGRectMake(50, 10, 30, 30)
+            reportTopicButton.frame = CGRectMake(50, reportIdeaButton.frame.maxY + 10, 30, 30)
+            reportBothButton.frame = CGRectMake(50, reportTopicButton.frame.maxY + 10, 30, 30)
             
-            reportIdeaButton.layer.cornerRadius = 10
-            reportTopicButton.layer.cornerRadius = 10
-            reportBothButton.layer.cornerRadius = 10
+            reportIdeaButton.layer.cornerRadius = 15
+            reportTopicButton.layer.cornerRadius = 15
+            reportBothButton.layer.cornerRadius = 15
             reportIdeaButton.layer.masksToBounds = true
             reportTopicButton.layer.masksToBounds = true
             reportBothButton.layer.masksToBounds = true
@@ -69,9 +69,29 @@ class ReportAbuseViewController: UIViewController {
             container.addSubview(reportBothButton)
             
             
-            selectionView.frame = CGRectMake(2, 2, 16, 16)
+            selectionView.frame = CGRectMake(2, 2, 26, 26)
             selectionView.backgroundColor = redColor
-            selectionView.layer.cornerRadius = 8
+            selectionView.layer.cornerRadius = 13
+            
+            let reportIdeaLabel = UILabel(frame: CGRectMake(reportIdeaButton.frame.maxX + 10, reportIdeaButton.frame.minY, self.view.frame.width - reportIdeaButton.frame.maxX - 20, 30))
+            let reportTopicLabel = UILabel(frame: CGRectMake(reportIdeaButton.frame.maxX + 10, reportTopicButton.frame.minY, self.view.frame.width - reportIdeaButton.frame.maxX - 20, 30))
+            let reportBothLabel = UILabel(frame: CGRectMake(reportIdeaButton.frame.maxX + 10, reportBothButton.frame.minY, self.view.frame.width - reportIdeaButton.frame.maxX - 20, 30))
+            
+            reportIdeaLabel.text = "Report Idea"
+            reportTopicLabel.text = "Report Topic"
+            reportBothLabel.text = "Report Both"
+            
+            reportIdeaLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 16)
+            reportTopicLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 16)
+            reportBothLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 16)
+            
+            reportIdeaLabel.textColor = fiftyGrayColor
+            reportTopicLabel.textColor = fiftyGrayColor
+            reportBothLabel.textColor = fiftyGrayColor
+            
+            container.addSubview(reportIdeaLabel)
+            container.addSubview(reportTopicLabel)
+            container.addSubview(reportBothLabel)
             
         }
         
