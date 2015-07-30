@@ -91,6 +91,7 @@
 		EEB320481B684C55005D1334 /* MoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB320471B684C55005D1334 /* MoreTableViewCell.swift */; };
 		EEB3204A1B69356D005D1334 /* NotificationSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB320491B69356D005D1334 /* NotificationSettingsTableViewController.swift */; };
 		EEB3204C1B69467D005D1334 /* NotificationSettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB3204B1B69467D005D1334 /* NotificationSettingsTableViewCell.swift */; };
+		EEB3204E1B6AD353005D1334 /* ReportAbuseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB3204D1B6AD353005D1334 /* ReportAbuseViewController.swift */; };
 		EEC89CBD1B507A56009720CE /* StoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBC1B507A56009720CE /* StoreViewController.swift */; };
 		EEC89CC01B507BA1009720CE /* StoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */; };
 		EED08A211B386DC5002FAE19 /* IdeaDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A201B386DC5002FAE19 /* IdeaDetailViewController.swift */; };
@@ -234,6 +235,7 @@
 		EEB320471B684C55005D1334 /* MoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreTableViewCell.swift; sourceTree = "<group>"; };
 		EEB320491B69356D005D1334 /* NotificationSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationSettingsTableViewController.swift; sourceTree = "<group>"; };
 		EEB3204B1B69467D005D1334 /* NotificationSettingsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationSettingsTableViewCell.swift; sourceTree = "<group>"; };
+		EEB3204D1B6AD353005D1334 /* ReportAbuseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportAbuseViewController.swift; sourceTree = "<group>"; };
 		EEC89CBB1B50390C009720CE /* IdeaMuscle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = IdeaMuscle.entitlements; sourceTree = "<group>"; };
 		EEC89CBC1B507A56009720CE /* StoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreViewController.swift; sourceTree = "<group>"; };
 		EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreTableViewCell.swift; sourceTree = "<group>"; };
@@ -327,6 +329,7 @@
 				EED8C4541B34719F008981D1 /* Compose Controllers */,
 				EED8C4531B347171008981D1 /* Tab Bar Controllers */,
 				81BA81481A49DA1800E65899 /* Supporting Files */,
+				EEB3204D1B6AD353005D1334 /* ReportAbuseViewController.swift */,
 			);
 			path = IdeaMuscle;
 			sourceTree = "<group>";
@@ -683,6 +686,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EEB320481B684C55005D1334 /* MoreTableViewCell.swift in Sources */,
+				EEB3204E1B6AD353005D1334 /* ReportAbuseViewController.swift in Sources */,
 				EED08A2C1B3CC0EB002FAE19 /* ProfileIdeaCell.swift in Sources */,
 				EE1A7F941B4C97B3004EBD8B /* HOKNavigation.m in Sources */,
 				EE1A7F991B4C97B3004EBD8B /* Hoko.m in Sources */,

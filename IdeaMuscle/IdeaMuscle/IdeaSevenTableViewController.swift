@@ -61,6 +61,7 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
         
         let longGest = UILongPressGestureRecognizer()
         longGest.addTarget(self, action: "cellLongPress:")
+        longGest.minimumPressDuration = 0.4
         tableView.addGestureRecognizer(longGest)
         
         reportViewContainer.frame = CGRectMake(0, self.tabBarController!.tabBar.frame.maxY, self.view.frame.width, 100)
@@ -118,7 +119,6 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
     }
     
     func cellLongPress(sender: UILongPressGestureRecognizer){
-        if sender.state == UIGestureRecognizerState.Ended{
             let point = sender.locationInView(tableView)
             let indexPath = tableView.indexPathForRowAtPoint(point)
             
@@ -170,28 +170,49 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
             self.invisibleView.backgroundColor = oneFiftyGrayColor
             self.invisibleView.alpha = 0.7
             self.navigationController!.view.addSubview(self.invisibleView)
-        }
     }
     
     func hideIdea(sender: UIButton){
-        println("Hide Idea")
+        
+        let row = sender.tag
+        if let currentUser = PFUser.currentUser(){
+            let idea = ideaObjects[row]
+            currentUser.addObject(idea, forKey: "ideasToHide")
+            currentUser.saveEventually()
+        }
+        
+        hideInvisibleAndReportView()
+        ideaObjects.removeAtIndex(row)
+        let indexPath = NSIndexPath(forRow: row, inSection: 0)
+        let pathArray = [indexPath]
+        tableView.deleteRowsAtIndexPaths(pathArray, withRowAnimation: UITableViewRowAnimation.Bottom)
     }
     
     func hideAndReport(sender: UIButton){
-        println("Hide and report")
+        let reportVC = ReportAbuseViewController()
+        reportVC.activeIdea = ideaObjects[sender.tag]
+        if let topic = ideaObjects[sender.tag]["topicPointer"] as? PFObject{
+            reportVC.activeTopic = topic
+            //self.presentViewController(reportVC, animated: true, completion: nil)
+            self.navigationController?.pushViewController(reportVC, animated: true)
+        }
+        hideIdea(sender)
     }
     
     func cancelHide(sender: UIButton){
         
-        invisibleView.removeFromSuperview()
+       hideInvisibleAndReportView()
+    }
+    
+    func hideInvisibleAndReportView(){
         
+        invisibleView.removeFromSuperview()
         
         UIView.animateWithDuration(0.5, animations: { () -> Void in
             
             self.reportViewContainer.frame = CGRectMake(0, self.tabBarController!.tabBar.frame.maxY, self.view.frame.width, 100)
             self.tabBarController!.tabBar.hidden = false
         })
-        
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
