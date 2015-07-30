@@ -18,6 +18,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     var followButton = UIButton()
     var following = [PFUser()]
     var activityIndicator = UIActivityIndicatorView()
+    var activityIndicatorTable = UIActivityIndicatorView()
     let worldRankTitleLabel = UILabel()
     var ideaTableView = UITableView()
     var ideaObjects = [PFObject(className: "Idea")]
@@ -34,6 +35,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         //startActivityIndicator()
         //worldRankQuery()
         totalUsersQuery()
+        startActivityIndicatorTable()
         queryForIdeaObjects()
         if activeUser != PFUser.currentUser(){
             followingQuery()
@@ -250,6 +252,10 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     
     
     
+   
+    
+    
+    
     func goToFollowing(sender: UITapGestureRecognizer){
         let followingVC = FollowingTableViewController()
         followingVC.activeUser = activeUser
@@ -428,9 +434,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             println("Error: \(error.userInfo)")
             
         }
-        //stopActivityIndicator()
-        //refreshTable.endRefreshing()
-        ideaTableView.reloadData()
+        stopActivityIndicatorTable()
     }
 
     func startActivityIndicator(){
@@ -527,8 +531,25 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
 
+    
+    
+    
+    func startActivityIndicatorTable(){
+        activityIndicatorTable.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        activityIndicatorTable.hidesWhenStopped = true
+        activityIndicatorTable.frame = CGRectMake(self.view.frame.width/2 - 25, ideaTableView.frame.minY - 15, 50, 50)
+        ideaTableView.addSubview(activityIndicatorTable)
+        activityIndicatorTable.startAnimating()
+    }
+    
+    func stopActivityIndicatorTable(){
+        
+        activityIndicatorTable.stopAnimating()
+        ideaTableView.flashScrollIndicators()
+        ideaTableView.reloadData()
+    }
+    
     
 
 }

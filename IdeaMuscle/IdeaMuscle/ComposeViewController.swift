@@ -227,7 +227,9 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     }
     
     func cancelExit(sender: UIButton){
-        saveDraftContainer.frame = CGRectMake(0, self.view.frame.maxY, self.view.frame.width, 140)
+        UIView.animateWithDuration(0.5, animations: { () -> Void in
+            self.saveDraftContainer.frame = CGRectMake(0, self.view.frame.maxY, self.view.frame.width, 140)
+        })
     }
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -622,10 +624,11 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     func cancel(sender: UIButton!){
         
         //self.dismissViewControllerAnimated(true, completion: nil)
-        self.view.endEditing(true)
-        saveDraftContainer.frame = CGRectMake(0, self.view.frame.maxY - 140, self.view.frame.width, 140)
-        self.view.bringSubviewToFront(saveDraftContainer)
-        
+        UIView.animateWithDuration(0.5, animations: { () -> Void in
+            self.view.endEditing(true)
+            self.saveDraftContainer.frame = CGRectMake(0, self.view.frame.maxY - 140, self.view.frame.width, 140)
+            self.view.bringSubviewToFront(self.saveDraftContainer)
+        })
     }
     
     

@@ -18,6 +18,8 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
     let refreshTable = UIRefreshControl()
     var hasUpvoted = [Bool](count: 100, repeatedValue: false)
     var shouldReloadTable = false
+    let reportViewContainer = UIView()
+    let invisibleView = UIView()
     
     
     func queryForIdeaObjects(){
@@ -56,6 +58,13 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
         refreshTable.attributedTitle = NSAttributedString(string: "")
         refreshTable.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
         tableView.addSubview(refreshTable)
+        
+        let longGest = UILongPressGestureRecognizer()
+        longGest.addTarget(self, action: "cellLongPress:")
+        tableView.addGestureRecognizer(longGest)
+        
+        reportViewContainer.frame = CGRectMake(0, self.tabBarController!.tabBar.frame.maxY, self.view.frame.width, 100)
+        
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -73,6 +82,7 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
         
         //cell.frame = CGRectMake(0, 0, self.view.frame.width, 150)
         cellFrame(cell, self.view)
+        
         
         //MARK: - Number Of Upvotes Button Config
         if ideaObjects[indexPath.row]["numberOfUpvotes"] != nil{
@@ -104,6 +114,83 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
         timeStampGlobal(ideaObjects, cell.timeStamp, indexPath.row, cell.usernameLabel, cell)
         
         return cell
+        
+    }
+    
+    func cellLongPress(sender: UILongPressGestureRecognizer){
+        if sender.state == UIGestureRecognizerState.Ended{
+            let point = sender.locationInView(tableView)
+            let indexPath = tableView.indexPathForRowAtPoint(point)
+            
+            self.tabBarController!.tabBar.hidden = true
+            
+            UIView.animateWithDuration(0.5, animations: { () -> Void in
+                self.reportViewContainer.frame = CGRectMake(0, self.tabBarController!.tabBar.frame.maxY - 140, self.view.frame.width, 140)
+                self.reportViewContainer.backgroundColor = UIColor.whiteColor()
+                self.navigationController!.view.addSubview(self.reportViewContainer)
+                self.view.bringSubviewToFront(self.reportViewContainer)
+            })
+            
+            let hideButton = UIButton(frame: CGRectMake(5, 5, self.view.frame.width - 10, 40))
+            let hideAndReportButton = UIButton(frame: CGRectMake(5, hideButton.frame.maxY + 5, self.view.frame.width - 10, 40))
+            let cancelHideButton = UIButton(frame: CGRectMake(5, hideAndReportButton.frame.maxY + 5, self.view.frame.width - 10, 40))
+            
+            hideButton.setTitle("Hide", forState: .Normal)
+            hideAndReportButton.setTitle("Hide And Report", forState: .Normal)
+            cancelHideButton.setTitle("Cancel", forState: .Normal)
+            
+            hideButton.backgroundColor = oneFiftyGrayColor
+            hideAndReportButton.backgroundColor = oneFiftyGrayColor
+            cancelHideButton.backgroundColor = twoHundredGrayColor
+            
+            hideButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+            hideAndReportButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+            cancelHideButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+            
+            hideButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
+            hideAndReportButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
+            cancelHideButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
+            
+            hideButton.addTarget(self, action: "hideIdea:", forControlEvents: .TouchUpInside)
+            hideAndReportButton.addTarget(self, action: "hideAndReport:", forControlEvents: .TouchUpInside)
+            cancelHideButton.addTarget(self, action: "cancelHide:", forControlEvents: .TouchUpInside)
+            
+            hideButton.tag = indexPath!.row
+            hideAndReportButton.tag = indexPath!.row
+            
+            hideButton.layer.cornerRadius = 3
+            hideAndReportButton.layer.cornerRadius = 3
+            cancelHideButton.layer.cornerRadius = 3
+            
+            reportViewContainer.addSubview(hideButton)
+            reportViewContainer.addSubview(hideAndReportButton)
+            reportViewContainer.addSubview(cancelHideButton)
+            
+            self.invisibleView.frame = CGRectMake(0, UIApplication.sharedApplication().statusBarFrame.height, self.view.frame.width, self.reportViewContainer.frame.minY - UIApplication.sharedApplication().statusBarFrame.height)
+            self.invisibleView.backgroundColor = oneFiftyGrayColor
+            self.invisibleView.alpha = 0.7
+            self.navigationController!.view.addSubview(self.invisibleView)
+        }
+    }
+    
+    func hideIdea(sender: UIButton){
+        println("Hide Idea")
+    }
+    
+    func hideAndReport(sender: UIButton){
+        println("Hide and report")
+    }
+    
+    func cancelHide(sender: UIButton){
+        
+        invisibleView.removeFromSuperview()
+        
+        
+        UIView.animateWithDuration(0.5, animations: { () -> Void in
+            
+            self.reportViewContainer.frame = CGRectMake(0, self.tabBarController!.tabBar.frame.maxY, self.view.frame.width, 100)
+            self.tabBarController!.tabBar.hidden = false
+        })
         
     }
     
