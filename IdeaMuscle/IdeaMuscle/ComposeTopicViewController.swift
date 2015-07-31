@@ -138,6 +138,10 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
         
     }
     
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        textView.endEditing(true)
+    }
+    
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         
         if text == "\n"{

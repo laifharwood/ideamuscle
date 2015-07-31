@@ -9,7 +9,7 @@
 import UIKit
 import Parse
 
-class ReportAbuseViewController: UIViewController {
+class ReportAbuseViewController: UIViewController, UITextViewDelegate {
     
     var activeIdea = PFObject?()
     var activeTopic = PFObject(className: "Topic")
@@ -28,6 +28,8 @@ class ReportAbuseViewController: UIViewController {
         if self.tabBarController != nil{
             self.tabBarController!.tabBar.hidden = true
         }
+        
+        container.frame = CGRectMake(0, self.navigationController!.navigationBar.frame.maxY, self.view.frame.width, 5)
         
         if let idea = activeIdea{
             container.frame = CGRectMake(0, self.navigationController!.navigationBar.frame.maxY, self.view.frame.width, 130)
@@ -95,6 +97,79 @@ class ReportAbuseViewController: UIViewController {
             
         }
         
+        let addCommentLabelContainer = UIView(frame: CGRectMake(0, container.frame.maxY + 5, self.view.frame.width, 80))
+        addCommentLabelContainer.backgroundColor = fiftyGrayColor
+        self.view.addSubview(addCommentLabelContainer)
+        
+        let addCommentLabel = UILabel(frame: CGRectMake(5, 0, self.view.frame.width - 10, 80))
+        addCommentLabel.text = "Tell us why this content is offensive(Optional).  If we find that it violates our content policy it will be removed within 24 hours without notice, but it has already been hidden from you."
+        addCommentLabel.numberOfLines = 0
+        addCommentLabel.font = UIFont(name: "HelveticaNeue", size: 12)
+        addCommentLabel.backgroundColor = fiftyGrayColor
+        addCommentLabel.textColor = UIColor.whiteColor()
+        addCommentLabelContainer.addSubview(addCommentLabel)
+        
+        commentsTextView.delegate = self
+        commentsTextView.frame = CGRectMake(5, addCommentLabelContainer.frame.maxY + 5, self.view.frame.width - 10, 100)
+        commentsTextView.font = UIFont(name: "Avenir", size: 13)
+        commentsTextView.textColor = fiftyGrayColor
+        commentsTextView.layer.borderColor = fiftyGrayColor.CGColor
+        commentsTextView.layer.borderWidth = 1
+        commentsTextView.layer.cornerRadius = 5
+        self.view.addSubview(commentsTextView)
+        
+        let submitButton = UIButton(frame: CGRectMake(self.view.frame.width/2 - 50, commentsTextView.frame.maxY + 5, 100, 30))
+        submitButton.setTitle("Submit", forState: .Normal)
+        submitButton.setTitleColor(fiftyGrayColor, forState: .Highlighted)
+        submitButton.backgroundColor = redColor
+        submitButton.addTarget(self, action: "submit:", forControlEvents: .TouchUpInside)
+        submitButton.titleLabel?.textColor = UIColor.whiteColor()
+        submitButton.layer.cornerRadius = 3
+        self.view.addSubview(submitButton)
+        
+        
+    }
+    
+    func submit(sender: UIButton){
+        if let currentUser = PFUser.currentUser(){
+            let reportObject = PFObject(className: "Report")
+            reportObject.ACL?.setPublicReadAccess(false)
+            reportObject.ACL?.setPublicWriteAccess(false)
+            reportObject["userWhoReported"] = currentUser
+            reportObject["userComments"] = commentsTextView.text
+            if let idea = activeIdea{
+                if selectedButton == 1 || selectedButton == 3{
+                    //Report Idea
+                    reportObject["ideaPointer"] = activeIdea
+                }
+                if selectedButton == 2 || selectedButton == 3{
+                    //Report Topic
+                    reportObject["topicPointer"] = activeTopic
+                    currentUser.addObject(activeTopic, forKey: "topicsToHide")
+                }
+            }else{
+                //Report Topic
+                reportObject["topicPointer"] = activeTopic
+                currentUser.addObject(activeTopic, forKey: "topicsToHide")
+            }
+            reportObject.saveEventually()
+            currentUser.saveEventually()
+        }
+        
+        self.navigationController?.popViewControllerAnimated(true)
+    }
+    
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        commentsTextView.endEditing(true)
+    }
+    
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n"{
+            textView.resignFirstResponder()
+            return false
+        }else{
+            return true
+        }
     }
     
     func reportSelection(sender: UIButton){
