@@ -19,6 +19,8 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
     let refreshTable = UIRefreshControl()
     var hasUpvoted = [Bool](count: 100, repeatedValue: false)
     var shouldReloadTable = false
+    let reportViewContainer = UIView()
+    let invisibleView = UIView()
     
     
     func queryForIdeaObjects(){
@@ -57,6 +59,8 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
         refreshTable.attributedTitle = NSAttributedString(string: "")
         refreshTable.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
         tableView.addSubview(refreshTable)
+        
+        longPressToTableViewGlobal(self, tableView, reportViewContainer)
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -106,6 +110,35 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
         
         return cell
         
+    }
+    
+    func cellLongPress(sender: UILongPressGestureRecognizer){
+        cellLongPressGlobal(sender, tableView, self, self.reportViewContainer, self.invisibleView)
+    }
+    
+    func hideIdea(sender: UIButton){
+        
+        let row = sender.tag
+        if let currentUser = PFUser.currentUser(){
+            let idea = ideaObjects[row]
+            currentUser.addObject(idea.objectId!, forKey: "ideasToHideId")
+            currentUser.saveEventually()
+        }
+        
+        hideInvisibleAndReportView(invisibleView, self, reportViewContainer)
+        ideaObjects.removeAtIndex(row)
+        let indexPath = NSIndexPath(forRow: row, inSection: 0)
+        let pathArray = [indexPath]
+        tableView.deleteRowsAtIndexPaths(pathArray, withRowAnimation: UITableViewRowAnimation.Bottom)
+    }
+    
+    func hideAndReport(sender: UIButton){
+        hideAndReportGlobal(ideaObjects, sender, self, self.hideIdea)
+    }
+    
+    func cancelHide(sender: UIButton){
+        
+        hideInvisibleAndReportView(invisibleView, self, reportViewContainer)
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

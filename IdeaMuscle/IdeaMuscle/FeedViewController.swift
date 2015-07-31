@@ -21,6 +21,8 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var shouldReloadTable = false
     var tableView = UITableView()
     var query = PFQuery()
+    let reportViewContainer = UIView()
+    let invisibleView = UIView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,7 +61,8 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let leftBarButtonItem: UIBarButtonItem = UIBarButtonItem(customView: leftLogoView)
         self.navigationItem.setLeftBarButtonItem(leftBarButtonItem, animated: false)
         
-
+        longPressToTableViewGlobal(self, tableView, reportViewContainer)
+        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -133,6 +136,36 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return cell
     }
     
+    func cellLongPress(sender: UILongPressGestureRecognizer){
+        cellLongPressGlobal(sender, tableView, self, self.reportViewContainer, self.invisibleView)
+    }
+    
+    func hideIdea(sender: UIButton){
+        
+        let row = sender.tag
+        if let currentUser = PFUser.currentUser(){
+            let idea = ideaObjects[row]
+            currentUser.addObject(idea.objectId!, forKey: "ideasToHideId")
+            currentUser.saveEventually()
+        }
+        
+        hideInvisibleAndReportView(invisibleView, self, reportViewContainer)
+        ideaObjects.removeAtIndex(row)
+        let indexPath = NSIndexPath(forRow: row, inSection: 0)
+        let pathArray = [indexPath]
+        tableView.deleteRowsAtIndexPaths(pathArray, withRowAnimation: UITableViewRowAnimation.Bottom)
+    }
+    
+    func hideAndReport(sender: UIButton){
+        hideAndReportGlobal(ideaObjects, sender, self, self.hideIdea)
+    }
+    
+    func cancelHide(sender: UIButton){
+        
+        hideInvisibleAndReportView(invisibleView, self, reportViewContainer)
+    }
+
+    
     func startActivityIndicator(){
         
         activityIndicatorContainer.frame = CGRectMake(0, 75, self.view.frame.width, 1000)
@@ -187,6 +220,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         ideaQuery.limit = 200
         ideaQuery.includeKey("owner")
         ideaQuery.includeKey("topicPointer")
+        getIdeasToHideGlobal(ideaQuery)
         ideaQuery.findObjectsInBackgroundWithTarget(self, selector: "ideaSelector:error:")
 
     }

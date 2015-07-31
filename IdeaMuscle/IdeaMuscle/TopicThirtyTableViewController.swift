@@ -16,6 +16,8 @@ class TopicThirtyTableViewController: UITableViewController, UITableViewDataSour
     var topicObjects = [PFObject(className: "Topic")]
     let activityIndicatorContainer = UIView()
     let refreshTable = UIRefreshControl()
+    let reportViewContainer = UIView()
+    let invisibleView = UIView()
     
     
     func queryForTopicObjects(){
@@ -54,6 +56,8 @@ class TopicThirtyTableViewController: UITableViewController, UITableViewDataSour
         refreshTable.attributedTitle = NSAttributedString(string: "")
         refreshTable.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
         tableView.addSubview(refreshTable)
+        
+        longPressToTableViewGlobal(self, tableView, reportViewContainer)
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -94,6 +98,36 @@ class TopicThirtyTableViewController: UITableViewController, UITableViewDataSour
         
         return cell
         
+    }
+    
+    func cellLongPress(sender: UILongPressGestureRecognizer){
+        cellLongPressGlobal(sender, tableView, self, self.reportViewContainer, self.invisibleView)
+    }
+    
+    func hideIdea(sender: UIButton){
+        //Is really hide topic in this case but used hideIdea cuz it was already created for ideas
+        let row = sender.tag
+        if let currentUser = PFUser.currentUser(){
+            let topic = topicObjects[row]
+            currentUser.addObject(topic.objectId!, forKey: "topicsToHideId")
+            currentUser.addObject(topic, forKey: "topicsToHide")
+            currentUser.saveEventually()
+        }
+        
+        hideInvisibleAndReportView(invisibleView, self, reportViewContainer)
+        topicObjects.removeAtIndex(row)
+        let indexPath = NSIndexPath(forRow: row, inSection: 0)
+        let pathArray = [indexPath]
+        tableView.deleteRowsAtIndexPaths(pathArray, withRowAnimation: UITableViewRowAnimation.Bottom)
+    }
+    
+    func hideAndReport(sender: UIButton){
+        hideAndReportTopicGlobal(topicObjects, sender, self, self.hideIdea)
+    }
+    
+    func cancelHide(sender: UIButton){
+        
+        hideInvisibleAndReportView(invisibleView, self, reportViewContainer)
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

@@ -20,6 +20,7 @@ class ReportAbuseViewController: UIViewController, UITextViewDelegate {
     var commentsTextView = UITextView()
     var container = UIView()
     let selectionView = UIView()
+    var isFromTopic = Bool()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -145,12 +146,18 @@ class ReportAbuseViewController: UIViewController, UITextViewDelegate {
                 if selectedButton == 2 || selectedButton == 3{
                     //Report Topic
                     reportObject["topicPointer"] = activeTopic
-                    currentUser.addObject(activeTopic, forKey: "topicsToHide")
+                    if isFromTopic == false{
+                        currentUser.addObject(activeTopic, forKey: "topicsToHide")
+                        currentUser.addObject(activeTopic.objectId!, forKey: "topicsToHideId")
+                    }
                 }
             }else{
                 //Report Topic
                 reportObject["topicPointer"] = activeTopic
-                currentUser.addObject(activeTopic, forKey: "topicsToHide")
+                if isFromTopic == false{
+                    currentUser.addObject(activeTopic, forKey: "topicsToHide")
+                    currentUser.addObject(activeTopic.objectId!, forKey: "topicsToHideId")
+                }
             }
             reportObject.saveEventually()
             currentUser.saveEventually()

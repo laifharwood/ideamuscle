@@ -59,12 +59,7 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
         refreshTable.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
         tableView.addSubview(refreshTable)
         
-        let longGest = UILongPressGestureRecognizer()
-        longGest.addTarget(self, action: "cellLongPress:")
-        longGest.minimumPressDuration = 0.4
-        tableView.addGestureRecognizer(longGest)
-        
-        reportViewContainer.frame = CGRectMake(0, self.tabBarController!.tabBar.frame.maxY, self.view.frame.width, 100)
+        longPressToTableViewGlobal(self, tableView, reportViewContainer)
         
     }
     
@@ -119,57 +114,7 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
     }
     
     func cellLongPress(sender: UILongPressGestureRecognizer){
-            let point = sender.locationInView(tableView)
-            let indexPath = tableView.indexPathForRowAtPoint(point)
-            
-            self.tabBarController!.tabBar.hidden = true
-            
-            UIView.animateWithDuration(0.5, animations: { () -> Void in
-                self.reportViewContainer.frame = CGRectMake(0, self.tabBarController!.tabBar.frame.maxY - 140, self.view.frame.width, 140)
-                self.reportViewContainer.backgroundColor = UIColor.whiteColor()
-                self.navigationController!.view.addSubview(self.reportViewContainer)
-                self.view.bringSubviewToFront(self.reportViewContainer)
-            })
-            
-            let hideButton = UIButton(frame: CGRectMake(5, 5, self.view.frame.width - 10, 40))
-            let hideAndReportButton = UIButton(frame: CGRectMake(5, hideButton.frame.maxY + 5, self.view.frame.width - 10, 40))
-            let cancelHideButton = UIButton(frame: CGRectMake(5, hideAndReportButton.frame.maxY + 5, self.view.frame.width - 10, 40))
-            
-            hideButton.setTitle("Hide", forState: .Normal)
-            hideAndReportButton.setTitle("Hide And Report", forState: .Normal)
-            cancelHideButton.setTitle("Cancel", forState: .Normal)
-            
-            hideButton.backgroundColor = oneFiftyGrayColor
-            hideAndReportButton.backgroundColor = oneFiftyGrayColor
-            cancelHideButton.backgroundColor = twoHundredGrayColor
-            
-            hideButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-            hideAndReportButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-            cancelHideButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-            
-            hideButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
-            hideAndReportButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
-            cancelHideButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
-            
-            hideButton.addTarget(self, action: "hideIdea:", forControlEvents: .TouchUpInside)
-            hideAndReportButton.addTarget(self, action: "hideAndReport:", forControlEvents: .TouchUpInside)
-            cancelHideButton.addTarget(self, action: "cancelHide:", forControlEvents: .TouchUpInside)
-            
-            hideButton.tag = indexPath!.row
-            hideAndReportButton.tag = indexPath!.row
-            
-            hideButton.layer.cornerRadius = 3
-            hideAndReportButton.layer.cornerRadius = 3
-            cancelHideButton.layer.cornerRadius = 3
-            
-            reportViewContainer.addSubview(hideButton)
-            reportViewContainer.addSubview(hideAndReportButton)
-            reportViewContainer.addSubview(cancelHideButton)
-            
-            self.invisibleView.frame = CGRectMake(0, UIApplication.sharedApplication().statusBarFrame.height, self.view.frame.width, self.reportViewContainer.frame.minY - UIApplication.sharedApplication().statusBarFrame.height)
-            self.invisibleView.backgroundColor = oneFiftyGrayColor
-            self.invisibleView.alpha = 0.7
-            self.navigationController!.view.addSubview(self.invisibleView)
+        cellLongPressGlobal(sender, tableView, self, self.reportViewContainer, self.invisibleView)
     }
     
     func hideIdea(sender: UIButton){
@@ -177,11 +122,11 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
         let row = sender.tag
         if let currentUser = PFUser.currentUser(){
             let idea = ideaObjects[row]
-            currentUser.addObject(idea, forKey: "ideasToHide")
+            currentUser.addObject(idea.objectId!, forKey: "ideasToHideId")
             currentUser.saveEventually()
         }
         
-        hideInvisibleAndReportView()
+        hideInvisibleAndReportView(invisibleView, self, reportViewContainer)
         ideaObjects.removeAtIndex(row)
         let indexPath = NSIndexPath(forRow: row, inSection: 0)
         let pathArray = [indexPath]
@@ -189,31 +134,15 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
     }
     
     func hideAndReport(sender: UIButton){
-        let reportVC = ReportAbuseViewController()
-        reportVC.activeIdea = ideaObjects[sender.tag]
-        if let topic = ideaObjects[sender.tag]["topicPointer"] as? PFObject{
-            reportVC.activeTopic = topic
-            //self.presentViewController(reportVC, animated: true, completion: nil)
-            self.navigationController?.pushViewController(reportVC, animated: true)
-        }
-        hideIdea(sender)
+        hideAndReportGlobal(ideaObjects, sender, self, self.hideIdea)
     }
     
     func cancelHide(sender: UIButton){
         
-       hideInvisibleAndReportView()
+       hideInvisibleAndReportView(invisibleView, self, reportViewContainer)
     }
     
-    func hideInvisibleAndReportView(){
-        
-        invisibleView.removeFromSuperview()
-        
-        UIView.animateWithDuration(0.5, animations: { () -> Void in
-            
-            self.reportViewContainer.frame = CGRectMake(0, self.tabBarController!.tabBar.frame.maxY, self.view.frame.width, 100)
-            self.tabBarController!.tabBar.hidden = false
-        })
-    }
+
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)

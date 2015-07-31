@@ -21,6 +21,8 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
     var activityIndicator = UIActivityIndicatorView()
     let activityIndicatorContainer = UIView()
     var shareContainer = UIView()
+    let reportViewContainer = UIView()
+    let invisibleView = UIView()
     
     func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
         dismissViewControllerAnimated(true, completion: nil)
@@ -117,6 +119,8 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         shareContainer.addSubview(facebookShareButton)
         shareContainer.addSubview(emailShareButton)
         shareContainer.addSubview(cancelShareButton)
+        
+        longPressToTableViewGlobal(self, tableView, reportViewContainer)
     }
     
     func shareTwitter(sender: UIButton!){
@@ -216,7 +220,8 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         query.includeKey("usersWhoUpvoted")
         query.orderByAscending("createdAt")
         query.orderByDescending("numberOfUpvotes")
-        query.limit = 100
+        query.limit = 500
+        getIdeasToHideGlobal(query)
         query.findObjectsInBackgroundWithTarget(self, selector: "ideaSelector:error:")
         
     }
@@ -320,6 +325,46 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
 
         return cell
     }
+    
+    func cellLongPress(sender: UILongPressGestureRecognizer){
+        cellLongPressGlobal(sender, tableView, self, self.reportViewContainer, self.invisibleView)
+    }
+    
+    func hideIdea(sender: UIButton){
+        
+        let row = sender.tag
+        if let currentUser = PFUser.currentUser(){
+            let idea = ideaObjects[row]
+            currentUser.addObject(idea.objectId!, forKey: "ideasToHideId")
+            currentUser.saveEventually()
+        }
+        
+        hideInvisibleAndReportViewLocal()
+        ideaObjects.removeAtIndex(row)
+        let indexPath = NSIndexPath(forRow: row, inSection: 0)
+        let pathArray = [indexPath]
+        tableView.deleteRowsAtIndexPaths(pathArray, withRowAnimation: UITableViewRowAnimation.Bottom)
+    }
+    
+    func hideAndReport(sender: UIButton){
+        hideAndReportGlobal(ideaObjects, sender, self, self.hideIdea)
+    }
+    
+    func cancelHide(sender: UIButton){
+        
+        hideInvisibleAndReportViewLocal()
+    }
+    
+    func hideInvisibleAndReportViewLocal(){
+        
+        invisibleView.removeFromSuperview()
+        
+        UIView.animateWithDuration(0.5, animations: { () -> Void in
+            
+            self.reportViewContainer.frame = CGRectMake(0, self.tabBarController!.tabBar.frame.maxY, self.view.frame.width, 100)
+        })
+    }
+
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)

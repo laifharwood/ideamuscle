@@ -16,19 +16,35 @@ func topicQueryGlobal(daysInPast: Int, query: PFQuery){
     query.orderByAscending("createdAt")
     query.orderByDescending("numberOfIdeas")
     query.limit = 100
-    //query.whereKeyExists("numberOfIdeas")
     query.whereKey("isPublic", equalTo: true)
     query.includeKey("creator")
+    getTopicToHideGlobal(query)
     if daysInPast < 0{
-    let now = NSDate()
-    let calendar = NSCalendar.currentCalendar()
-    let timeZone = NSTimeZone(abbreviation: "GMT")
-    calendar.timeZone = timeZone!
-    let components = NSDateComponents()
-    components.day = daysInPast
-    let oneDayAgo = calendar.dateByAddingComponents(components, toDate: now, options: nil)
-    query.whereKey("createdAt", greaterThanOrEqualTo: oneDayAgo!)
+        let now = NSDate()
+        let calendar = NSCalendar.currentCalendar()
+        let timeZone = NSTimeZone(abbreviation: "GMT")
+        calendar.timeZone = timeZone!
+        let components = NSDateComponents()
+        components.day = daysInPast
+        let oneDayAgo = calendar.dateByAddingComponents(components, toDate: now, options: nil)
+        query.whereKey("createdAt", greaterThanOrEqualTo: oneDayAgo!)
     }
+}
+
+func getTopicToHideGlobal(query: PFQuery){
+    if let currentUser = PFUser.currentUser(){
+        if let topicsToHideId = currentUser["topicsToHideId"] as? [String]{
+            query.whereKey("objectId", notContainedIn: topicsToHideId)
+        }
+    }
+}
+
+func hideAndReportTopicGlobal(topicObjects: [PFObject], sender: UIButton, senderSelf: AnyObject, hideTopic: (UIButton) -> ()){
+    let reportVC = ReportAbuseViewController()
+    reportVC.activeTopic = topicObjects[sender.tag]
+    reportVC.isFromTopic == true
+    senderSelf.navigationController?!.pushViewController(reportVC, animated: true)
+    hideTopic(sender)
 }
 
 func tableViewTopicConfig(tableView: UITableView){
@@ -45,22 +61,25 @@ func cellFrameTopic(cell: UITableViewCell, view: UIView){
 
 func numberOfIdeasGlobal(topicObjects: [PFObject], indexPath: NSIndexPath, ideaTotalButton: UIButton, cell: UITableViewCell){
     var numberOfIdeas = Int()
-    if topicObjects[indexPath.row]["numberOfIdeas"] != nil{
-        numberOfIdeas = topicObjects[indexPath.row]["numberOfIdeas"] as! Int
-        
+    
+    if let numberOfIdeas = topicObjects[indexPath.row]["numberOfIdeas"] as? Int{
         let abbreviatedNumber = abbreviateNumber(numberOfIdeas) as String
         ideaTotalButton.setTitle(abbreviatedNumber, forState: .Normal)
     }else{
         ideaTotalButton.setTitle("0", forState: .Normal)
     }
-    ideaTotalButton.frame =  CGRectMake(cell.frame.maxX - (40 + 10), 20, 40, cell.frame.height - 40)
-    ideaTotalButton.layer.cornerRadius = 3.0
-    ideaTotalButton.layer.borderColor = oneFiftyGrayColor.CGColor
-    ideaTotalButton.backgroundColor = oneFiftyGrayColor
-    ideaTotalButton.layer.borderWidth = 1
-    ideaTotalButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-    ideaTotalButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 15)
-    ideaTotalButton.tag = indexPath.row
+    
+    if let id = topicObjects[indexPath.row].objectId{
+    
+        ideaTotalButton.frame =  CGRectMake(cell.frame.maxX - (40 + 10), 20, 40, cell.frame.height - 40)
+        ideaTotalButton.layer.cornerRadius = 3.0
+        ideaTotalButton.layer.borderColor = oneFiftyGrayColor.CGColor
+        ideaTotalButton.backgroundColor = oneFiftyGrayColor
+        ideaTotalButton.layer.borderWidth = 1
+        ideaTotalButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        ideaTotalButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 15)
+        ideaTotalButton.tag = indexPath.row
+    }
 }
 
 func ideaTitleLabelGlobal(ideaTitleLabel: UILabel, ideaTotalButton: UIButton){
