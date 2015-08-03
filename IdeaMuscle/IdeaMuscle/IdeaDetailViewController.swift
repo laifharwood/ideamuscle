@@ -29,6 +29,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     var shareContainer = UIView()
     let gestureRecTextField = UITapGestureRecognizer()
     var ideaIsPublic = Bool()
+    let invisibleView = UIView()
     
     func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
         dismissViewControllerAnimated(true, completion: nil)
@@ -232,7 +233,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
             commentTextFieldContainter.addSubview(characterCountLabel)
             
             //MARK: - Share Container and Buttons
-            shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 105, self.view.frame.width, 180)
+            shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 105, self.view.frame.width, 185)
             shareContainer.backgroundColor = UIColor.whiteColor()
             self.view.addSubview(shareContainer)
             
@@ -241,7 +242,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
             let emailShareButton = UIButton()
             let cancelShareButton = UIButton()
             
-            twitterShareButton.frame = CGRectMake(5, 0, shareContainer.frame.width - 10, 40)
+            twitterShareButton.frame = CGRectMake(5, 5, shareContainer.frame.width - 10, 40)
             facebookShareButton.frame = CGRectMake(5, twitterShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
             emailShareButton.frame = CGRectMake(5, facebookShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
             cancelShareButton.frame = CGRectMake(5, emailShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
@@ -249,7 +250,17 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
             twitterShareButton.backgroundColor = fiftyGrayColor
             facebookShareButton.backgroundColor = fiftyGrayColor
             emailShareButton.backgroundColor = fiftyGrayColor
-            cancelShareButton.backgroundColor = fiftyGrayColor
+            cancelShareButton.backgroundColor = oneFiftyGrayColor
+            
+            twitterShareButton.layer.cornerRadius = 3
+            facebookShareButton.layer.cornerRadius = 3
+            emailShareButton.layer.cornerRadius = 3
+            cancelShareButton.layer.cornerRadius = 3
+            
+            twitterShareButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
+            facebookShareButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
+            emailShareButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
+            cancelShareButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
             
             twitterShareButton.setTitle("Twitter", forState: .Normal)
             facebookShareButton.setTitle("Facebook", forState: .Normal)
@@ -373,6 +384,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     
     func shareTwitter(sender: UIButton!){
         shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
+        invisibleView.removeFromSuperview()
         let twitterComposeVC = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
         
         let ideaString = activeIdea["content"] as! String
@@ -398,6 +410,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     
     func shareFacebook(sender: UIButton!){
         shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
+        invisibleView.removeFromSuperview()
         let facebookComposeVC = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
         let ideaString = activeIdea["content"] as! String
         let deeplink = HOKDeeplink(route: "ideas/:ideaId", routeParameters: ["ideaId": activeIdea.objectId!])
@@ -415,7 +428,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     
     func shareEmail(sender: UIButton!){
         shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
-        
+        invisibleView.removeFromSuperview()
         let emailVC = MFMailComposeViewController()
         emailVC.mailComposeDelegate = self
         let ideaString = activeIdea["content"] as! String
@@ -444,6 +457,8 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         UIView.animateWithDuration(0.5, animations: { () -> Void in
             self.shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
         })
+        
+        invisibleView.removeFromSuperview()
         
     }
     
@@ -622,6 +637,11 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
             self.shareContainer.frame = CGRectMake(0, self.view.frame.maxY - 180, self.view.frame.width, 180)
             self.view.bringSubviewToFront(self.shareContainer)
        })
+        
+        invisibleView.frame = CGRectMake(0, UIApplication.sharedApplication().statusBarFrame.height, self.view.frame.width, shareContainer.frame.minY - UIApplication.sharedApplication().statusBarFrame.height)
+        invisibleView.backgroundColor = oneFiftyGrayColor
+        invisibleView.alpha = 0.7
+        self.navigationController!.view.addSubview(invisibleView)
     }
     
     func postComment(sender: UIButton!){

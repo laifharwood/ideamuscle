@@ -159,6 +159,36 @@ class ReportAbuseViewController: UIViewController, UITextViewDelegate {
                     currentUser.addObject(activeTopic.objectId!, forKey: "topicsToHideId")
                 }
             }
+            
+            var title = String()
+            var content = String()
+            var username = String()
+            
+            if let topicTitle = activeTopic["title"] as? String{
+                title = topicTitle + " "
+            }else{
+                title = " "
+            }
+            
+            if let idea = activeIdea{
+                if let ideaContent = idea["content"] as? String{
+                    content = ideaContent + " "
+                }else{
+                    content = " "
+                }
+            }else{
+                content = " "
+            }
+            
+            if let currentUsername = currentUser.username{
+                username = currentUsername + " "
+            }else{
+                username = " "
+            }
+            
+            let emailText = "Reporting User: " + username + "\r\n" + "User Comments: " + commentsTextView.text + " " + "\r\n" + "Topic Title: " + title + "\r\n" + "Idea Content: " + content
+            
+            reportObject["emailText"] = emailText
             reportObject.saveEventually()
             currentUser.saveEventually()
         }

@@ -27,6 +27,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     var draftObject = PFObject(className: "Draft")
     var isADraft = Bool()
     var hasAddedTopic = Bool()
+    let invisibleView = UIView()
     
     
     
@@ -176,7 +177,16 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         
         deleteDraftButton.backgroundColor = oneFiftyGrayColor
         saveDraftButton.backgroundColor = oneFiftyGrayColor
-        cancelExitButton.backgroundColor = oneFiftyGrayColor
+        cancelExitButton.backgroundColor = twoHundredGrayColor
+        
+        deleteDraftButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
+        saveDraftButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
+        cancelExitButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
+        
+        deleteDraftButton.layer.cornerRadius = 3
+        saveDraftButton.layer.cornerRadius = 3
+        cancelExitButton.layer.cornerRadius = 3
+        
         
         deleteDraftButton.setTitleColor(redColor, forState: .Normal)
         saveDraftButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
@@ -230,6 +240,8 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         UIView.animateWithDuration(0.5, animations: { () -> Void in
             self.saveDraftContainer.frame = CGRectMake(0, self.view.frame.maxY, self.view.frame.width, 140)
         })
+        
+        invisibleView.removeFromSuperview()
     }
     
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -629,6 +641,11 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             self.saveDraftContainer.frame = CGRectMake(0, self.view.frame.maxY - 140, self.view.frame.width, 140)
             self.view.bringSubviewToFront(self.saveDraftContainer)
         })
+        
+        invisibleView.frame = CGRectMake(0, UIApplication.sharedApplication().statusBarFrame.height, self.view.frame.width, saveDraftContainer.frame.minY - UIApplication.sharedApplication().statusBarFrame.height)
+        invisibleView.backgroundColor = oneFiftyGrayColor
+        invisibleView.alpha = 0.7
+        self.view.addSubview(invisibleView)
     }
     
     

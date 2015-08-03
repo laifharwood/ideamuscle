@@ -181,11 +181,11 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         ideaTitleLabelContainter.addSubview(ideaTitleLabel)
         
         //MARK: - Follow Button
-        let followButtonContainter = UIView(frame: CGRectMake(worldRankContainer.frame.maxX + 2, topBackgroundContainer.frame.maxY + 2, self.view.frame.width/2 - 1, 80))
-        followButtonContainter.backgroundColor = twoHundredGrayColor
-        self.view.addSubview(followButtonContainter)
+        let followButtonContainer = UIView(frame: CGRectMake(worldRankContainer.frame.maxX + 2, topBackgroundContainer.frame.maxY + 2, self.view.frame.width/2 - 1, 80))
+        followButtonContainer.backgroundColor = twoHundredGrayColor
+        self.view.addSubview(followButtonContainer)
         
-        followButton.frame = CGRectMake(followButtonContainter.frame.width/2 - 40, worldRankContainer.frame.height/2 - 20, 80, 40)
+        followButton.frame = CGRectMake(followButtonContainer.frame.width/2 - 40, worldRankContainer.frame.height/2 - 20, 80, 40)
         followButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         followButton.addTarget(self, action: "follow:", forControlEvents: .TouchUpInside)
         followButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 15)
@@ -193,11 +193,32 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         
         if let currentUser = PFUser.currentUser(){
             if activeUser != currentUser{
-            followButtonContainter.addSubview(followButton)
+                followButtonContainer.addSubview(followButton)
+            }else{
+                if let activeUserIsPro = activeUser["isPro"] as? Bool{
+                    if activeUserIsPro{
+                        if let isProForever = activeUser["isProForever"] as? Bool{
+                            if isProForever{
+                                //Never Expiration
+                                expirationDateLabel(true, followButtonContainer: followButtonContainer)
+                            }else{
+                                //Expiration Date
+                                expirationDateLabel(false, followButtonContainer: followButtonContainer)
+                            }
+                        }else{
+                            //expiration Date
+                            expirationDateLabel(false, followButtonContainer: followButtonContainer)
+                        }
+                    }else{
+                        //Upgrade To Pro Button
+                        upgradeToProButton(followButtonContainer)
+                    }
+                }else{
+                    //Upgrade To Pro Button
+                    upgradeToProButton(followButtonContainer)
+                }
             }
         }
-        
-        
         
         
         
@@ -205,6 +226,41 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         ideaTableView.frame = CGRectMake(0, ideaTitleLabelContainter.frame.maxY, self.view.frame.width, self.view.frame.height - ideaTitleLabelContainter.frame.maxY)
         self.view.addSubview(ideaTableView)
         
+    }
+    
+    func expirationDateLabel(isForever: Bool, followButtonContainer: UIView){
+        var label = UILabel(frame: CGRectMake(5, 5, followButtonContainer.frame.width - 10, followButtonContainer.frame.height - 10))
+        label.font = UIFont(name: "HelveticaNeue", size: 15)
+        label.numberOfLines = 0
+        label.textAlignment = NSTextAlignment.Center
+        if isForever == false{
+            let formatter = NSDateFormatter()
+            formatter.dateStyle = NSDateFormatterStyle.ShortStyle
+            if let proExpirationDate = activeUser["proExpiration"] as? NSDate{
+                let formattedDate = formatter.stringFromDate(proExpirationDate)
+                label.text = "Pro Expiration: " + formattedDate
+            }
+        }else{
+            label.text = "Pro Expiration: Never"
+        }
+        followButtonContainer.addSubview(label)
+    }
+    
+    func upgradeToProButton(followButtonContainer: UIView){
+        let upgradeButton = UIButton(frame: CGRectMake(followButtonContainer.frame.width/2 - 60, followButtonContainer.frame.height/2 - 20, 120, 40))
+        upgradeButton.backgroundColor = redColor
+        upgradeButton.layer.cornerRadius = 3
+        upgradeButton.setTitle("Upgrade To Pro", forState: .Normal)
+        upgradeButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        upgradeButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 14)
+        upgradeButton.addTarget(self, action: "goToStore:", forControlEvents: .TouchUpInside)
+        followButtonContainer.addSubview(upgradeButton)
+    }
+    
+    func goToStore(sender: UIButton?){
+        let storeVC = StoreViewController()
+        //let navVC = UINavigationController(rootViewController: storeVC)
+        self.navigationController?.pushViewController(storeVC, animated: true)
     }
     
     func queryNumberOfUpvotes(){
@@ -307,11 +363,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         upgradeAlert.addAction(cancelAction)
         
         let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
-            let storeVC = StoreViewController()
-            //let navVC = UINavigationController(rootViewController: storeVC)
-            //self.presentViewController(navVC, animated: true, completion: nil)
-            self.navigationController?.pushViewController(storeVC, animated: true)
-            
+            self.goToStore(nil)
         })
         
         upgradeAlert.addAction(goToStore)

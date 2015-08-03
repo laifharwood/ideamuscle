@@ -86,8 +86,8 @@ func cellLongPressGlobal(sender: UILongPressGestureRecognizer, tableView: UITabl
     hideAndReportButton.setTitle("Hide And Report", forState: .Normal)
     cancelHideButton.setTitle("Cancel", forState: .Normal)
     
-    hideButton.backgroundColor = oneFiftyGrayColor
-    hideAndReportButton.backgroundColor = oneFiftyGrayColor
+    hideButton.backgroundColor = fiftyGrayColor
+    hideAndReportButton.backgroundColor = fiftyGrayColor
     cancelHideButton.backgroundColor = twoHundredGrayColor
     
     hideButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)

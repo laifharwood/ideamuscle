@@ -86,7 +86,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         self.view.addSubview(composeButton)
         
         //MARK: - Share Container and Buttons
-        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 105, self.view.frame.width, 180)
+        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 105, self.view.frame.width, 185)
         shareContainer.backgroundColor = UIColor.whiteColor()
         self.view.addSubview(shareContainer)
         
@@ -95,7 +95,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         let emailShareButton = UIButton()
         let cancelShareButton = UIButton()
         
-        twitterShareButton.frame = CGRectMake(5, 0, shareContainer.frame.width - 10, 40)
+        twitterShareButton.frame = CGRectMake(5, 5, shareContainer.frame.width - 10, 40)
         facebookShareButton.frame = CGRectMake(5, twitterShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
         emailShareButton.frame = CGRectMake(5, facebookShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
         cancelShareButton.frame = CGRectMake(5, emailShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
@@ -103,7 +103,17 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         twitterShareButton.backgroundColor = fiftyGrayColor
         facebookShareButton.backgroundColor = fiftyGrayColor
         emailShareButton.backgroundColor = fiftyGrayColor
-        cancelShareButton.backgroundColor = fiftyGrayColor
+        cancelShareButton.backgroundColor = oneFiftyGrayColor
+        
+        twitterShareButton.layer.cornerRadius = 3
+        facebookShareButton.layer.cornerRadius = 3
+        emailShareButton.layer.cornerRadius = 3
+        cancelShareButton.layer.cornerRadius = 3
+        
+        twitterShareButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
+        facebookShareButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
+        emailShareButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
+        cancelShareButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
         
         twitterShareButton.setTitle("Twitter", forState: .Normal)
         facebookShareButton.setTitle("Facebook", forState: .Normal)
@@ -125,6 +135,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
     
     func shareTwitter(sender: UIButton!){
         shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
+        invisibleView.removeFromSuperview()
         let twitterComposeVC = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
         
         let topicString = activeTopic["title"] as! String
@@ -150,6 +161,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
     
     func shareFacebook(sender: UIButton!){
         shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
+        invisibleView.removeFromSuperview()
         let facebookComposeVC = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
         let topicString = activeTopic["title"] as! String
         facebookComposeVC.setInitialText(topicString)
@@ -169,6 +181,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
     
     func shareEmail(sender: UIButton!){
         shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
+        invisibleView.removeFromSuperview()
         
         let emailVC = MFMailComposeViewController()
         emailVC.mailComposeDelegate = self
@@ -195,6 +208,8 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         UIView.animateWithDuration(0.5, animations: { () -> Void in
             self.shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
         })
+        
+        invisibleView.removeFromSuperview()
     }
 
     
@@ -422,6 +437,11 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
             self.shareContainer.frame = CGRectMake(0, self.view.frame.maxY - 180, self.view.frame.width, 180)
             self.view.bringSubviewToFront(self.shareContainer)
         })
+        
+        invisibleView.frame = CGRectMake(0, UIApplication.sharedApplication().statusBarFrame.height, self.view.frame.width, shareContainer.frame.minY - UIApplication.sharedApplication().statusBarFrame.height)
+        invisibleView.backgroundColor = oneFiftyGrayColor
+        invisibleView.alpha = 0.7
+        self.navigationController!.view.addSubview(invisibleView)
         
     }
     

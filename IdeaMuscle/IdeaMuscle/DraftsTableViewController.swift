@@ -78,10 +78,11 @@ class DraftsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
         
-        cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+        
         
         
         if let topicObject = draftObjects[indexPath.row]["topicPointer"] as? PFObject{
+            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
             if let topicTitle = topicObject["title"] as? String{
                 cell.textLabel?.text = topicTitle
                 cell.textLabel?.font = UIFont(name: "HelveticaNeue", size: 14)
