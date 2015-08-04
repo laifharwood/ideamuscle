@@ -80,6 +80,7 @@ class UserTopicsTableViewController: UITableViewController, UITableViewDataSourc
         }
         
         
+        
         //MARK: - Idea Total Button Config
         cell.ideaTotalButton.addTarget(self, action: "viewIdeas:", forControlEvents: .TouchUpInside)
         cell.ideaTotalButton.frame =  CGRectMake(cell.frame.maxX - (40 + 10), 20, 40, cell.frame.height - 40)
@@ -89,6 +90,8 @@ class UserTopicsTableViewController: UITableViewController, UITableViewDataSourc
         cell.ideaTotalButton.layer.borderWidth = 1
         cell.ideaTotalButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         cell.ideaTotalButton.tag = indexPath.row
+            
+        
         
         
         //MARK: - Idea Title Label

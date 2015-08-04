@@ -91,6 +91,8 @@ class TopicAndIdeaContainerViewController: UIViewController {
         periodFrame.addSubview(periodSC)
         
         activeViewController = ideaSevenVC
+        
+        
 
         // Do any additional setup after loading the view.
     }
@@ -100,6 +102,11 @@ class TopicAndIdeaContainerViewController: UIViewController {
             self.tabBarController!.tabBar.hidden = false
             //updateMoreBadge(self.tabBarController!)
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        //let welcomeVC = WelcomeViewController()
+       // navigationController?.presentViewController(welcomeVC, animated: true, completion: nil)
     }
     
     
@@ -139,7 +146,7 @@ class TopicAndIdeaContainerViewController: UIViewController {
     func composeOriginal(sender: UIButton!){
         
         //composeOriginalGlobal(self)
-        composeFromDetail(self, nil, true)
+        composeFromDetail(navigationController, nil, true)
         
     }
     

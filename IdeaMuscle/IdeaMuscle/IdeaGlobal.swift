@@ -282,23 +282,6 @@ func composeFromDetail(sender: AnyObject!, activeTopic: PFObject?, isNewTopic: B
     
     if let user = PFUser.currentUser(){
         
-        
-        if let hasPosted = user["hasPosted"] as? Bool{
-            if hasPosted == false{
-                if isNewTopic == false{
-                    presentCompose(sender, activeTopic!, isNewTopic)
-                }else{
-                    presentCompose(sender, nil, isNewTopic)
-                }
-            }
-        }else{
-            if isNewTopic == false{
-                presentCompose(sender, activeTopic!, isNewTopic)
-            }else{
-                presentCompose(sender, nil, isNewTopic)
-            }
-        }
-        
         if let isPro = user["isPro"] as? Bool{
             if isPro{
                 if isNewTopic == false{
@@ -307,14 +290,10 @@ func composeFromDetail(sender: AnyObject!, activeTopic: PFObject?, isNewTopic: B
                     presentCompose(sender, nil, isNewTopic)
                 }
             }else{
-                if isNewTopic == false{
-                    notProCheckIfCanPostFromDetail(user, sender, activeTopic!, isNewTopic)
-                }else{
-                    notProCheckIfCanPostFromDetail(user, sender, nil, isNewTopic)
-                }
+                checkIfHasPosted(user, sender, isNewTopic, activeTopic)
             }
         }else{
-            notProCheckIfCanPostFromDetail(user, sender, activeTopic!, isNewTopic)
+            checkIfHasPosted(user, sender, isNewTopic, activeTopic)
         }
     }
 }
@@ -328,6 +307,22 @@ func presentCompose(sender: AnyObject!, activeTopic: PFObject?, isNewTopic: Bool
     }else{
         let composeTopicVC = ComposeTopicViewController()
         sender.presentViewController(composeTopicVC, animated: true, completion: nil)
+    }
+}
+
+func checkIfHasPosted (user: PFUser, sender: AnyObject!, isNewTopic: Bool, activeTopic: PFObject?){
+    if let hasPosted = user["hasPosted"] as? Bool{
+        if hasPosted == false{
+            if isNewTopic == false{
+                presentCompose(sender, activeTopic!, isNewTopic)
+            }else{
+                presentCompose(sender, nil, isNewTopic)
+            }
+        }else{
+            notProCheckIfCanPostFromDetail(user, sender, activeTopic, isNewTopic)
+        }
+    }else{
+        notProCheckIfCanPostFromDetail(user, sender, activeTopic, isNewTopic)
     }
 }
 

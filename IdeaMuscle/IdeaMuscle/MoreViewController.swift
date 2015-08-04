@@ -40,7 +40,17 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.delegate = self
         //tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height - tabBarController!.tabBar.frame.height)
+        tableView.sectionHeaderHeight = 10
+        //tableView.headerViewForSection(0)?.backgroundColor = oneFiftyGrayColor
         self.view.addSubview(tableView)
+    }
+    
+    func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        view.tintColor = oneFiftyGrayColor
+    }
+    
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return " "
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -61,12 +71,23 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
 
-        return 1
+        return 4
     }
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return 7
+        
+        if section == 0{
+            return 4
+        }else if section == 1{
+            return 2
+        }else if section == 2{
+            return 3
+        }else if section == 3{
+            return 2
+        }else{
+            return 0
+        }
     }
     
     func composeOriginal(sender: UIButton!){
@@ -86,23 +107,19 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.textLabel!.font = UIFont(name: "HelveticaNeue", size: 13)
 
         // Configure the cell...
-        if indexPath.row == 0 {
-            cell.textLabel!.text = "IdeaMuscle Pro Store"
-        }else if indexPath.row == 1{
-            cell.textLabel!.text = "Drafts"
-        }else if indexPath.row == 2{
+        if indexPath == NSIndexPath(forRow: 0, inSection: 0){
+            cell.textLabel!.text = "Profile"
+        }else if indexPath == NSIndexPath(forRow: 1, inSection: 0){
             cell.textLabel!.text = "Your Ideas"
-        }else if indexPath.row == 3{
+        }else if indexPath == NSIndexPath(forRow: 2, inSection: 0){
             cell.textLabel!.text = "Your Topics"
-        }else if indexPath.row == 4{
-            cell.textLabel!.text = "Your Profile"
-        }else if indexPath.row == 5{
+        }else if indexPath == NSIndexPath(forRow: 3, inSection: 0){
             cell.textLabel!.text = "Ideas You've Upvoted"
-        }else if indexPath.row == 6{
+        }else if indexPath == NSIndexPath(forRow: 0, inSection: 1){
+            cell.textLabel!.text = "Drafts"
+        }else if indexPath == NSIndexPath(forRow: 1, inSection: 1){
             cell.textLabel!.text = "Notifications"
-            
             let badgeValue = PFInstallation.currentInstallation().badge
-        
             if badgeValue != 0{
                 
                 var width = CGFloat()
@@ -124,6 +141,20 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.badgeLabel.text = abbreviateNumber(badgeValue) as String
                 cell.badgeLabel.textAlignment = NSTextAlignment.Center
             }
+
+        }else if indexPath == NSIndexPath(forRow: 0, inSection: 2){
+            cell.textLabel!.text = "Store"
+        }else if indexPath == NSIndexPath(forRow: 1, inSection: 2){
+            cell.textLabel!.text = "Report An Issue / Contact Us"
+        }else if indexPath == NSIndexPath(forRow: 2, inSection: 2){
+            cell.textLabel!.text = "End User License Agreement"
+        }
+        else if indexPath == NSIndexPath(forRow: 0, inSection: 3){
+            cell.textLabel!.text = "What Is IdeaMuscle?"
+            cell.accessoryType = UITableViewCellAccessoryType.None
+        }else if indexPath == NSIndexPath(forRow: 1, inSection: 3){
+            cell.textLabel!.text = "Sign Out"
+            cell.accessoryType = UITableViewCellAccessoryType.None
         }
         
 
@@ -133,36 +164,24 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
         
-        if indexPath.row == 0{
-            let storeVC = StoreViewController()
-            navigationController?.pushViewController(storeVC, animated: true)
-        }else if indexPath.row == 1{
-            if let user = PFUser.currentUser(){
-                if let isPro = user["isPro"] as? Bool{
-                    if isPro == true{
-                        let draftsVC = DraftsTableViewController()
-                        navigationController?.pushViewController(draftsVC, animated: true)
-                    }else{
-                        upgradeAlert()
-                    }
-                }else{
-                    upgradeAlert()
-                }
-            }
-            
-        }else if indexPath.row == 2{
-            let userIdeasVC = UserIdeasTableViewController()
-            navigationController?.pushViewController(userIdeasVC, animated: true)
-        }else if indexPath.row == 3{
-            let userTopicsVC = UserTopicsTableViewController()
-            navigationController?.pushViewController(userTopicsVC, animated: true)
-        }else if indexPath.row == 4{
+        
+        if indexPath == NSIndexPath(forRow: 0, inSection: 0){
+            //Profile
             let profileVC = ProfileViewController()
             if let user = PFUser.currentUser(){
                 profileVC.activeUser = user
                 navigationController?.pushViewController(profileVC, animated: true)
             }
-        }else if indexPath.row == 5{
+        }else if indexPath == NSIndexPath(forRow: 1, inSection: 0){
+            //User Ideas
+            let userIdeasVC = UserIdeasTableViewController()
+            navigationController?.pushViewController(userIdeasVC, animated: true)
+        }else if indexPath == NSIndexPath(forRow: 2, inSection: 0){
+            //User Topics
+            let userTopicsVC = UserTopicsTableViewController()
+            navigationController?.pushViewController(userTopicsVC, animated: true)
+        }else if indexPath == NSIndexPath(forRow: 3, inSection: 0){
+            //Ideas User Upvoted
             if let user = PFUser.currentUser(){
                 if let isPro = user["isPro"] as? Bool{
                     if isPro{
@@ -175,10 +194,36 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
                     upgradeUpvotedAlert()
                 }
             }
-        }else if indexPath.row == 6{
+        }else if indexPath == NSIndexPath(forRow: 0, inSection: 1){
+            //Drafts
+            if let user = PFUser.currentUser(){
+                if let isPro = user["isPro"] as? Bool{
+                    if isPro == true{
+                        let draftsVC = DraftsTableViewController()
+                        navigationController?.pushViewController(draftsVC, animated: true)
+                    }else{
+                        upgradeAlert()
+                    }
+                }else{
+                    upgradeAlert()
+                }
+            }
+        }else if indexPath == NSIndexPath(forRow: 1, inSection: 1){
+            //Notifications
             let notificationVC = NotificationsTableViewController()
-            //tableView.reloadData()
             navigationController?.pushViewController(notificationVC, animated: true)
+        }else if indexPath == NSIndexPath(forRow: 0, inSection: 2){
+            //Store
+            let storeVC = StoreViewController()
+            navigationController?.pushViewController(storeVC, animated: true)
+        }else if indexPath == NSIndexPath(forRow: 1, inSection: 2){
+            //Report Issue
+        }else if indexPath == NSIndexPath(forRow: 2, inSection: 2){
+            //EULA
+        }else if indexPath == NSIndexPath(forRow: 0, inSection: 3){
+            //What Is IdeaMuscle?
+        }else if indexPath == NSIndexPath(forRow: 1, inSection: 3){
+            //Sign Out
         }
     }
     

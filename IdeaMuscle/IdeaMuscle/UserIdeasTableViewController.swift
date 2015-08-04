@@ -86,8 +86,10 @@ class UserIdeasTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let userIdeaDetailVC = UserIdeasDetailViewController()
         let topic = topicsComposedForObjects[indexPath.row]["topicPointer"] as! PFObject
-        userIdeaDetailVC.activeTopic = topic
-        navigationController?.pushViewController(userIdeaDetailVC, animated: true)
+        topic.fetchIfNeededInBackgroundWithBlock { (success, error) -> Void in
+            userIdeaDetailVC.activeTopic = topic
+            self.navigationController?.pushViewController(userIdeaDetailVC, animated: true)
+        }
     }
     
     func startActivityIndicator(){

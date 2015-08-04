@@ -64,6 +64,8 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
 
     }
     
+    
+    
     func reloadView(){
         
         if ideaIsPublic == true{
@@ -584,6 +586,8 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
+        
+        //activeTopic.fetchIfNeededInBackground()
         
     }
     

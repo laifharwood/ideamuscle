@@ -338,8 +338,8 @@ func getAvatar(user: PFUser, imageView: UIImageView?, parseImageView: PFImageVie
     var image = UIImage()
     var wasSuccessful = Bool()
     let defaultImage = UIImage(named: "IdeaMuscleLogoWhiteBackground.png")
-    if user["avatar"] != nil{
-        avatarFile = user["avatar"] as! PFFile
+    
+    if let avatarFile = user["avatar"] as? PFFile{
         avatarFile.getDataInBackgroundWithBlock({ (data, error) -> Void in
             if error == nil{
                 image = UIImage(data: data!)!

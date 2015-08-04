@@ -144,13 +144,15 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let ideaDetailVC = IdeaDetailViewController()
+        shouldReloadTable = true
         if ideaObjects[indexPath.row]["topicPointer"] != nil{
             let passingIdea = ideaObjects[indexPath.row]
             let passingTopic = ideaObjects[indexPath.row]["topicPointer"] as! PFObject
-            ideaDetailVC.activeIdea = passingIdea
-            ideaDetailVC.activeTopic =  passingTopic
-            shouldReloadTable = true
-            self.navigationController?.pushViewController(ideaDetailVC, animated: true)
+            passingTopic.fetchIfNeededInBackgroundWithBlock({ (object, error) -> Void in
+                ideaDetailVC.activeIdea = passingIdea
+                ideaDetailVC.activeTopic =  passingTopic
+                self.navigationController?.pushViewController(ideaDetailVC, animated: true)
+            })
         }
     }
     

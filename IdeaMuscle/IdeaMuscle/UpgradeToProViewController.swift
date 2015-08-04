@@ -27,6 +27,7 @@ class UpgradeToProViewController: UIViewController {
         button.backgroundColor = redColor
         button.titleLabel?.font = UIFont(name: "HelveticaNeue-Light", size: 13)
         button.addTarget(self, action: "goToStore:", forControlEvents: .TouchUpInside)
+        button.layer.cornerRadius = 3
         self.view.addSubview(button)
 
         // Do any additional setup after loading the view.
