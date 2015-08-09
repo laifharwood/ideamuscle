@@ -46,7 +46,6 @@ class IdeasUserUpvotedTableViewController: UITableViewController, UITableViewDat
                         }
                     }
                 }
-                
             }
             stopActivityIndicator()
         }

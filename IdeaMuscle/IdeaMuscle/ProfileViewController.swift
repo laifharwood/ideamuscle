@@ -192,7 +192,8 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         followButton.layer.cornerRadius = 3
         
         if let currentUser = PFUser.currentUser(){
-            if activeUser != currentUser{
+            if activeUser.objectId != currentUser.objectId{
+                println("activeUser does not equal current user")
                 followButtonContainer.addSubview(followButton)
             }else{
                 if let activeUserIsPro = activeUser["isPro"] as? Bool{
@@ -305,12 +306,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
     }
-    
-    
-    
-   
-    
-    
     
     func goToFollowing(sender: UITapGestureRecognizer){
         let followingVC = FollowingTableViewController()

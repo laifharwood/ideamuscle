@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "bulb.png"
+      "filename" : "checkmarkOrange.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "bulb@2x.png"
+      "filename" : "checkmarkOrange@2x.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "bulb@3x.png"
+      "filename" : "checkmarkOrange@3x.png"
     }
   ],
   "info" : {

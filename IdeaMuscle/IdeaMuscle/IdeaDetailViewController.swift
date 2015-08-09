@@ -649,8 +649,6 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     }
     
     func postComment(sender: UIButton!){
-        println("comment Posted")
-        
         if commentTextField != ""{
             
             var comment = PFObject(className: "Comment")
@@ -700,17 +698,15 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
                 }
                 return true
             }else{
-                
                 return false
             }
-            
-            
-        }else if characterCount == 118{
+    
+        }else if characterCount + count(string) > 118{
             return false
         }else if string == " "{
             if characterCount > 0{
                 
-                ++characterCount
+                characterCount = characterCount + count(string)
                 characterCountLabel.text = "\(characterCount)" + "/118"
                 postCommentButton.enabled = true
                 postCommentButton.setTitleColor(redColor, forState: .Normal)
@@ -722,7 +718,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
             
             
         }else{
-            ++characterCount
+            characterCount = characterCount + count(string)
             characterCountLabel.text = "\(characterCount)" + "/118"
             postCommentButton.enabled = true
             postCommentButton.setTitleColor(redColor, forState: .Normal)

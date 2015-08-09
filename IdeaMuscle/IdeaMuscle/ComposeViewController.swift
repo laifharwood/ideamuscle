@@ -18,7 +18,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     var activeComposeTopicObject = PFObject(className: "Topic")
     
     let grayCheckmarkImage = UIImage(named: "checkmarkGray")
-    let redCheckmarkImage = UIImage(named: "checkmarkRed")
+    let redCheckmarkImage = UIImage(named: "checkmarkOrange")
     var publicBoolArray = [false, false, false, false, false, false, false, false, false, false]
     var topicLabel = UILabel()
     var numberOfPublic = 0

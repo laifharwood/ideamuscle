@@ -66,12 +66,24 @@ class WelcomeViewController: UIViewController {
         bottomContainer.addSubview(oneCircle)
         bottomContainer.addSubview(twoCircle)
         bottomContainer.addSubview(threeCircle)
+        
+        let skipButton = UIButton(frame: CGRectMake(bottomContainer.frame.maxX - 45, bottomContainer.frame.height/2 - 15, 40, 30))
+        skipButton.setTitle("Skip", forState: .Normal)
+        skipButton.addTarget(self, action: "skip:", forControlEvents: .TouchUpInside)
+        skipButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        skipButton.setTitleColor(fiftyGrayColor, forState: .Highlighted)
+        skipButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 13)
+        bottomContainer.addSubview(skipButton)
     }
     
     func changeViewFrame(vC: UIViewController, xValue: CGFloat){
         UIView.animateWithDuration(0.2, animations: { () -> Void in
             vC.view.frame = CGRectMake(xValue, 0, self.view.frame.width, self.view.frame.height - 50)
         })
+    }
+    
+    func skip(sender: UIButton){
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     
@@ -116,34 +128,6 @@ class WelcomeViewController: UIViewController {
         }
     }
     
-    private func removeInactiveViewController(inactiveViewController: UIViewController?) {
-//        if let inActiveVC = inactiveViewController {
-//           
-//                // call before removing child view controller's view from hierarchy
-//                inActiveVC.willMoveToParentViewController(nil)
-//                
-//                inActiveVC.view.removeFromSuperview()
-//                
-//                // call after removing child view controller's view from hierarchy
-//                inActiveVC.removeFromParentViewController()
-//            
-//        }
-    }
-    
-    private func updateActiveViewController() {
-//        if let activeVC = activeViewController {
-//            
-//                // call before adding child view controller's view as subview
-//                self.addChildViewController(activeVC)
-//                
-//                activeVC.view.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height - 50)
-//                
-//                self.view.addSubview(activeVC.view)
-//                
-//                // call before adding child view controller's view as subview
-//                activeVC.didMoveToParentViewController(self)
-//        }
-    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

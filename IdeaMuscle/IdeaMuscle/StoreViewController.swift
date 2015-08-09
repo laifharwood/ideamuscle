@@ -80,6 +80,7 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
         restorePurchaseButton.setTitleColor(redColor, forState: .Highlighted)
         restorePurchaseButton.backgroundColor = fiftyGrayColor
         restorePurchaseButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        restorePurchaseButton.layer.cornerRadius = 3
         restorePurchaseButton.addTarget(self, action: "restorePurchases:", forControlEvents: .TouchUpInside)
         if let user = PFUser.currentUser(){
             if let isProForever = user["isProForever"] as? Bool{
@@ -279,27 +280,22 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue!) {
-        
-        println("restore successful")
-                if let user = PFUser.currentUser(){
-                    if let isPro = user["isPro"] as? Bool{
-                        if isPro == true{
-                            let expiration = user["proExpiration"] as! NSDate
-                            let formatter = NSDateFormatter()
-                            formatter.dateStyle = NSDateFormatterStyle.ShortStyle
-                            let formattedDate = formatter.stringFromDate(expiration)
-                            var alert = UIAlertView(title: "Success!", message: "Your purchase was restored. Your Pro expiration date is " + formattedDate, delegate: nil, cancelButtonTitle: "OK")
-                            alert.show()
-                        }else{
-                            notLoggedIntoRightAccount()
-                            
-                        }
-                        
-                    }else{
-                        notLoggedIntoRightAccount()
-                    }
-
+        if let user = PFUser.currentUser(){
+            if let isPro = user["isPro"] as? Bool{
+                if isPro == true{
+                    let expiration = user["proExpiration"] as! NSDate
+                    let formatter = NSDateFormatter()
+                    formatter.dateStyle = NSDateFormatterStyle.ShortStyle
+                    let formattedDate = formatter.stringFromDate(expiration)
+                    var alert = UIAlertView(title: "Success!", message: "Your purchase was restored. Your Pro expiration date is " + formattedDate, delegate: nil, cancelButtonTitle: "OK")
+                    alert.show()
+                }else{
+                    notLoggedIntoRightAccount()
                 }
+            }else{
+                notLoggedIntoRightAccount()
+            }
+        }
     }
     
     func paymentQueue(queue: SKPaymentQueue!, removedTransactions transactions: [AnyObject]!) {
@@ -308,7 +304,7 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func notLoggedIntoRightAccount(){
-        let notLoggedInToRightAccount: UIAlertController = UIAlertController(title: "You are logged into a different account", message: "Please login to the account you made the purchase with to restore the purchase.", preferredStyle: .Alert)
+        let notLoggedInToRightAccount: UIAlertController = UIAlertController(title: "You are logged into a different account", message: "Please login to the account you made purchases with to restore purchases. If you think you shouldn't be seeing this message email us at support@ideamuscle.me", preferredStyle: .Alert)
         notLoggedInToRightAccount.view.tintColor = redColor
         notLoggedInToRightAccount.view.backgroundColor = oneFiftyGrayColor
         //Create and add the Cancel action
@@ -370,6 +366,7 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
                         cell.buyButton.setTitle("Buy", forState: .Normal)
                         cell.buyButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
                         cell.buyButton.setTitleColor(fiftyGrayColor, forState: .Highlighted)
+                        cell.buyButton.layer.cornerRadius = 3
                         cell.buyButton.frame = CGRectMake(cell.frame.maxX - 65, 5, 60, cell.frame.height - 10)
                         cell.buyButton.addTarget(self, action: "buy:", forControlEvents: .TouchUpInside)
                         cell.buyButton.tag = indexPath.row

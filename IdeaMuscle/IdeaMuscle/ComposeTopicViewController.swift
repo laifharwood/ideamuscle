@@ -13,8 +13,8 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
     var shouldDismissCompose = false
     var textView = UITextView()
     var isPublic = true
-    let grayCheckmarkImage = UIImage(named: "checkmarkGray.png")
-    let redCheckmarkImage = UIImage(named: "checkmarkRed.png")
+    let grayCheckmarkImage = UIImage(named: "checkmarkGray")
+    let redCheckmarkImage = UIImage(named: "checkmarkOrange")
     var checkmarkButton = UIButton()
     var submitButton = UIButton()
     var characterCountLabel = UILabel()

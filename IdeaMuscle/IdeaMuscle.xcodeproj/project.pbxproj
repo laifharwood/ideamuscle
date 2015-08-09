@@ -65,13 +65,9 @@
 		EE8085061B191CCD00BFC07C /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8085051B191CCD00BFC07C /* StoreKit.framework */; };
 		EE8085081B191CF000BFC07C /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8085071B191CF000BFC07C /* libz.dylib */; };
 		EE80850A1B19620700BFC07C /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE8085091B19620700BFC07C /* Twitter.framework */; };
-		EE80851D1B1E123900BFC07C /* IdeaMuscleLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = EE80851C1B1E123900BFC07C /* IdeaMuscleLogo.png */; };
 		EE8085211B1E1AE300BFC07C /* SharedCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8085201B1E1AE300BFC07C /* SharedCode.swift */; };
-		EE8085231B1E2BD800BFC07C /* ideaShare.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8085221B1E2BD800BFC07C /* ideaShare.png */; };
-		EE8085251B1E2E4A00BFC07C /* ideaCompose.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8085241B1E2E4A00BFC07C /* ideaCompose.png */; };
 		EE8740441B43538800D0519B /* LeaderboardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8740431B43538800D0519B /* LeaderboardTableViewCell.swift */; };
-		EE8EE49A1B1E5D270093A62A /* ComposeWhite.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE4991B1E5D270093A62A /* ComposeWhite.png */; };
-		EE8EE49C1B224DFC0093A62A /* smallLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = EE8EE49B1B224DFC0093A62A /* smallLogo.png */; };
+		EE8EB3C51B7691A5002EFA98 /* UserSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8EB3C41B7691A5002EFA98 /* UserSearchViewController.swift */; };
 		EE8EE4A21B226C6D0093A62A /* TopicsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8EE4A11B226C6D0093A62A /* TopicsDetailViewController.swift */; };
 		EE8EE4A41B228E260093A62A /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8EE4A31B228E260093A62A /* FeedViewController.swift */; };
 		EE8EE4A61B228EAC0093A62A /* LeaderboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8EE4A51B228EAC0093A62A /* LeaderboardViewController.swift */; };
@@ -96,6 +92,7 @@
 		EEB320531B711C20005D1334 /* PageOneWelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB320521B711C20005D1334 /* PageOneWelcomeViewController.swift */; };
 		EEB320551B711C2F005D1334 /* PageTwoWelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB320541B711C2F005D1334 /* PageTwoWelcomeViewController.swift */; };
 		EEB320571B711C3E005D1334 /* PageThreeWelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB320561B711C3E005D1334 /* PageThreeWelcomeViewController.swift */; };
+		EEB320591B726E0F005D1334 /* EulaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEB320581B726E0F005D1334 /* EulaViewController.swift */; };
 		EEC89CBD1B507A56009720CE /* StoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBC1B507A56009720CE /* StoreViewController.swift */; };
 		EEC89CC01B507BA1009720CE /* StoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */; };
 		EED08A211B386DC5002FAE19 /* IdeaDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A201B386DC5002FAE19 /* IdeaDetailViewController.swift */; };
@@ -103,7 +100,6 @@
 		EED08A251B3B4050002FAE19 /* TimeAgo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A241B3B4050002FAE19 /* TimeAgo.swift */; };
 		EED08A291B3C7507002FAE19 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A281B3C7507002FAE19 /* ProfileViewController.swift */; };
 		EED08A2C1B3CC0EB002FAE19 /* ProfileIdeaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A2B1B3CC0EB002FAE19 /* ProfileIdeaCell.swift */; };
-		EED08A2F1B3DCDA7002FAE19 /* IdeaMuscleLogoWhiteBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = EED08A2E1B3DCDA7002FAE19 /* IdeaMuscleLogoWhiteBackground.png */; };
 		EED08A311B41BAC7002FAE19 /* IdeaGlobal.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A301B41BAC7002FAE19 /* IdeaGlobal.swift */; };
 		EED08A331B41D5D8002FAE19 /* IdeaSevenTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A321B41D5D8002FAE19 /* IdeaSevenTableViewController.swift */; };
 		EED08A351B41D619002FAE19 /* IdeaThirtyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED08A341B41D619002FAE19 /* IdeaThirtyTableViewController.swift */; };
@@ -213,13 +209,9 @@
 		EE8085051B191CCD00BFC07C /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		EE8085071B191CF000BFC07C /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		EE8085091B19620700BFC07C /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
-		EE80851C1B1E123900BFC07C /* IdeaMuscleLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = IdeaMuscleLogo.png; path = "../../../../Desktop/Idea Muscle/IdeaMuscleLogo.png"; sourceTree = "<group>"; };
 		EE8085201B1E1AE300BFC07C /* SharedCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedCode.swift; sourceTree = "<group>"; };
-		EE8085221B1E2BD800BFC07C /* ideaShare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ideaShare.png; path = "../../../../Desktop/Idea Muscle/ideaShare.png"; sourceTree = "<group>"; };
-		EE8085241B1E2E4A00BFC07C /* ideaCompose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ideaCompose.png; path = "../../../../Desktop/Idea Muscle/ideaCompose.png"; sourceTree = "<group>"; };
 		EE8740431B43538800D0519B /* LeaderboardTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaderboardTableViewCell.swift; sourceTree = "<group>"; };
-		EE8EE4991B1E5D270093A62A /* ComposeWhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ComposeWhite.png; path = "../../../../Desktop/Idea Muscle/ComposeWhite.png"; sourceTree = "<group>"; };
-		EE8EE49B1B224DFC0093A62A /* smallLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = smallLogo.png; path = "../../../../Desktop/Idea Muscle/smallLogo.png"; sourceTree = "<group>"; };
+		EE8EB3C41B7691A5002EFA98 /* UserSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSearchViewController.swift; sourceTree = "<group>"; };
 		EE8EE4A11B226C6D0093A62A /* TopicsDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopicsDetailViewController.swift; sourceTree = "<group>"; };
 		EE8EE4A31B228E260093A62A /* FeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		EE8EE4A51B228EAC0093A62A /* LeaderboardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaderboardViewController.swift; sourceTree = "<group>"; };
@@ -244,6 +236,7 @@
 		EEB320521B711C20005D1334 /* PageOneWelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageOneWelcomeViewController.swift; sourceTree = "<group>"; };
 		EEB320541B711C2F005D1334 /* PageTwoWelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageTwoWelcomeViewController.swift; sourceTree = "<group>"; };
 		EEB320561B711C3E005D1334 /* PageThreeWelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageThreeWelcomeViewController.swift; sourceTree = "<group>"; };
+		EEB320581B726E0F005D1334 /* EulaViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EulaViewController.swift; sourceTree = "<group>"; };
 		EEC89CBB1B50390C009720CE /* IdeaMuscle.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = IdeaMuscle.entitlements; sourceTree = "<group>"; };
 		EEC89CBC1B507A56009720CE /* StoreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreViewController.swift; sourceTree = "<group>"; };
 		EEC89CBF1B507BA1009720CE /* StoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreTableViewCell.swift; sourceTree = "<group>"; };
@@ -252,7 +245,6 @@
 		EED08A241B3B4050002FAE19 /* TimeAgo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeAgo.swift; sourceTree = "<group>"; };
 		EED08A281B3C7507002FAE19 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		EED08A2B1B3CC0EB002FAE19 /* ProfileIdeaCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileIdeaCell.swift; sourceTree = "<group>"; };
-		EED08A2E1B3DCDA7002FAE19 /* IdeaMuscleLogoWhiteBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = IdeaMuscleLogoWhiteBackground.png; path = "../../../../Desktop/Idea Muscle/IdeaMuscleLogoWhiteBackground.png"; sourceTree = "<group>"; };
 		EED08A301B41BAC7002FAE19 /* IdeaGlobal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaGlobal.swift; sourceTree = "<group>"; };
 		EED08A321B41D5D8002FAE19 /* IdeaSevenTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaSevenTableViewController.swift; sourceTree = "<group>"; };
 		EED08A341B41D619002FAE19 /* IdeaThirtyTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdeaThirtyTableViewController.swift; sourceTree = "<group>"; };
@@ -329,7 +321,6 @@
 				EEB3202B1B595BA0005D1334 /* UpgradeToProViewController.swift */,
 				EED08A2D1B3CC16F002FAE19 /* Global Code */,
 				81BA81511A49DA1800E65899 /* Images.xcassets */,
-				EE80850B1B1A720100BFC07C /* Images */,
 				EED08A401B432DB9002FAE19 /* Leaderboard Controllers */,
 				EED08A2A1B3CC0B5002FAE19 /* Profile Controllers */,
 				EED8C4551B3471B1008981D1 /* Topic Controllers */,
@@ -458,19 +449,6 @@
 			path = "../../../Downloads/hoko-ios-master 2/Hoko";
 			sourceTree = "<group>";
 		};
-		EE80850B1B1A720100BFC07C /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				EED08A2E1B3DCDA7002FAE19 /* IdeaMuscleLogoWhiteBackground.png */,
-				EE8EE49B1B224DFC0093A62A /* smallLogo.png */,
-				EE8EE4991B1E5D270093A62A /* ComposeWhite.png */,
-				EE8085241B1E2E4A00BFC07C /* ideaCompose.png */,
-				EE8085221B1E2BD800BFC07C /* ideaShare.png */,
-				EE80851C1B1E123900BFC07C /* IdeaMuscleLogo.png */,
-			);
-			name = Images;
-			sourceTree = "<group>";
-		};
 		EEB3202D1B59798A005D1334 /* More Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -480,6 +458,8 @@
 				EEB320361B5F0C58005D1334 /* UserTopicsTableViewController.swift */,
 				EEB3203E1B617920005D1334 /* IdeasUserUpvotedTableViewController.swift */,
 				EEB320421B6845B5005D1334 /* Notification Controllers */,
+				EEB320581B726E0F005D1334 /* EulaViewController.swift */,
+				EE8EB3C41B7691A5002EFA98 /* UserSearchViewController.swift */,
 			);
 			name = "More Controllers";
 			sourceTree = "<group>";
@@ -671,13 +651,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81BA81501A49DA1800E65899 /* Main.storyboard in Resources */,
-				EE8085231B1E2BD800BFC07C /* ideaShare.png in Resources */,
-				EE80851D1B1E123900BFC07C /* IdeaMuscleLogo.png in Resources */,
-				EE8085251B1E2E4A00BFC07C /* ideaCompose.png in Resources */,
 				81BA81521A49DA1800E65899 /* Images.xcassets in Resources */,
-				EED08A2F1B3DCDA7002FAE19 /* IdeaMuscleLogoWhiteBackground.png in Resources */,
-				EE8EE49C1B224DFC0093A62A /* smallLogo.png in Resources */,
-				EE8EE49A1B1E5D270093A62A /* ComposeWhite.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -712,6 +686,7 @@
 				EE1A7F991B4C97B3004EBD8B /* Hoko.m in Sources */,
 				EE3A79B01B261B2500300018 /* ComposeViewController.swift in Sources */,
 				EEB320501B70305B005D1334 /* WelcomeViewController.swift in Sources */,
+				EEB320591B726E0F005D1334 /* EulaViewController.swift in Sources */,
 				EE8EE4A61B228EAC0093A62A /* LeaderboardViewController.swift in Sources */,
 				EE1A7FA21B4C97B3004EBD8B /* HOKVersionChecker.m in Sources */,
 				EED08A251B3B4050002FAE19 /* TimeAgo.swift in Sources */,
@@ -733,6 +708,7 @@
 				EE1A7F951B4C97B3004EBD8B /* HOKNetworking.m in Sources */,
 				EE8740441B43538800D0519B /* LeaderboardTableViewCell.swift in Sources */,
 				EEB3204C1B69467D005D1334 /* NotificationSettingsTableViewCell.swift in Sources */,
+				EE8EB3C51B7691A5002EFA98 /* UserSearchViewController.swift in Sources */,
 				EE1A7F8E1B4C97B3004EBD8B /* HOKError.m in Sources */,
 				EE1A7F9F1B4C97B3004EBD8B /* HOKSwizzling.m in Sources */,
 				EED08A311B41BAC7002FAE19 /* IdeaGlobal.swift in Sources */,

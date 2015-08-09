@@ -19,7 +19,7 @@ let darkBrownColor : UIColor = UIColor(red: 72/255, green: 61/255, blue: 50/255,
 let tealColor : UIColor = UIColor(red: 3/255, green: 165/255, blue: 165/255, alpha: 1)
 let customGrayColor : UIColor = UIColor(red: 153/255, green: 153/255, blue: 153/255, alpha: 1)
 
-let redColor : UIColor = UIColor(red: 175/255, green: 0/255, blue: 0/255, alpha: 1)
+let redColor : UIColor = UIColor(red: 255/255, green: 130/255, blue: 17/255, alpha: 1)
 
 
 let seventySevenGrayColor : UIColor = UIColor(red: 77/255, green: 77/255, blue: 77/255, alpha: 1)
@@ -337,7 +337,7 @@ func getAvatar(user: PFUser, imageView: UIImageView?, parseImageView: PFImageVie
     var avatarFile = PFFile()
     var image = UIImage()
     var wasSuccessful = Bool()
-    let defaultImage = UIImage(named: "IdeaMuscleLogoWhiteBackground.png")
+    let defaultImage = UIImage(named: "defaultProfile")
     
     if let avatarFile = user["avatar"] as? PFFile{
         avatarFile.getDataInBackgroundWithBlock({ (data, error) -> Void in

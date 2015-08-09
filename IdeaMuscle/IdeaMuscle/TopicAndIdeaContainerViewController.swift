@@ -91,10 +91,8 @@ class TopicAndIdeaContainerViewController: UIViewController {
         periodFrame.addSubview(periodSC)
         
         activeViewController = ideaSevenVC
-        
-        
 
-        // Do any additional setup after loading the view.
+        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -105,8 +103,21 @@ class TopicAndIdeaContainerViewController: UIViewController {
     }
     
     override func viewDidAppear(animated: Bool) {
-        //let welcomeVC = WelcomeViewController()
-       // navigationController?.presentViewController(welcomeVC, animated: true, completion: nil)
+        if let user = PFUser.currentUser(){
+            if let hasSeenWelcome = user["hasSeenWelcome"] as? Bool{
+                if hasSeenWelcome == false{
+                    user["hasSeenWelcome"] = true
+                    user.saveEventually()
+                    let welcomeVC = WelcomeViewController()
+                    navigationController?.presentViewController(welcomeVC, animated: true, completion: nil)
+                }
+            }else{
+                user["hasSeenWelcome"] = true
+                user.saveEventually()
+                let welcomeVC = WelcomeViewController()
+                navigationController?.presentViewController(welcomeVC, animated: true, completion: nil)
+            }
+        }
     }
     
     

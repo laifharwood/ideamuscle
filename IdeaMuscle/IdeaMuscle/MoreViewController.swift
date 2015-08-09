@@ -8,8 +8,9 @@
 
 import UIKit
 import Parse
+import MessageUI
 
-class MoreViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MoreViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMailComposeViewControllerDelegate{
     
     var tableView = UITableView()
 
@@ -43,6 +44,10 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.sectionHeaderHeight = 10
         //tableView.headerViewForSection(0)?.backgroundColor = oneFiftyGrayColor
         self.view.addSubview(tableView)
+    }
+    
+    func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
+        dismissViewControllerAnimated(true, completion: nil)
     }
     
     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -80,7 +85,7 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
         if section == 0{
             return 4
         }else if section == 1{
-            return 2
+            return 3
         }else if section == 2{
             return 3
         }else if section == 3{
@@ -142,6 +147,8 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
                 cell.badgeLabel.textAlignment = NSTextAlignment.Center
             }
 
+        }else if indexPath == NSIndexPath(forRow: 2, inSection: 1){
+            cell.textLabel!.text = "Search For Users"
         }else if indexPath == NSIndexPath(forRow: 0, inSection: 2){
             cell.textLabel!.text = "Store"
         }else if indexPath == NSIndexPath(forRow: 1, inSection: 2){
@@ -150,7 +157,7 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.textLabel!.text = "End User License Agreement"
         }
         else if indexPath == NSIndexPath(forRow: 0, inSection: 3){
-            cell.textLabel!.text = "What Is IdeaMuscle?"
+            cell.textLabel!.text = "Idea Muscle Orientation"
             cell.accessoryType = UITableViewCellAccessoryType.None
         }else if indexPath == NSIndexPath(forRow: 1, inSection: 3){
             cell.textLabel!.text = "Sign Out"
@@ -212,18 +219,46 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
             //Notifications
             let notificationVC = NotificationsTableViewController()
             navigationController?.pushViewController(notificationVC, animated: true)
+        }else if indexPath == NSIndexPath(forRow: 2, inSection: 1){
+            //User Search
+            let userSearchVC = UserSearchTableViewController()
+             navigationController?.pushViewController(userSearchVC, animated: true)
+            
         }else if indexPath == NSIndexPath(forRow: 0, inSection: 2){
             //Store
             let storeVC = StoreViewController()
             navigationController?.pushViewController(storeVC, animated: true)
         }else if indexPath == NSIndexPath(forRow: 1, inSection: 2){
             //Report Issue
+            let emailVC = MFMailComposeViewController()
+            emailVC.mailComposeDelegate = self
+            emailVC.setSubject("Idea Muscle Report / Inquiry")
+            emailVC.navigationBar.tintColor = redColor
+            emailVC.setToRecipients(["support@ideamuscle.me"])
+            self.presentViewController(emailVC, animated: true, completion: nil)
         }else if indexPath == NSIndexPath(forRow: 2, inSection: 2){
             //EULA
+            let eulaVC = EulaViewController()
+            self.presentViewController(eulaVC, animated: true, completion: nil)
         }else if indexPath == NSIndexPath(forRow: 0, inSection: 3){
-            //What Is IdeaMuscle?
+            //Idea Muscle Orientation
+            let welcomeVC = WelcomeViewController()
+            navigationController?.presentViewController(welcomeVC, animated: true, completion: nil)
         }else if indexPath == NSIndexPath(forRow: 1, inSection: 3){
             //Sign Out
+            let signOutAlert: UIAlertController = UIAlertController(title: "Confirm Sign Out", message: "Are you sure you want to Sign Out?", preferredStyle: .Alert)
+            signOutAlert.view.tintColor = redColor
+            signOutAlert.view.backgroundColor = oneFiftyGrayColor
+            //Create and add the Cancel action
+            let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+            }
+            signOutAlert.addAction(cancelAction)
+            
+            let signOutAction: UIAlertAction = UIAlertAction(title: "Sign Out", style: .Default, handler: { (action) -> Void in
+                logout()
+            })
+            signOutAlert.addAction(signOutAction)
+            self.presentViewController(signOutAlert, animated: true, completion: nil)
         }
     }
     

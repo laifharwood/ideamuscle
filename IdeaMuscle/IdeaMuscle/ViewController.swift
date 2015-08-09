@@ -17,10 +17,13 @@ class ViewController: UIViewController{
     
     var twitterLoginButton = UIButton()
     var facebookLoginButton = UIButton()
-    var proceedWithoutLoginButton = UIButton()
     var logo = UIImage()
     var activityIndicator = UIActivityIndicatorView()
     let permissions = ["public_profile", "email", "user_friends"]
+    var hasAgreed = false
+    let agreeLabel = UILabel()
+    let yesButton = UIButton()
+    let viewAgreementButton = UIButton()
     
 
     override func viewDidLoad() {
@@ -31,9 +34,9 @@ class ViewController: UIViewController{
         
         
         //MARK: - Logo Configuration
-        logo = UIImage(named: "IdeaMuscleLogo.png")!
+        logo = UIImage(named: "bigLogo")!
         let logoView = UIImageView(image: logo)
-        logoView.frame = CGRectMake(self.view.frame.width/2 - 100, 30, 200, 232)
+        logoView.frame = CGRectMake(self.view.frame.width/2 - 100, 30, 200, 225.08)
         if PFUser.currentUser() == nil{
         self.view.addSubview(logoView)
         }else{
@@ -46,20 +49,15 @@ class ViewController: UIViewController{
         twitterLoginButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         twitterLoginButton.setTitleColor(UIColor.grayColor(), forState: .Highlighted)
         twitterLoginButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 20)
-        twitterLoginButton.frame = CGRectMake(self.view.frame.width/2 - 100, logoView.frame.maxY + 75, 200, 40)
-        //twitterLoginButton.center = self.view.center
+        twitterLoginButton.frame = CGRectMake(self.view.frame.width/2 - 100, logoView.frame.maxY + 50, 200, 40)
         twitterLoginButton.backgroundColor = fiftyGrayColor
         let twitterLogoImage = UIImage(named: "twitter")
         twitterLoginButton.setImage(twitterLogoImage, forState: .Normal)
         twitterLoginButton.imageEdgeInsets = UIEdgeInsetsMake(5, 140, 5, 28.74)
         twitterLoginButton.titleEdgeInsets = UIEdgeInsetsMake(10, -160, 10, 0)
         twitterLoginButton.addTarget(self, action: "login:", forControlEvents: .TouchUpInside)
-        if PFUser.currentUser() == nil{
-        self.view.addSubview(twitterLoginButton)
-        }else{
-            self.view.addSubview(activityIndicator)
-            startActivityIndicator()
-        }
+        twitterLoginButton.layer.cornerRadius = 3
+        
         
         facebookLoginButton.setTitle("Login with", forState: .Normal)
         facebookLoginButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
@@ -73,52 +71,92 @@ class ViewController: UIViewController{
         facebookLoginButton.imageEdgeInsets = UIEdgeInsetsMake(5, 140, 5, 28.74)
         facebookLoginButton.titleEdgeInsets = UIEdgeInsetsMake(10, -160, 10, 0)
         facebookLoginButton.addTarget(self, action: "loginFacebook:", forControlEvents: .TouchUpInside)
+        facebookLoginButton.layer.cornerRadius = 3
+        
+        
+        agreeLabel.frame = CGRectMake(5, facebookLoginButton.frame.maxY + 15, self.view.frame.width - 10, 60)
+        agreeLabel.text = "Have you read and agree to the terms of the end user license agreement?"
+        agreeLabel.font =  UIFont(name: "HelveticaNeue", size: 15)
+        agreeLabel.textColor = fiftyGrayColor
+        agreeLabel.textAlignment = NSTextAlignment.Center
+        agreeLabel.numberOfLines = 0
+        
+        
+        yesButton.frame = CGRectMake(facebookLoginButton.frame.minX, agreeLabel.frame.maxY + 10, 95, 50)
+        yesButton.setTitle("Yes", forState: .Normal)
+        yesButton.backgroundColor = redColor
+        yesButton.addTarget(self, action: "agreed:", forControlEvents: .TouchUpInside)
+        yesButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        yesButton.layer.cornerRadius = 3
+        
+        
+        viewAgreementButton.frame = CGRectMake(yesButton.frame.maxX + 10, agreeLabel.frame.maxY + 10, 95, 50)
+        viewAgreementButton.setTitle("View Agreement", forState: .Normal)
+        viewAgreementButton.backgroundColor = oneFiftyGrayColor
+        viewAgreementButton.addTarget(self, action: "viewAgreement:", forControlEvents: .TouchUpInside)
+        viewAgreementButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        viewAgreementButton.layer.cornerRadius = 3
+        viewAgreementButton.titleLabel?.numberOfLines = 0
+        viewAgreementButton.titleLabel?.textAlignment = NSTextAlignment.Center
+        
         if PFUser.currentUser() == nil{
+            self.view.addSubview(twitterLoginButton)
             self.view.addSubview(facebookLoginButton)
+            self.view.addSubview(agreeLabel)
+            self.view.addSubview(yesButton)
+            self.view.addSubview(viewAgreementButton)
         }else{
             self.view.addSubview(activityIndicator)
             startActivityIndicator()
         }
-        
-        
-        
-        //MARK: - Proceed Without Login Button Configuration
-        proceedWithoutLoginButton.setTitle("Proceed Without Login", forState: .Normal)
-        proceedWithoutLoginButton.setTitleColor(UIColor.grayColor(), forState: .Normal)
-        proceedWithoutLoginButton.setTitleColor(UIColor.blackColor(), forState: .Highlighted)
-        proceedWithoutLoginButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 10)
-        proceedWithoutLoginButton.frame = CGRectMake((self.view.frame.width/2) - 100, twitterLoginButton.frame.minY + 75, 200, 20)
-        proceedWithoutLoginButton.addTarget(self, action: "proceedWithoutAccount:", forControlEvents: .TouchUpInside)
-        //self.view.addSubview(proceedWithoutLoginButton)
-        
-        
-        
+    }
+    
+    func agreed(sender: UIButton){
+        hasAgreed = true
+        UIView.animateWithDuration(0.2, animations: { () -> Void in
+            sender.hidden = true
+            self.agreeLabel.hidden = true
+            self.viewAgreementButton.hidden = true
+        })
+    }
+    
+    func viewAgreement(sender: UIButton){
+        let eulaVC = EulaViewController()
+        self.presentViewController(eulaVC, animated: true, completion: nil)
     }
     
     func loginFacebook(sender: UIButton!){
-        
-        startActivityIndicator()
-        
-        PFFacebookUtils.logInInBackgroundWithReadPermissions(permissions, block: { (user, error) -> Void in
-            
-            if user == nil {
-                println("Uh oh. The user cancelled the Facebook login.")
-                self.stopActivityIndicator()
-            }else if user!.isNew {
-                println("User signed up and logged in through Facebook!")
-                self.getUserFacebookInfo()
-                self.goToTabBar()
+        if hasAgreed{
+            startActivityIndicator()
+            PFFacebookUtils.logInInBackgroundWithReadPermissions(permissions, block: { (user, error) -> Void in
                 
-            }else{
-                println("User logged in through Facebook!")
-                self.getUserFacebookInfo()
-                self.goToTabBar()
-            }
-            
-        })
-        
-        
-        
+                if user == nil {
+                    println("Uh oh. The user cancelled the Facebook login.")
+                    self.stopActivityIndicator()
+                }else if user!.isNew {
+                    println("User signed up and logged in through Facebook!")
+                    self.getUserFacebookInfo()
+                    self.goToTabBar()
+                }else{
+                    println("User logged in through Facebook!")
+                    self.getUserFacebookInfo()
+                    self.goToTabBar()
+                }
+            })
+        }else{
+            promptForAgreement()
+        }
+    }
+    
+    func promptForAgreement(){
+        let agreeAlert: UIAlertController = UIAlertController(title: "License Agreement", message: "You must agree to the end user license agreement to login.", preferredStyle: .Alert)
+        agreeAlert.view.tintColor = redColor
+        agreeAlert.view.backgroundColor = oneFiftyGrayColor
+        //Create and add the Cancel action
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Okay", style: .Cancel) { action -> Void in
+        }
+        agreeAlert.addAction(cancelAction)
+        self.presentViewController(agreeAlert, animated: true, completion: nil)
     }
     
     func getUserFacebookInfo(){
@@ -142,6 +180,7 @@ class ViewController: UIViewController{
                 if let user = PFUser.currentUser(){
                     
                     user["username"] = username
+                    user["lowercaseUserName"] = username.lowercaseString
                     user["email"] = userEmail
                     user["facebookID"] = userID
                     let fid = user["facebookID"] as! String
@@ -158,79 +197,61 @@ class ViewController: UIViewController{
         })
     }
     func login(sender: UIButton!){
-        
-        startActivityIndicator()
-    
-        
-        PFTwitterUtils.logInWithBlock { (user, error) -> Void in
-            
-            if (error != nil){
+        if hasAgreed{
+            startActivityIndicator()
+            PFTwitterUtils.logInWithBlock { (user, error) -> Void in
                 
-              //No Twitter Account Setup On Phone. Show Alert
-                
-                self.stopActivityIndicator()
-                
-                let noTwitterAccountController: UIAlertController = UIAlertController(title: "No Twitter Account Linked", message: "You must have a twitter account setup on your phone. Go to your Settings App/Twitter/Sign In or Create New Account", preferredStyle: .Alert)
-                noTwitterAccountController.view.tintColor = redColor
-                noTwitterAccountController.view.backgroundColor = oneFiftyGrayColor
-                //Create and add the Cancel action
-                let cancelAction: UIAlertAction = UIAlertAction(title: "Okay", style: .Cancel) { action -> Void in
-                }
-                noTwitterAccountController.addAction(cancelAction)
-                //Present the AlertController
-                self.presentViewController(noTwitterAccountController, animated: true, completion: nil)
-                
-            
-                
-            }else if !(user != nil) {
-            
-            //User Cancelled
-            
-            self.stopActivityIndicator()
-            
-            
-            }else{
-            
-            PFTwitterUtils.linkUser(PFUser.currentUser()!, block: { (success, error) -> Void in
-                if success{
-                    
-                    //Linked User SuccessFully.
-                    var twitterUsername = PFTwitterUtils.twitter()?.screenName
-                    PFUser.currentUser()?.username = twitterUsername
-                    PFUser.currentUser()?.saveInBackground()
-                    
-                    //Perform Segue
-                    self.getAvatar()
-                    self.goToTabBar()
-                    
-                    
-                }else{
-                    
-                    //Could Not Link User
-                    
-                    let couldNotLinkTwitterAccountController: UIAlertController = UIAlertController(title: "Could Not Link Twitter Account", message: "There was an error in linking your Twitter Account, Please Try Again.", preferredStyle: .Alert)
-                    couldNotLinkTwitterAccountController.view.tintColor = redColor
-                    couldNotLinkTwitterAccountController.view.backgroundColor = oneFiftyGrayColor
+                if (error != nil){
+                  //No Twitter Account Setup On Phone. Show Alert
+                    self.stopActivityIndicator()
+                    let noTwitterAccountController: UIAlertController = UIAlertController(title: "No Twitter Account Linked", message: "You must have a twitter account setup on your phone. Go to your Settings App/Twitter/Sign In or Create New Account", preferredStyle: .Alert)
+                    noTwitterAccountController.view.tintColor = redColor
+                    noTwitterAccountController.view.backgroundColor = oneFiftyGrayColor
                     //Create and add the Cancel action
                     let cancelAction: UIAlertAction = UIAlertAction(title: "Okay", style: .Cancel) { action -> Void in
-                        //Add Logout User
-                        self.stopActivityIndicator()
-                        logout()
                     }
-                    couldNotLinkTwitterAccountController.addAction(cancelAction)
+                    noTwitterAccountController.addAction(cancelAction)
                     //Present the AlertController
-                    self.presentViewController(couldNotLinkTwitterAccountController, animated: true, completion: nil)
-                    
-                    
+                    self.presentViewController(noTwitterAccountController, animated: true, completion: nil)
+                }else if !(user != nil) {
+                //User Cancelled
+                self.stopActivityIndicator()
+                }else{
+                PFTwitterUtils.linkUser(PFUser.currentUser()!, block: { (success, error) -> Void in
+                    if success{
+                        
+                        //Linked User SuccessFully.
+                        if let twitterUsername = PFTwitterUtils.twitter()?.screenName{
+                            if let user = PFUser.currentUser(){
+                                user.username = twitterUsername
+                                user["lowercaseUsername"] = twitterUsername.lowercaseString
+                                user.saveEventually()
+                            }
+                        }
+                        //Perform Segue
+                        self.getAvatar()
+                        self.goToTabBar()
+                    }else{
+                        //Could Not Link User
+                        
+                        let couldNotLinkTwitterAccountController: UIAlertController = UIAlertController(title: "Could Not Link Twitter Account", message: "There was an error in linking your Twitter Account, Please Try Again.", preferredStyle: .Alert)
+                        couldNotLinkTwitterAccountController.view.tintColor = redColor
+                        couldNotLinkTwitterAccountController.view.backgroundColor = oneFiftyGrayColor
+                        //Create and add the Cancel action
+                        let cancelAction: UIAlertAction = UIAlertAction(title: "Okay", style: .Cancel) { action -> Void in
+                            //Add Logout User
+                            self.stopActivityIndicator()
+                            logout()
+                        }
+                        couldNotLinkTwitterAccountController.addAction(cancelAction)
+                        //Present the AlertController
+                        self.presentViewController(couldNotLinkTwitterAccountController, animated: true, completion: nil)
+                    }
+                })
                 }
-            })
-                
-                
-            
-            
-            
-                
             }
+        }else{
+            promptForAgreement()
         }
     }
     
@@ -292,28 +313,28 @@ class ViewController: UIViewController{
     
     let offset = UIOffsetMake(0, 1)
     
-    let bulb = UIImage(named: "bulb")
+    let bulb = UIImage(named: "bulbTabBar")
     topicsController.tabBarItem = UITabBarItem(title: nil, image: bulb, tag: 1)
-    topicsController.tabBarItem.imageInsets = UIEdgeInsetsMake(5.5, 0, -5.5, 0)
+    topicsController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
     topicsController.tabBarItem.setTitlePositionAdjustment(offset)
     topicsController.tabBarItem.title = "Ideas"
     
     
     let feed = UIImage(named: "feed")
     feedController.tabBarItem = UITabBarItem(title: nil, image: feed, tag: 2)
-    feedController.tabBarItem.imageInsets = UIEdgeInsetsMake(5.5, 0, -5.5, 0)
+    feedController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
     feedController.tabBarItem.setTitlePositionAdjustment(offset)
     feedController.tabBarItem.title = "Feed"
     
     let crown = UIImage(named: "crown")
     leaderboardController.tabBarItem = UITabBarItem(title: nil, image: crown, tag: 3)
-    leaderboardController.tabBarItem.imageInsets = UIEdgeInsetsMake(5.5, 0, -5.5, 0)
+    leaderboardController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
     leaderboardController.tabBarItem.setTitlePositionAdjustment(offset)
     leaderboardController.tabBarItem.title = "Leaderboard"
     
     let more = UIImage(named: "more")
     moreController.tabBarItem = UITabBarItem(title: nil, image: more, tag: 4)
-    moreController.tabBarItem.imageInsets = UIEdgeInsetsMake(5.5, 0, -5.5, 0)
+    moreController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
     moreController.tabBarItem.setTitlePositionAdjustment(offset)
     if PFInstallation.currentInstallation().badge != 0{
         moreController.tabBarItem.badgeValue = abbreviateNumber(PFInstallation.currentInstallation().badge) as String
@@ -490,14 +511,16 @@ class ViewController: UIViewController{
         
         facebookLoginButton.removeFromSuperview()
         twitterLoginButton.removeFromSuperview()
-        
+        agreeLabel.removeFromSuperview()
+        yesButton.removeFromSuperview()
+        viewAgreementButton.removeFromSuperview()
         activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
         activityIndicator.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
         activityIndicator.backgroundColor = UIColor.whiteColor()
         self.view.addSubview(activityIndicator)
         activityIndicator.hidesWhenStopped = true
         activityIndicator.startAnimating()
-        //UIApplication.sharedApplication().beginIgnoringInteractionEvents()
+        
         
     }
     
@@ -505,7 +528,9 @@ class ViewController: UIViewController{
         self.activityIndicator.stopAnimating()
         self.view.addSubview(facebookLoginButton)
         self.view.addSubview(twitterLoginButton)
-        //UIApplication.sharedApplication().endIgnoringInteractionEvents()
+        self.view.addSubview(agreeLabel)
+        self.view.addSubview(yesButton)
+        self.view.addSubview(viewAgreementButton)
     }
     
     
