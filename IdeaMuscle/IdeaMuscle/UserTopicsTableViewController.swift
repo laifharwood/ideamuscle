@@ -20,6 +20,7 @@ class UserTopicsTableViewController: UITableViewController, UITableViewDataSourc
     func queryForTopicObjects(){
         if let user = PFUser.currentUser(){
             var query = PFQuery(className: "Topic")
+            query.cachePolicy = PFCachePolicy.NetworkElseCache
             query.whereKey("creator", equalTo: user)
             query.orderByDescending("createdAt")
             query.limit = 1000

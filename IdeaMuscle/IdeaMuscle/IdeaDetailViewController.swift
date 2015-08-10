@@ -63,9 +63,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
 //        }
 
     }
-    
-    
-    
+
     func reloadView(){
         
         if ideaIsPublic == true{
@@ -123,7 +121,11 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         var avatarButton = UIImageView()
         
         if let ideaOwner = activeIdea["owner"] as? PFUser{
-            getAvatar(ideaOwner, avatarButton, nil)
+            ideaOwner.fetchIfNeededInBackgroundWithBlock({ (object, error) -> Void in
+                if error == nil{
+                   getAvatar(ideaOwner, avatarButton, nil)
+                }
+            })
         }
         avatarButton.frame = CGRectMake(5, numberOfUpvotesButton.frame.maxY + 5, 40, 40)
         avatarButton.layer.cornerRadius = 20
@@ -530,6 +532,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         query.orderByAscending("createdAt")
         query.includeKey("owner")
         query.includeKey("createdAt")
+        query.cachePolicy = PFCachePolicy.NetworkElseCache
         query.findObjectsInBackgroundWithTarget(self, selector: "commentSelector:error:")
     }
     

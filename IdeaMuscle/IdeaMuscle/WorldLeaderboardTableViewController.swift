@@ -164,6 +164,7 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
         let leaderboardQuery = PFQuery(className: "Leaderboard")
         leaderboardQuery.orderByDescending("numberOfUpvotes")
         leaderboardQuery.limit = 1000
+        leaderboardQuery.cachePolicy = PFCachePolicy.NetworkElseCache
         leaderboardQuery.includeKey("userPointer")
         leaderboardQuery.findObjectsInBackgroundWithTarget(self, selector: "leaderboardSelector:error:")
         
@@ -185,11 +186,10 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
         if PFUser.currentUser() != nil{
         let query = PFQuery(className: "Leaderboard")
         query.whereKey("userPointer", equalTo: PFUser.currentUser()!)
+        query.cachePolicy = PFCachePolicy.NetworkElseCache
         query.includeKey("userPointer")
             query.getFirstObjectInBackgroundWithTarget(self, selector: "currentUserLeaderBoardSelector:error:")
         }
-        
-        
     }
     
     func currentUserLeaderBoardSelector(object: AnyObject!, error: NSError!){
@@ -257,6 +257,7 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
     func totalUsersQuery(){
         
         let query = PFQuery(className: "TotalUsers")
+        query.cachePolicy = PFCachePolicy.NetworkElseCache
         query.getObjectInBackgroundWithId("RjDIi23LNW", block: { (object, error) -> Void in
             if error == nil{
                 //MARK: - World Rank Label
@@ -314,6 +315,7 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
                     numberOfUpvotes = 0
                 }
                 var worldRankQuery = PFQuery(className: "Leaderboard")
+                worldRankQuery.cachePolicy = PFCachePolicy.NetworkElseCache
                 worldRankQuery.whereKey("numberOfUpvotes", greaterThan: numberOfUpvotes)
                 worldRankQuery.countObjectsInBackgroundWithBlock({ (rank, error) -> Void in
                     if error == nil{

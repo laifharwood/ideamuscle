@@ -13,8 +13,6 @@ class FollowingTableViewController: UITableViewController {
     var activeUser = PFUser()
     var activeUserFollowing = [PFUser()]
     var activityIndicator = UIActivityIndicatorView()
-    var isFollowing = [Bool?](count: 1000, repeatedValue: nil)
-    var currentUserFollowing = [PFUser()]
     
     
     override func viewDidLoad() {
@@ -34,22 +32,6 @@ class FollowingTableViewController: UITableViewController {
         
     }
     
-    func currentUserFollowingQuery(){
-        if let currentUser = PFUser.currentUser(){
-            var relation = PFRelation()
-            var query = PFQuery(className: "_User")
-            relation = currentUser.relationForKey("following")
-            query = relation.query()!
-            query.limit = 1000
-            query.orderByAscending("username")
-            query.findObjectsInBackgroundWithBlock({ (objects, error) -> Void in
-                if error == nil{
-                    self.currentUserFollowing = objects as! [PFUser]
-                }
-                self.stopActivityIndicator()
-            })
-        }
-    }
     
     func activeUserFollowingQuery(){
         var query = PFQuery(className: "_User")
@@ -57,11 +39,12 @@ class FollowingTableViewController: UITableViewController {
         relation = activeUser.relationForKey("following")
         query = relation.query()!
         query.limit = 1000
+        query.cachePolicy = PFCachePolicy.NetworkElseCache
         query.orderByAscending("username")
         query.findObjectsInBackgroundWithBlock { (objects, error) -> Void in
             if error == nil{
                 self.activeUserFollowing = objects as! [PFUser]
-                self.currentUserFollowingQuery()
+                self.stopActivityIndicator()
             }
         }
     }
@@ -87,6 +70,8 @@ class FollowingTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! FriendshipTableViewCell
         
+        cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+        
         let user = activeUserFollowing[indexPath.row]
         
         getAvatar(user, nil, cell.profileButton)
@@ -98,29 +83,7 @@ class FollowingTableViewController: UITableViewController {
         cell.profileButton.layer.masksToBounds = true
         cell.profileButton.tag = indexPath.row
         
-        if let currentUser = PFUser.currentUser(){
-            cell.followButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-            cell.followButton.addTarget(self, action: "follow:", forControlEvents: .TouchUpInside)
-            cell.followButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 15)
-            cell.followButton.layer.cornerRadius = 3
-            cell.followButton.tag = indexPath.row
-            
-            if contains(currentUserFollowing, user){
-                cell.followButton.setTitle("Following", forState: .Normal)
-                cell.followButton.backgroundColor = oneFiftyGrayColor
-                isFollowing[indexPath.row] = true
-            }else{
-                cell.followButton.setTitle("Follow", forState: .Normal)
-                cell.followButton.backgroundColor = redColor
-                isFollowing[indexPath.row] = false
-            }
-            
-            if currentUser != user{
-                cell.followButton.frame = CGRectMake(cell.frame.maxX - 90, cell.frame.height/2 - 20, 80, 40)
-            }else{
-                cell.followButton.hidden = true
-            }
-        }
+
         
         if let username = user.username{
             cell.usernameLabel.text = username
@@ -129,35 +92,17 @@ class FollowingTableViewController: UITableViewController {
             cell.usernameLabel.textColor = twoHundredGrayColor
         }
         
-        
-        
-        
         return cell
     }
     
-    func follow(sender: UIButton!){
-        if isFollowing[sender.tag] == true{
-            //Unfollow
-            if let user = PFUser.currentUser(){
-                let userToFollow = activeUserFollowing[sender.tag]
-                followGlobal(userToFollow, false, self)
-                sender.setTitle("Follow", forState: .Normal)
-                sender.backgroundColor = redColor
-                isFollowing[sender.tag] = false
-            }
-            
-        }else{
-            //Follow
-            if let user = PFUser.currentUser(){
-                let userToFollow = activeUserFollowing[sender.tag]
-                followGlobal(userToFollow, true, self)
-                if let numberFollowing = user["numberFollowing"] as? Int{
-                    if numberFollowing < 1000{
-                        sender.setTitle("Following", forState: .Normal)
-                        sender.backgroundColor = oneFiftyGrayColor
-                        isFollowing[sender.tag] = true
-                    }
-                }
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        let profileVC = ProfileViewController()
+        let user = activeUserFollowing[indexPath.row]
+        user.fetchIfNeededInBackgroundWithBlock { (object, error) -> Void in
+            if error == nil{
+                profileVC.activeUser = user
+                self.navigationController?.pushViewController(profileVC, animated: true)
             }
         }
     }

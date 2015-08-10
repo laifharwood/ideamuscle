@@ -21,6 +21,7 @@ func ideaQueryGlobal(daysInPast: Int, query: PFQuery){
     query.includeKey("owner")
     query.includeKey("usersWhoUpvoted")
     query.includeKey("topicPointer")
+    query.cachePolicy = PFCachePolicy.NetworkElseCache
     
     getIdeasToHideGlobal(query)
 

@@ -218,6 +218,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         ideaQuery.whereKey("owner", matchesQuery: query)
         ideaQuery.orderByDescending("createdAt")
         ideaQuery.limit = 200
+        ideaQuery.cachePolicy = PFCachePolicy.NetworkElseCache
         ideaQuery.includeKey("owner")
         ideaQuery.includeKey("topicPointer")
         getIdeasToHideGlobal(ideaQuery)

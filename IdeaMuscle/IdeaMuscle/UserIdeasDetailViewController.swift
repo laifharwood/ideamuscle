@@ -223,6 +223,7 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
             query.whereKey("topicPointer", equalTo: activeTopic)
             query.whereKey("owner", equalTo: user)
             query.includeKey("owner")
+            query.cachePolicy = PFCachePolicy.NetworkElseCache
             query.includeKey("usersWhoUpvoted")
             query.orderByAscending("createdAt")
             query.orderByDescending("numberOfUpvotes")

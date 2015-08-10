@@ -234,6 +234,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         query.includeKey("owner")
         query.includeKey("usersWhoUpvoted")
         query.orderByAscending("createdAt")
+        query.cachePolicy = PFCachePolicy.NetworkElseCache
         query.orderByDescending("numberOfUpvotes")
         query.limit = 500
         getIdeasToHideGlobal(query)

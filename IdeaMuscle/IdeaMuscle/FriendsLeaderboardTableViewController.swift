@@ -163,6 +163,7 @@ class FriendsLeaderboardTableViewController: UIViewController, UITableViewDelega
         let leaderboardQuery = PFQuery.orQueryWithSubqueries([friendsQuery, selfQuery])
         leaderboardQuery.orderByDescending("numberOfUpvotes")
         leaderboardQuery.limit = 1000
+        leaderboardQuery.cachePolicy = PFCachePolicy.NetworkElseCache
         leaderboardQuery.includeKey("userPointer")
         leaderboardQuery.findObjectsInBackgroundWithTarget(self, selector: "leaderboardSelector:error:")
         

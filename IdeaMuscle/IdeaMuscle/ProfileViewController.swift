@@ -16,7 +16,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     var worldRankLabel = UILabel()
     var isFollowing = Bool()
     var followButton = UIButton()
-    var following = [PFUser()]
+    var following = [PFObject(className: "following")]
     var activityIndicator = UIActivityIndicatorView()
     var activityIndicatorTable = UIActivityIndicatorView()
     let worldRankTitleLabel = UILabel()
@@ -37,7 +37,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         totalUsersQuery()
         startActivityIndicatorTable()
         queryForIdeaObjects()
-        if activeUser != PFUser.currentUser(){
+        if activeUser.objectId != PFUser.currentUser()?.objectId{
             followingQuery()
         }
         queryNumberFollowing()
@@ -193,7 +193,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         
         if let currentUser = PFUser.currentUser(){
             if activeUser.objectId != currentUser.objectId{
-                println("activeUser does not equal current user")
                 followButtonContainer.addSubview(followButton)
             }else{
                 if let activeUserIsPro = activeUser["isPro"] as? Bool{
@@ -267,6 +266,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     func queryNumberOfUpvotes(){
         let query = PFQuery(className: "Leaderboard")
         query.whereKey("userPointer", equalTo: activeUser)
+        //query.cachePolicy = PFCachePolicy.NetworkElseCache
         query.getFirstObjectInBackgroundWithBlock { (object, error) -> Void in
             if error == nil{
                 var leaderboardObject = PFObject(className: "Leaderboard")
@@ -293,6 +293,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     func queryNumberOfFollowers(){
         let query = PFQuery(className: "NumberOfFollowers")
         query.whereKey("userPointer", equalTo: activeUser)
+        //query.cachePolicy = PFCachePolicy.NetworkElseCache
         query.getFirstObjectInBackgroundWithBlock { (object, error) -> Void in
             if error == nil{
                 var numberOfFollowersObject = PFObject(className: "NumberOfFollowers")
@@ -396,6 +397,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         var leaderboardObjectQuery = PFQuery(className: "Leaderboard")
         var leaderboardOjbect = PFObject(className: "LeaderBoard")
         leaderboardObjectQuery.whereKey("userPointer", equalTo: activeUser)
+        leaderboardObjectQuery.cachePolicy = PFCachePolicy.NetworkElseCache
         leaderboardObjectQuery.getFirstObjectInBackgroundWithBlock { (object, error) -> Void in
             if error == nil{
                 var numberOfUpvotes = Int()
@@ -407,6 +409,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 }
                 var worldRankQuery = PFQuery(className: "Leaderboard")
                 worldRankQuery.whereKey("numberOfUpvotes", greaterThan: numberOfUpvotes)
+                worldRankQuery.cachePolicy = PFCachePolicy.NetworkElseCache
                 worldRankQuery.countObjectsInBackgroundWithBlock({ (rank, error) -> Void in
                     if error == nil{
                         self.worldRank = Int(rank) + 1
@@ -432,11 +435,19 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         var query = PFQuery()
         relation = currentUser.relationForKey("following")
         query = relation.query()!
+        //query.cachePolicy =  PFCachePolicy.NetworkElseCache
         query.findObjectsInBackgroundWithBlock({ (objects, error) -> Void in
             if error == nil{
+                self.following = objects as! [PFObject]
                 
-                self.following = objects as! [PFUser]
-                if contains(self.following, self.activeUser){
+                var ids = [String()]
+                for object in self.following{
+                    if let id = object.objectId{
+                        ids.append(id)
+                    }
+                }
+                
+                if contains(ids, self.activeUser.objectId!){
                     self.followButton.setTitle("Following", forState: .Normal)
                     self.followButton.backgroundColor = oneFiftyGrayColor
                     self.isFollowing = true
@@ -453,6 +464,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     func totalUsersQuery(){
         
         let query = PFQuery(className: "TotalUsers")
+        query.cachePolicy = PFCachePolicy.NetworkElseCache
         query.getObjectInBackgroundWithId("RjDIi23LNW", block: { (object, error) -> Void in
             if error == nil{
                 let totalUsersObject = object!
@@ -467,6 +479,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         var query = PFQuery(className: "Idea")
         query.orderByDescending("numberOfUpvotes")
         query.limit = 100
+        query.cachePolicy = PFCachePolicy.NetworkElseCache
         query.whereKey("isPublic", equalTo: true)
         query.whereKey("owner", equalTo: activeUser)
         query.includeKey("topicPointer")
@@ -551,12 +564,13 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         let ideaDetailVC = IdeaDetailViewController()
         shouldReloadTable = true
         let passingIdea = ideaObjects[indexPath.row]
-        let passingTopic = ideaObjects[indexPath.row]["topicPointer"] as! PFObject
-        passingTopic.fetchIfNeededInBackgroundWithBlock { (object, error) -> Void in
-            if error == nil{
-                ideaDetailVC.activeIdea = passingIdea
-                ideaDetailVC.activeTopic =  passingTopic
-                self.navigationController?.pushViewController(ideaDetailVC, animated: true)
+        if let passingTopic = ideaObjects[indexPath.row]["topicPointer"] as? PFObject{
+            passingTopic.fetchIfNeededInBackgroundWithBlock { (object, error) -> Void in
+                if error == nil{
+                    ideaDetailVC.activeIdea = passingIdea
+                    ideaDetailVC.activeTopic =  passingTopic
+                    self.navigationController?.pushViewController(ideaDetailVC, animated: true)
+                }
             }
         }
     }

@@ -41,6 +41,7 @@ class DraftsTableViewController: UITableViewController {
             draftQuery.includeKey("topicPointer")
             draftQuery.includeKey("ideaArray")
             draftQuery.includeKey("isPublicArray")
+            draftQuery.cachePolicy = PFCachePolicy.NetworkElseCache
             draftQuery.orderByDescending("createAt")
             draftQuery.findObjectsInBackgroundWithTarget(self, selector: "draftSelector:error:")
         }

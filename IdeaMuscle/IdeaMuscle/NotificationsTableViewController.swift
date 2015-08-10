@@ -55,6 +55,7 @@ class NotificationsTableViewController: UITableViewController {
             let query = PFQuery(className: "Notification")
             query.whereKey("toUser", equalTo: currentUser)
             query.limit = 100
+            query.cachePolicy = PFCachePolicy.NetworkElseCache
             query.includeKey("ideaPointer")
             query.orderByDescending("createdAt")
             query.findObjectsInBackgroundWithBlock({ (objects, error) -> Void in

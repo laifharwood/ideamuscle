@@ -33,6 +33,7 @@ class UserIdeasTableViewController: UITableViewController {
             query.whereKey("userPointer", equalTo: user)
             query.includeKey("topicPointer")
             query.limit = 1000
+            query.cachePolicy = PFCachePolicy.NetworkElseCache
             query.findObjectsInBackgroundWithBlock({ (objects, error) -> Void in
                 if error == nil{
                     self.topicsComposedForObjects = objects as! [PFObject]

@@ -18,6 +18,7 @@ func topicQueryGlobal(daysInPast: Int, query: PFQuery){
     query.limit = 100
     query.whereKey("isPublic", equalTo: true)
     query.includeKey("creator")
+    query.cachePolicy = PFCachePolicy.NetworkElseCache
     getTopicToHideGlobal(query)
     if daysInPast < 0{
         let now = NSDate()

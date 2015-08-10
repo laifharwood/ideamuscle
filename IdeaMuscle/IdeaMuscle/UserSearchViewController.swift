@@ -20,9 +20,12 @@ class UserSearchTableViewController: UIViewController, UITableViewDelegate, UITa
     let searchField = UITextField()
     let searchButton = UIButton()
     let searchTypeSelection = UISegmentedControl()
+    let resultLabel = UILabel()
+    let searchTypeContainer = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        searchField.becomeFirstResponder()
         
         self.view.backgroundColor = fiftyGrayColor
         self.title = "User Search"
@@ -32,8 +35,6 @@ class UserSearchTableViewController: UIViewController, UITableViewDelegate, UITa
         searchField.placeholder = "Search"
         searchField.font = UIFont(name: "Avenir", size: 14)
         searchField.layer.cornerRadius = 3
-        searchField.layer.borderWidth = 1
-        searchField.layer.borderColor = oneFiftyGrayColor.CGColor
         searchField.backgroundColor = UIColor.whiteColor()
         searchField.textColor = UIColor.blackColor()
         let paddingView = UIView(frame: CGRectMake(0, 0, 5, searchField.frame.height))
@@ -52,7 +53,7 @@ class UserSearchTableViewController: UIViewController, UITableViewDelegate, UITa
         searchButton.addTarget(self, action: "querySearch:", forControlEvents: .TouchUpInside)
         self.view.addSubview(searchButton)
         
-        let searchTypeContainer = UIView(frame: CGRectMake(0, searchField.frame.maxY + 5, self.view.frame.width, 30))
+        searchTypeContainer.frame = CGRectMake(0, searchField.frame.maxY + 5, self.view.frame.width, 30)
         searchTypeContainer.backgroundColor = oneFiftyGrayColor
         self.view.addSubview(searchTypeContainer)
         
@@ -83,6 +84,7 @@ class UserSearchTableViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func querySearch(sender: UIButton){
+        searchField.resignFirstResponder()
         startActivityIndicator()
         
         let lowercaseSearchString = searchField.text.lowercaseString
@@ -98,7 +100,9 @@ class UserSearchTableViewController: UIViewController, UITableViewDelegate, UITa
         
         query.findObjectsInBackgroundWithBlock { (objects, error) -> Void in
             if error == nil{
-                self.userObjects = objects as! [PFUser]
+                if objects?.count > 0{
+                    self.userObjects = objects as! [PFUser]
+                }
             }
             self.stopActivityIndicator()
         }
@@ -110,18 +114,19 @@ class UserSearchTableViewController: UIViewController, UITableViewDelegate, UITa
     
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         
-        if string == ""{
-            if count(searchField.text) - 1 > 3{
-                searchButton.enabled = false
-                searchButton.backgroundColor = twoHundredGrayColor
-            }
-        }
         if count(searchField.text) + count(string) > 3{
             searchButton.enabled = true
             searchButton.backgroundColor = redColor
         }else{
             searchButton.enabled = false
             searchButton.backgroundColor = twoHundredGrayColor
+        }
+        
+        if string == ""{
+            if count(searchField.text) - 1 < 4{
+                searchButton.enabled = false
+                searchButton.backgroundColor = twoHundredGrayColor
+            }
         }
         return true
     }
@@ -224,20 +229,29 @@ class UserSearchTableViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func startActivityIndicator(){
-        
+        resultLabel.removeFromSuperview()
+        tableView.removeFromSuperview()
+        userObjects = []
         activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
         activityIndicator.hidesWhenStopped = true
-        activityIndicator.frame = CGRectMake(self.view.frame.width/2 - 25, tableView.frame.minY, 50, 50)
-        tableView.addSubview(activityIndicator)
+        activityIndicator.frame = CGRectMake(self.view.frame.width/2 - 25, searchTypeContainer.frame.maxY + 5, 50, 50)
+        self.view.addSubview(activityIndicator)
         activityIndicator.startAnimating()
     }
     
     func stopActivityIndicator(){
-        self.view.addSubview(tableView)
         activityIndicator.stopAnimating()
-        tableView.reloadData()
+        if userObjects.count > 0{
+            self.view.addSubview(tableView)
+            tableView.reloadData()
+        }else{
+            resultLabel.frame = CGRectMake(5, searchTypeContainer.frame.maxY + 5, self.view.frame.width - 10, 30)
+            resultLabel.font = UIFont(name:"HelveticaNeue", size: 14)
+            resultLabel.text = "No Match Found"
+            resultLabel.textColor = UIColor.whiteColor()
+            resultLabel.textAlignment = NSTextAlignment.Center
+            self.view.addSubview(resultLabel)
+        }
     }
-    
-    
 }
 

@@ -27,6 +27,7 @@ class IdeasUserUpvotedTableViewController: UITableViewController, UITableViewDat
             query.includeKey("ideaUpvoted.topicPointer")
             query.includeKey("ideaUpvoted.owner")
             query.limit = 1000
+            query.cachePolicy = PFCachePolicy.NetworkElseCache
             query.orderByAscending("createdAt")
             query.findObjectsInBackgroundWithTarget(self, selector: "upvoteSelector:error:")
         }
