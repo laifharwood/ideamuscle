@@ -19,7 +19,7 @@ func ideaQueryGlobal(daysInPast: Int, query: PFQuery){
     query.limit = 100
     query.whereKey("isPublic", equalTo: true)
     query.includeKey("owner")
-    query.includeKey("usersWhoUpvoted")
+    //query.includeKey("usersWhoUpvoted")
     query.includeKey("topicPointer")
     query.cachePolicy = PFCachePolicy.NetworkElseCache
     
@@ -181,10 +181,23 @@ func getUpvotes(idea: PFObject, button: UIButton, cell: UITableViewCell?) -> Boo
     let numberString = abbreviateNumber(numberOfUpvotes)
     button.setTitle(numberString as String, forState: .Normal)
     if let currentUser = PFUser.currentUser(){
-        if idea.objectForKey("usersWhoUpvoted")?.containsObject(currentUser) == true{
-            button.setTitleColor(redColor, forState: .Normal)
-            button.tintColor = redColor
-            hasUpvoted = true
+        if let ideasUpvoted = currentUser["ideasUpvoted"] as? [String]{
+            
+            if let ideaId = idea.objectId{
+                if contains(ideasUpvoted, ideaId){
+                    button.setTitleColor(redColor, forState: .Normal)
+                    button.tintColor = redColor
+                    hasUpvoted = true
+                }else{
+                    button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+                    button.tintColor = UIColor.whiteColor()
+                    hasUpvoted = false
+                }
+            }else{
+                button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+                button.tintColor = UIColor.whiteColor()
+                hasUpvoted = false
+            }
         }else{
             button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
             button.tintColor = UIColor.whiteColor()
@@ -202,7 +215,7 @@ func getUpvotes(idea: PFObject, button: UIButton, cell: UITableViewCell?) -> Boo
         button.titleEdgeInsets = UIEdgeInsetsMake(0, -imageSize.width, 0, 0)
         button.imageEdgeInsets = UIEdgeInsetsMake(-45, 0.0, 0.0, -titleSize.width)
         button.layer.cornerRadius = 3
-        button.backgroundColor = oneFiftyGrayColor
+        button.backgroundColor = seventySevenGrayColor
         
     }else{
         button.setTitle("0", forState: .Normal)
@@ -323,7 +336,11 @@ func checkIfHasPosted (user: PFUser, sender: AnyObject!, isNewTopic: Bool, activ
             notProCheckIfCanPostFromDetail(user, sender, activeTopic, isNewTopic)
         }
     }else{
-        notProCheckIfCanPostFromDetail(user, sender, activeTopic, isNewTopic)
+        if isNewTopic == false{
+            presentCompose(sender, activeTopic!, isNewTopic)
+        }else{
+            presentCompose(sender, nil, isNewTopic)
+        }
     }
 }
 
@@ -367,10 +384,8 @@ func notProCheckIfCanPostFromDetail(user: PFUser, sender: AnyObject!, activeTopi
                                     
                                     let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
                                         let storeVC = StoreViewController()
-                                        sender.navigationController!!.pushViewController(storeVC, animated: true)
-                                        
+                                        sender.navigationController??.pushViewController(storeVC, animated: true)
                                     })
-                                    
                                     upgradeAlert.addAction(goToStore)
                                     sender.presentViewController(upgradeAlert, animated: true, completion: nil)
                                 }

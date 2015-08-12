@@ -180,7 +180,7 @@ class ViewController: UIViewController{
                 if let user = PFUser.currentUser(){
                     
                     user["username"] = username
-                    user["lowercaseUserName"] = username.lowercaseString
+                    user["lowercaseUsername"] = username.lowercaseString
                     user["email"] = userEmail
                     user["facebookID"] = userID
                     let fid = user["facebookID"] as! String
@@ -353,7 +353,7 @@ class ViewController: UIViewController{
                 leaderboardObject.saveInBackgroundWithBlock({ (success, error) -> Void in
                     if success{
                         currentUser["isOnLeaderboard"] = true
-                        currentUser.saveInBackground()
+                        currentUser.saveEventually()
                     }
                 })
                 }
@@ -365,7 +365,7 @@ class ViewController: UIViewController{
                 totalUsers.saveInBackgroundWithBlock({ (success, error) -> Void in
                     if success{
                         currentUser["hasIncTotalUserCount"] = true
-                        currentUser.saveInBackground()
+                        currentUser.saveEventually()
                     }
                 })
             }
@@ -378,7 +378,7 @@ class ViewController: UIViewController{
                 lastPostedObject.saveInBackgroundWithBlock({ (success, error) -> Void in
                 if success{
                     currentUser["isInLastPosted"] = true
-                    currentUser.saveInBackground()
+                    currentUser.saveEventually()
                 }
                 })
             }
@@ -392,7 +392,7 @@ class ViewController: UIViewController{
                 numberOfFollowersObject.saveInBackgroundWithBlock({ (success, error) -> Void in
                     if success{
                         currentUser["isInNumberOfFollowers"] = true
-                        currentUser.saveInBackground()
+                        currentUser.saveEventually()
                     }
                 })
             }
@@ -410,7 +410,7 @@ class ViewController: UIViewController{
         if let user = PFUser.currentUser(){
             let installation = PFInstallation.currentInstallation()
             installation.setObject(user, forKey: "user")
-            installation.saveInBackground()
+            installation.saveEventually()
         }
         
         

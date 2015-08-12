@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let query = PFQuery(className: "Idea")
             query.includeKey("owner")
             query.includeKey("topicPointer")
-            query.includeKey("usersWhoUpvoted")
+            //query.includeKey("usersWhoUpvoted")
             query.getObjectInBackgroundWithId(ideaId!, block: { (idea, error) -> Void in
                 if error == nil{
                     let activeIdea = idea! as PFObject

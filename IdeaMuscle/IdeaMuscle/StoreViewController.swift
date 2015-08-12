@@ -360,13 +360,13 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
                 cell.textLabel!.font = UIFont(name: "HelveticaNeue", size: 14)
                 
                 if let user = PFUser.currentUser(){
+                        cell.buyButton.layer.cornerRadius = 3
                 if let isProForever = user["isProForever"] as? Bool{
                     if isProForever == false{
                         cell.buyButton.backgroundColor = redColor
                         cell.buyButton.setTitle("Buy", forState: .Normal)
                         cell.buyButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
                         cell.buyButton.setTitleColor(fiftyGrayColor, forState: .Highlighted)
-                        cell.buyButton.layer.cornerRadius = 3
                         cell.buyButton.frame = CGRectMake(cell.frame.maxX - 65, 5, 60, cell.frame.height - 10)
                         cell.buyButton.addTarget(self, action: "buy:", forControlEvents: .TouchUpInside)
                         cell.buyButton.tag = indexPath.row

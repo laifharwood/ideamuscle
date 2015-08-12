@@ -158,21 +158,23 @@ func upvoteGlobal(idea: PFObject, shouldUpvote: Bool, button: UIButton){
     if shouldUpvote == false{
         //Remove Upvote
         if let user = PFUser.currentUser(){
-            idea.removeObject(user, forKey: "usersWhoUpvoted")
-            idea.incrementKey("numberOfUpvotes", byAmount: -1)
-            idea.saveInBackgroundWithBlock({ (success, error) -> Void in
-                if error != nil{
-                    println("error saving idea object for remove upvote")
-                    println("Error: \(error!.userInfo)")
-                }
-            })
             
+            //idea.removeObject(user, forKey: "usersWhoUpvoted")
+            idea.incrementKey("numberOfUpvotes", byAmount: -1)
+            idea.saveEventually()
+            
+            if let user = PFUser.currentUser(){
+                if let ideaId = idea.objectId{
+                    user.removeObject(ideaId, forKey: "ideasUpvoted")
+                    user.saveEventually()
+                }
+            }
+            
+            //Remove Upvoted Object
             var upvoteObjectQuery = PFQuery(className: "Upvote")
             upvoteObjectQuery.whereKey("userWhoUpvoted", equalTo: user)
             upvoteObjectQuery.whereKey("ideaUpvoted", equalTo: idea)
-            
             var upvoteObject = PFObject(className: "Upvote")
-            
             upvoteObjectQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
                 if error != nil{
                     println("error in getting Upvote Object for remove upvote")
@@ -180,14 +182,10 @@ func upvoteGlobal(idea: PFObject, shouldUpvote: Bool, button: UIButton){
                     
                 }else{
                     upvoteObject = object! as PFObject
-                    upvoteObject.deleteInBackgroundWithBlock({ (success, error) -> Void in
-                        if error != nil{
-                            println("error deleting upvote object")
-                            println("Error: \(error!.userInfo)")
-                        }
-                    })
+                    upvoteObject.deleteEventually()
                 }
-                let ideaOwner = idea["owner"] as! PFUser
+                //Decrement Leaderboard Object
+                if let ideaOwner = idea["owner"] as? PFUser{
                 var leaderboardQuery = PFQuery(className: "Leaderboard")
                 leaderboardQuery.whereKey("userPointer", equalTo: ideaOwner)
                 leaderboardQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
@@ -196,80 +194,65 @@ func upvoteGlobal(idea: PFObject, shouldUpvote: Bool, button: UIButton){
                         var leaderboardObject = PFObject(className: "Leaderboard")
                         leaderboardObject = object!
                         leaderboardObject.incrementKey("numberOfUpvotes", byAmount: -1)
-                        leaderboardObject.saveInBackgroundWithBlock({ (success, error) -> Void in
-                            if error != nil{
-                                println("error saving leaderboard object for remove upvote")
-                                println("Error: \(error!.userInfo)")
-                            }
-                        })
+                        leaderboardObject.saveEventually()
                     }else{
                         println("error finding leaderboard object to downvote")
                         println("Error: \(error!.userInfo)")
                     }
                 })
+                }
             })
+            
+                
             
             let title = idea["numberOfUpvotes"] as! Int
             let numberString = abbreviateNumber(title)
             button.setTitle(numberString as String, forState: .Normal)
             button.setTitleColor(UIColor.whiteColor(), forState: .Normal)
             button.tintColor = UIColor.whiteColor()
-            
         }
 
     }else{
         //Add Upvote
         if let user = PFUser.currentUser(){
-            idea.addObject(user, forKey: "usersWhoUpvoted")
+            //idea.addObject(user, forKey: "usersWhoUpvoted")
             idea.incrementKey("numberOfUpvotes")
-            idea.saveInBackgroundWithBlock({ (success, error) -> Void in
-                if error != nil{
-                    
-                    println("error saving idea object for upvote")
-                    println("Error: \(error!.userInfo)")
-                }
-            })
+            idea.saveEventually()
             
             var upvoteObject = PFObject(className: "Upvote")
             upvoteObject.setObject(user, forKey: "userWhoUpvoted")
             upvoteObject.setObject(idea, forKey: "ideaUpvoted")
             upvoteObject.ACL?.setPublicWriteAccess(true)
-            upvoteObject.saveInBackgroundWithBlock({ (success, error) -> Void in
-                if error != nil{
-                    
-                    println("error saving upvote object for upvote")
-                    println("Error: \(error!.userInfo)")
-                }
-            })
-    
-            let ideaOwner = idea["owner"] as! PFUser
-            var leaderboardQuery = PFQuery(className: "Leaderboard")
-            leaderboardQuery.whereKey("userPointer", equalTo: ideaOwner)
-            leaderboardQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
-                
-                if error == nil{
-                    var leaderboardObject = PFObject(className: "Leaderboard")
-                    leaderboardObject = object!
-                    leaderboardObject.incrementKey("numberOfUpvotes", byAmount: 1)
-                    leaderboardObject.saveInBackgroundWithBlock({ (success, error) -> Void in
-                        if error != nil{
-                            
-                            println("error saving leaderboard object for upvote")
-                            println("Error: \(error!.userInfo)")
-                        }
-                    })
-                }else{
-                    println("error getting leaderboardOjbect to upvote")
-                    println("Error: \(error!.userInfo)")
-                }
-            })
+            upvoteObject.saveEventually()
             
-            let title = idea["numberOfUpvotes"] as! Int
-            let numberString = abbreviateNumber(title)
-            button.setTitle(numberString as String, forState: .Normal)
-            button.setTitleColor(redColor, forState: .Normal)
-            button.tintColor = redColor
-
+            if let currentUser = PFUser.currentUser(){
+                if let ideaId = idea.objectId{
+                    currentUser.addObject(ideaId, forKey: "ideasUpvoted")
+                    currentUser.saveEventually()
+                }
+            }
+    
+            if let ideaOwner = idea["owner"] as? PFUser{
+                var leaderboardQuery = PFQuery(className: "Leaderboard")
+                leaderboardQuery.whereKey("userPointer", equalTo: ideaOwner)
+                leaderboardQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
+                    if error == nil{
+                        var leaderboardObject = PFObject(className: "Leaderboard")
+                        leaderboardObject = object!
+                        leaderboardObject.incrementKey("numberOfUpvotes", byAmount: 1)
+                        leaderboardObject.saveEventually()
+                    }else{
+                        println("error getting leaderboardOjbect to upvote")
+                        println("Error: \(error!.userInfo)")
+                    }
+                })
+                
+                let title = idea["numberOfUpvotes"] as! Int
+                let numberString = abbreviateNumber(title)
+                button.setTitle(numberString as String, forState: .Normal)
+                button.setTitleColor(redColor, forState: .Normal)
+                button.tintColor = redColor
+            }
         }
     }
 }
@@ -297,6 +280,15 @@ func followGlobal(userToFollow: PFUser, shouldFollow: Bool, sender: AnyObject!){
                 }else{
                     followLimitAlert(sender)
                 }
+            }else{
+                currentUser["numberFollowing"] = 1
+                currentUser.saveEventually()
+                let relation = currentUser.relationForKey("following")
+                relation.addObject(userToFollow)
+                currentUser.incrementKey("numberFollowing", byAmount: 1)
+                currentUser.saveInBackground()
+                queryNumberOfFollowers(1, userToFollow)
+                
             }
         }
     }

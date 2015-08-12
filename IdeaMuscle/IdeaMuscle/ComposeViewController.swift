@@ -475,7 +475,6 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         
             if isADraft == true{
                     draftObject.deleteInBackgroundWithBlock({ (success, error) -> Void in
-                    println("should dismiss")
                     self.dismissViewControllerAnimated(true, completion: nil)
                 })
             }else{
@@ -500,8 +499,10 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             ideaObject.ACL?.setPublicReadAccess(false)
         }
         
+
+        
         ideaObject.incrementKey("numberOfUpvotes")
-        ideaObject.addObject(user, forKey: "usersWhoUpvoted")
+        //ideaObject.addObject(user, forKey: "usersWhoUpvoted")
         ideaObject.saveInBackgroundWithBlock({ (success, error) -> Void in
             if success{
                 
@@ -509,6 +510,14 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                 upvoteObject["userWhoUpvoted"] = user
                 upvoteObject["ideaUpvoted"] = ideaObject
                 upvoteObject.saveInBackground()
+                
+                if let currentUser = PFUser.currentUser(){
+                    if let ideaId = ideaObject.objectId{
+                        println("objectId")
+                        currentUser.addObject(ideaId, forKey: "ideasUpvoted")
+                        currentUser.saveEventually()
+                    }
+                }
                 
                 if isPublic == true{
                     self.activeComposeTopicObject.incrementKey("numberOfIdeas")

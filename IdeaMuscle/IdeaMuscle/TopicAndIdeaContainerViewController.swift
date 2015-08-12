@@ -157,7 +157,7 @@ class TopicAndIdeaContainerViewController: UIViewController {
     func composeOriginal(sender: UIButton!){
         
         //composeOriginalGlobal(self)
-        composeFromDetail(navigationController, nil, true)
+        composeFromDetail(self, nil, true)
         
     }
     

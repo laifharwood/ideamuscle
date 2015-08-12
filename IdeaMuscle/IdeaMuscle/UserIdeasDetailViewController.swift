@@ -8,10 +8,8 @@
 
 import UIKit
 import Parse
-import MessageUI
-import Social
 
-class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMailComposeViewControllerDelegate {
+class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     var tableView: UITableView = UITableView()
     var activeTopic = PFObject(className: "Topic")
@@ -19,12 +17,9 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
     var hasUpvoted = [Bool](count: 100, repeatedValue: false)
     var shouldReloadTable = false
     var activityIndicator = UIActivityIndicatorView()
-    var shareContainer = UIView()
     var topicLabelView = UIView()
     
-    func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,145 +57,36 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
         self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 30, 0)
         self.view.addSubview(tableView)
         
-        //MARK: - Share Button
-        var shareButton = UIButton()
-        shareButton.frame = CGRectMake(0, self.view.frame.maxY - 30, self.view.frame.width/2 - 0.5, 30)
-        var topicIsPublic = Bool()
-        if let isPublic = activeTopic["isPublic"] as? Bool{
-            if isPublic{
-                topicIsPublic = true
-            }else{
-                topicIsPublic = false
-            }
-        }else{
-            topicIsPublic = false
-        }
-        if topicIsPublic{
-            shareButton.setTitle("Share", forState: .Normal)
-            shareButton.backgroundColor = sixtyThreeGrayColor
-            shareButton.addTarget(self, action: "share:", forControlEvents: .TouchUpInside)
-            shareButton.titleLabel?.font = UIFont(name: "Helvetica-Light", size: 14)
-            self.view.addSubview(shareButton)
-        }
+//        //MARK: - Share Button
+//        var shareButton = UIButton()
+//        shareButton.frame = CGRectMake(0, self.view.frame.maxY - 30, self.view.frame.width/2 - 0.5, 30)
+//        var topicIsPublic = Bool()
+//        if let isPublic = activeTopic["isPublic"] as? Bool{
+//            if isPublic{
+//                topicIsPublic = true
+//            }else{
+//                topicIsPublic = false
+//            }
+//        }else{
+//            topicIsPublic = false
+//        }
+//        if topicIsPublic{
+//            shareButton.setTitle("Share", forState: .Normal)
+//            shareButton.backgroundColor = sixtyThreeGrayColor
+//            shareButton.addTarget(self, action: "share:", forControlEvents: .TouchUpInside)
+//            shareButton.titleLabel?.font = UIFont(name: "Helvetica-Light", size: 14)
+//            self.view.addSubview(shareButton)
+//        }
+//        
+//        //MARK: - Compose Button
+//        var composeButton = UIButton()
+//        composeButton.frame = CGRectMake(shareButton.frame.maxX + 1, self.view.frame.maxY - 30, self.view.frame.width/2 - 0.5, 30)
+//        composeButton.setTitle("Compose", forState: .Normal)
+//        composeButton.backgroundColor = sixtyThreeGrayColor
+//        composeButton.addTarget(self, action: "compose:", forControlEvents: .TouchUpInside)
+//        composeButton.titleLabel?.font = UIFont(name: "Helvetica-Light", size: 14)
+//        self.view.addSubview(composeButton)
         
-        //MARK: - Compose Button
-        var composeButton = UIButton()
-        composeButton.frame = CGRectMake(shareButton.frame.maxX + 1, self.view.frame.maxY - 30, self.view.frame.width/2 - 0.5, 30)
-        composeButton.setTitle("Compose", forState: .Normal)
-        composeButton.backgroundColor = sixtyThreeGrayColor
-        composeButton.addTarget(self, action: "compose:", forControlEvents: .TouchUpInside)
-        composeButton.titleLabel?.font = UIFont(name: "Helvetica-Light", size: 14)
-        self.view.addSubview(composeButton)
-        
-        //MARK: - Share Container and Buttons
-        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 105, self.view.frame.width, 180)
-        shareContainer.backgroundColor = UIColor.whiteColor()
-        self.view.addSubview(shareContainer)
-        
-        let twitterShareButton = UIButton()
-        let facebookShareButton = UIButton()
-        let emailShareButton = UIButton()
-        let cancelShareButton = UIButton()
-        
-        twitterShareButton.frame = CGRectMake(5, 0, shareContainer.frame.width - 10, 40)
-        facebookShareButton.frame = CGRectMake(5, twitterShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
-        emailShareButton.frame = CGRectMake(5, facebookShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
-        cancelShareButton.frame = CGRectMake(5, emailShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
-        
-        twitterShareButton.backgroundColor = fiftyGrayColor
-        facebookShareButton.backgroundColor = fiftyGrayColor
-        emailShareButton.backgroundColor = fiftyGrayColor
-        cancelShareButton.backgroundColor = fiftyGrayColor
-        
-        twitterShareButton.setTitle("Twitter", forState: .Normal)
-        facebookShareButton.setTitle("Facebook", forState: .Normal)
-        emailShareButton.setTitle("Email", forState: .Normal)
-        cancelShareButton.setTitle("Cancel", forState: .Normal)
-        
-        twitterShareButton.addTarget(self, action: "shareTwitter:", forControlEvents: .TouchUpInside)
-        facebookShareButton.addTarget(self, action: "shareFacebook:", forControlEvents: .TouchUpInside)
-        emailShareButton.addTarget(self, action: "shareEmail:", forControlEvents: .TouchUpInside)
-        cancelShareButton.addTarget(self, action: "shareCancel:", forControlEvents: .TouchUpInside)
-        
-        shareContainer.addSubview(twitterShareButton)
-        shareContainer.addSubview(facebookShareButton)
-        shareContainer.addSubview(emailShareButton)
-        shareContainer.addSubview(cancelShareButton)
-    }
-    
-    func shareTwitter(sender: UIButton!){
-        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
-        let twitterComposeVC = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
-        
-        let topicString = activeTopic["title"] as! String
-        let stringCount = count(topicString)
-        let characterAllowance = 117
-        if stringCount > characterAllowance{
-            let twitterString = topicString.substringWithRange(Range<String.Index>(start: topicString.startIndex, end: advance(topicString.startIndex, characterAllowance)))
-            twitterComposeVC.setInitialText(twitterString)
-        }else{
-            twitterComposeVC.setInitialText(topicString)
-        }
-        let deeplink = HOKDeeplink(route: "topics/:topicId", routeParameters: ["topicId": activeTopic.objectId!])
-        
-        Hoko.deeplinking().generateSmartlinkForDeeplink(deeplink, success: { (smartlink) -> Void in
-            var url = NSURL()
-            url = NSURL(string: smartlink)!
-            twitterComposeVC.addURL(url)
-            self.presentViewController(twitterComposeVC, animated: true, completion: nil)
-            
-            }) { (error) -> Void in
-        }
-    }
-    
-    func shareFacebook(sender: UIButton!){
-        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
-        let facebookComposeVC = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
-        let topicString = activeTopic["title"] as! String
-        facebookComposeVC.setInitialText(topicString)
-        let deeplink = HOKDeeplink(route: "topics/:topicId", routeParameters: ["topicId": activeTopic.objectId!])
-        
-        Hoko.deeplinking().generateSmartlinkForDeeplink(deeplink, success: { (smartlink) -> Void in
-            var url = NSURL()
-            url = NSURL(string: smartlink)!
-            facebookComposeVC.addURL(url)
-            self.presentViewController(facebookComposeVC, animated: true, completion: nil)
-            
-            }) { (error) -> Void in
-        }
-        
-        
-    }
-    
-    func shareEmail(sender: UIButton!){
-        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
-        
-        let emailVC = MFMailComposeViewController()
-        emailVC.mailComposeDelegate = self
-        let topicString = activeTopic["title"] as! String
-        let deeplink = HOKDeeplink(route: "topics/:topicId", routeParameters: ["topicId": activeTopic.objectId!])
-        
-        Hoko.deeplinking().generateSmartlinkForDeeplink(deeplink, success: { (smartlink) -> Void in
-            let user = PFUser.currentUser()!
-            let username = user["username"] as! String
-            let body = topicString + " " + smartlink
-            
-            emailVC.setSubject(username + " has sent you a topic from IdeaMuscle")
-            emailVC.setMessageBody(body, isHTML: true)
-            emailVC.navigationBar.tintColor = redColor
-            
-            self.presentViewController(emailVC, animated: true, completion: nil)
-            
-            }) { (error) -> Void in
-        }
-        
-        
-        
-    }
-    
-    func shareCancel(sender: UIButton!){
-        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
-        println("share Cancel")
     }
     
     
@@ -224,7 +110,7 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
             query.whereKey("owner", equalTo: user)
             query.includeKey("owner")
             query.cachePolicy = PFCachePolicy.NetworkElseCache
-            query.includeKey("usersWhoUpvoted")
+            //query.includeKey("usersWhoUpvoted")
             query.orderByAscending("createdAt")
             query.orderByDescending("numberOfUpvotes")
             query.limit = 1000
@@ -420,11 +306,7 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
         tableView.reloadData()
     }
     
-    func share(sender: UIButton!){
-        shareContainer.frame = CGRectMake(0, self.view.frame.maxY - 180, self.view.frame.width, 180)
-        self.view.bringSubviewToFront(shareContainer)
-        
-    }
+
     
     // Override to support conditional editing of the table view.
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {

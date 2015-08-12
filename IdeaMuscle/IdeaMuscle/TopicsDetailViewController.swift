@@ -8,10 +8,9 @@
 
 import UIKit
 import Parse
-import MessageUI
-import Social
 
-class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMailComposeViewControllerDelegate {
+
+class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var tableView: UITableView = UITableView()
     var activeTopic = PFObject(className: "Topic")
@@ -24,9 +23,6 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
     let reportViewContainer = UIView()
     let invisibleView = UIView()
     
-    func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,132 +81,18 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         composeButton.titleLabel?.font = UIFont(name: "Helvetica-Light", size: 14)
         self.view.addSubview(composeButton)
         
-        //MARK: - Share Container and Buttons
-        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 105, self.view.frame.width, 185)
-        shareContainer.backgroundColor = UIColor.whiteColor()
-        self.view.addSubview(shareContainer)
-        
-        let twitterShareButton = UIButton()
-        let facebookShareButton = UIButton()
-        let emailShareButton = UIButton()
-        let cancelShareButton = UIButton()
-        
-        twitterShareButton.frame = CGRectMake(5, 5, shareContainer.frame.width - 10, 40)
-        facebookShareButton.frame = CGRectMake(5, twitterShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
-        emailShareButton.frame = CGRectMake(5, facebookShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
-        cancelShareButton.frame = CGRectMake(5, emailShareButton.frame.maxY + 5, shareContainer.frame.width - 10, 40)
-        
-        twitterShareButton.backgroundColor = fiftyGrayColor
-        facebookShareButton.backgroundColor = fiftyGrayColor
-        emailShareButton.backgroundColor = fiftyGrayColor
-        cancelShareButton.backgroundColor = oneFiftyGrayColor
-        
-        twitterShareButton.layer.cornerRadius = 3
-        facebookShareButton.layer.cornerRadius = 3
-        emailShareButton.layer.cornerRadius = 3
-        cancelShareButton.layer.cornerRadius = 3
-        
-        twitterShareButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
-        facebookShareButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
-        emailShareButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
-        cancelShareButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 15)
-        
-        twitterShareButton.setTitle("Twitter", forState: .Normal)
-        facebookShareButton.setTitle("Facebook", forState: .Normal)
-        emailShareButton.setTitle("Email", forState: .Normal)
-        cancelShareButton.setTitle("Cancel", forState: .Normal)
-        
-        twitterShareButton.addTarget(self, action: "shareTwitter:", forControlEvents: .TouchUpInside)
-        facebookShareButton.addTarget(self, action: "shareFacebook:", forControlEvents: .TouchUpInside)
-        emailShareButton.addTarget(self, action: "shareEmail:", forControlEvents: .TouchUpInside)
-        cancelShareButton.addTarget(self, action: "shareCancel:", forControlEvents: .TouchUpInside)
-        
-        shareContainer.addSubview(twitterShareButton)
-        shareContainer.addSubview(facebookShareButton)
-        shareContainer.addSubview(emailShareButton)
-        shareContainer.addSubview(cancelShareButton)
+
         
         longPressToTableViewGlobal(self, tableView, reportViewContainer)
     }
     
-    func shareTwitter(sender: UIButton!){
-        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
-        invisibleView.removeFromSuperview()
-        let twitterComposeVC = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
-        
-        let topicString = activeTopic["title"] as! String
-        let stringCount = count(topicString)
-        let characterAllowance = 117
-        if stringCount > characterAllowance{
-            let twitterString = topicString.substringWithRange(Range<String.Index>(start: topicString.startIndex, end: advance(topicString.startIndex, characterAllowance)))
-            twitterComposeVC.setInitialText(twitterString)
-        }else{
-            twitterComposeVC.setInitialText(topicString)
-        }
-        let deeplink = HOKDeeplink(route: "topics/:topicId", routeParameters: ["topicId": activeTopic.objectId!])
-        
-        Hoko.deeplinking().generateSmartlinkForDeeplink(deeplink, success: { (smartlink) -> Void in
-            var url = NSURL()
-            url = NSURL(string: smartlink)!
-            twitterComposeVC.addURL(url)
-            self.presentViewController(twitterComposeVC, animated: true, completion: nil)
-            
-            }) { (error) -> Void in
-        }
-    }
+
     
-    func shareFacebook(sender: UIButton!){
-        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
-        invisibleView.removeFromSuperview()
-        let facebookComposeVC = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
-        let topicString = activeTopic["title"] as! String
-        facebookComposeVC.setInitialText(topicString)
-        let deeplink = HOKDeeplink(route: "topics/:topicId", routeParameters: ["topicId": activeTopic.objectId!])
-        
-        Hoko.deeplinking().generateSmartlinkForDeeplink(deeplink, success: { (smartlink) -> Void in
-            var url = NSURL()
-            url = NSURL(string: smartlink)!
-            facebookComposeVC.addURL(url)
-            self.presentViewController(facebookComposeVC, animated: true, completion: nil)
-            
-            }) { (error) -> Void in
-        }
-        
-        
-    }
+
     
-    func shareEmail(sender: UIButton!){
-        shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
-        invisibleView.removeFromSuperview()
-        
-        let emailVC = MFMailComposeViewController()
-        emailVC.mailComposeDelegate = self
-        let topicString = activeTopic["title"] as! String
-        let deeplink = HOKDeeplink(route: "topics/:topicId", routeParameters: ["topicId": activeTopic.objectId!])
-        
-        Hoko.deeplinking().generateSmartlinkForDeeplink(deeplink, success: { (smartlink) -> Void in
-            let user = PFUser.currentUser()!
-            let username = user["username"] as! String
-            let body = topicString + " " + smartlink
-            
-            emailVC.setSubject(username + " has sent you a topic from IdeaMuscle")
-            emailVC.setMessageBody(body, isHTML: true)
-            emailVC.navigationBar.tintColor = redColor
-            
-            self.presentViewController(emailVC, animated: true, completion: nil)
-            
-            }) { (error) -> Void in
-        }
-        
-    }
+
     
-    func shareCancel(sender: UIButton!){
-        UIView.animateWithDuration(0.5, animations: { () -> Void in
-            self.shareContainer.frame = CGRectMake(0, self.view.frame.maxY + 180, self.view.frame.width, 180)
-        })
-        
-        invisibleView.removeFromSuperview()
-    }
+
 
     
     override func viewWillAppear(animated: Bool) {
@@ -232,7 +114,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         query.whereKey("topicPointer", equalTo: activeTopic)
         query.whereKey("isPublic", equalTo: true)
         query.includeKey("owner")
-        query.includeKey("usersWhoUpvoted")
+        //query.includeKey("usersWhoUpvoted")
         query.orderByAscending("createdAt")
         query.cachePolicy = PFCachePolicy.NetworkElseCache
         query.orderByDescending("numberOfUpvotes")
@@ -437,17 +319,28 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func share(sender: UIButton!){
+        let topicString = activeTopic["title"] as! String
+        let stringCount = count(topicString)
+        let characterAllowance = 117
+        var stringToShare = String()
         
-        UIView.animateWithDuration(0.5, animations: { () -> Void in
-            self.shareContainer.frame = CGRectMake(0, self.view.frame.maxY - 180, self.view.frame.width, 180)
-            self.view.bringSubviewToFront(self.shareContainer)
-        })
+        if stringCount > characterAllowance{
+            let twitterString = topicString.substringWithRange(Range<String.Index>(start: topicString.startIndex, end: advance(topicString.startIndex, characterAllowance)))
+            stringToShare = twitterString
+        }else{
+            stringToShare = topicString
+        }
         
-        invisibleView.frame = CGRectMake(0, UIApplication.sharedApplication().statusBarFrame.height, self.view.frame.width, shareContainer.frame.minY - UIApplication.sharedApplication().statusBarFrame.height)
-        invisibleView.backgroundColor = oneFiftyGrayColor
-        invisibleView.alpha = 0.7
-        self.navigationController!.view.addSubview(invisibleView)
-        
+        let deeplink = HOKDeeplink(route: "topics/:topicId", routeParameters: ["topicId": activeTopic.objectId!])
+        Hoko.deeplinking().generateSmartlinkForDeeplink(deeplink, success: { (smartlink) -> Void in
+            
+            if let url = NSURL(string: smartlink){
+                let objectsToShare = [stringToShare, url]
+                let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+                self.presentViewController(activityVC, animated: true, completion: nil)
+            }
+            }) { (error) -> Void in
+        }
     }
     
     override func didReceiveMemoryWarning() {

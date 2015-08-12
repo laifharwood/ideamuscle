@@ -367,6 +367,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func follow(sender: UIButton!){
+        
         if isFollowing == true{
             //Unfollow
             if let user = PFUser.currentUser(){
@@ -375,7 +376,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 self.followButton.backgroundColor = redColor
                 self.isFollowing = false
             }
-            
         }else{
             //Follow
             if let user = PFUser.currentUser(){
@@ -389,7 +389,6 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 }
             }
         }
-        
     }
     
     func worldRankQuery(){
@@ -483,7 +482,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         query.whereKey("isPublic", equalTo: true)
         query.whereKey("owner", equalTo: activeUser)
         query.includeKey("topicPointer")
-        query.includeKey("usersWhoUpvoted")
+        //query.includeKey("usersWhoUpvoted")
         query.findObjectsInBackgroundWithTarget(self, selector: "ideaSelector:error:")
     }
     
