@@ -38,6 +38,7 @@ class NotificationSettingsTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = NotificationSettingsTableViewCell()
+        cell.frame = CGRectMake(0, 0, tableView.frame.width, 44)
         
         cell.switchButton.frame = CGRectMake(cell.frame.maxX - 60, cell.frame.height/2 - 15, 40, 30)
         cell.switchButton.addTarget(self, action: "switchChanged:", forControlEvents: UIControlEvents.ValueChanged)
