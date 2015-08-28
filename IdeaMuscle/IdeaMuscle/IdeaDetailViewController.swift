@@ -320,14 +320,17 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         if let user = PFUser.currentUser(){
             if let isPro = user["isPro"] as? Bool{
                 if isPro == false{
+                    upgradeAlertShow()
                     return false
-                }else{
+            }else{
                     return true
                 }
             }else{
+                upgradeAlertShow()
                 return false
             }
         }else{
+            upgradeAlertShow()
             return false
         }
     }
