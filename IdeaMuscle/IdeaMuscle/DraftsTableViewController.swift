@@ -32,6 +32,7 @@ class DraftsTableViewController: UITableViewController {
             startActivityIndicator()
             draftsQuery()
         }
+        //text gibberish
     }
     
     func draftsQuery(){

@@ -266,6 +266,8 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         
         //MARK: - Create Reusable Cell
         let cell = UITableViewCell()
+        cell.frame = CGRectMake(0, 0, self.view.frame.width, 70)
+        
         
         
         cell.backgroundColor = twoHundredGrayColor

@@ -37,9 +37,9 @@ class TopicAndIdeaContainerViewController: UIViewController {
         
         //Right Compose Button
         let composeOriginalButton = UIButton()
-        let composeOriginalImage = UIImage(named: "ComposeWhite.png")
+        let composeOriginalImage = UIImage(named: "compose")
         composeOriginalButton.setImage(composeOriginalImage, forState: .Normal)
-        composeOriginalButton.frame = CGRectMake(self.view.frame.width - 38, 25, 24.7, 25)
+        composeOriginalButton.frame = CGRectMake(self.view.frame.width - 38, 25, 25, 25)
         composeOriginalButton.addTarget(self, action: "composeOriginal:", forControlEvents: .TouchUpInside)
         let rightBarButtonItem: UIBarButtonItem = UIBarButtonItem(customView: composeOriginalButton)
         self.navigationItem.setRightBarButtonItem(rightBarButtonItem, animated: false);

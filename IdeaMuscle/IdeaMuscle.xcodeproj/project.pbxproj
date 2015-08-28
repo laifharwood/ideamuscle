@@ -872,7 +872,7 @@
 				INFOPLIST_FILE = IdeaMuscle/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = IdeaMuscle;
-				PROVISIONING_PROFILE = "30b7f5da-1489-40a2-bc46-c82656af9998";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = IdeaMuscle/Header.h;
 			};
 			name = Debug;
@@ -894,7 +894,7 @@
 				INFOPLIST_FILE = IdeaMuscle/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = IdeaMuscle;
-				PROVISIONING_PROFILE = "30b7f5da-1489-40a2-bc46-c82656af9998";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = IdeaMuscle/Header.h;
 			};
 			name = Release;
