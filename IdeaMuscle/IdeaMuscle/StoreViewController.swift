@@ -335,7 +335,7 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
             cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! StoreTableViewCell
             cell = StoreTableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "Cell")
             cell.selectionStyle = UITableViewCellSelectionStyle.None
-            
+            cell.frame = CGRectMake(0, 0, tableView.frame.width, 44)
         
             if productsArray[indexPath.row].price != nil{
                 let numberFormatter = NSNumberFormatter()
@@ -398,6 +398,8 @@ class StoreViewController: UIViewController, UITableViewDataSource, UITableViewD
             return cell
             
         }else if tableView == self.descriptionTable{
+            
+            cell.frame = CGRectMake(0, 0, tableView.frame.width, 75)
             
             if indexPath.row == 0{
                 cellUnlimited.iconImage.frame = CGRectMake(5, 27.5, 45, 20)
