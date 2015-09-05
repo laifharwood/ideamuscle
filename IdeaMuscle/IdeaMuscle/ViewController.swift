@@ -36,7 +36,7 @@ class ViewController: UIViewController{
         //MARK: - Logo Configuration
         logo = UIImage(named: "bigLogo")!
         let logoView = UIImageView(image: logo)
-        logoView.frame = CGRectMake(self.view.frame.width/2 - 100, 30, 200, 225.08)
+        logoView.frame = CGRectMake(self.view.frame.width/2 - 89, 30, 178, 200)
         if PFUser.currentUser() == nil{
         self.view.addSubview(logoView)
         }else{
@@ -49,7 +49,7 @@ class ViewController: UIViewController{
         twitterLoginButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         twitterLoginButton.setTitleColor(UIColor.grayColor(), forState: .Highlighted)
         twitterLoginButton.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 20)
-        twitterLoginButton.frame = CGRectMake(self.view.frame.width/2 - 100, logoView.frame.maxY + 50, 200, 40)
+        twitterLoginButton.frame = CGRectMake(self.view.frame.width/2 - 100, logoView.frame.maxY + 25, 200, 40)
         twitterLoginButton.backgroundColor = fiftyGrayColor
         let twitterLogoImage = UIImage(named: "twitter")
         twitterLoginButton.setImage(twitterLogoImage, forState: .Normal)
@@ -74,7 +74,7 @@ class ViewController: UIViewController{
         facebookLoginButton.layer.cornerRadius = 3
         
         
-        agreeLabel.frame = CGRectMake(5, facebookLoginButton.frame.maxY + 15, self.view.frame.width - 10, 60)
+        agreeLabel.frame = CGRectMake(5, facebookLoginButton.frame.maxY + 7, self.view.frame.width - 10, 60)
         agreeLabel.text = "Have you read and agree to the terms of the end user license agreement?"
         agreeLabel.font =  UIFont(name: "HelveticaNeue", size: 15)
         agreeLabel.textColor = fiftyGrayColor
@@ -82,7 +82,7 @@ class ViewController: UIViewController{
         agreeLabel.numberOfLines = 0
         
         
-        yesButton.frame = CGRectMake(facebookLoginButton.frame.minX, agreeLabel.frame.maxY + 10, 95, 50)
+        yesButton.frame = CGRectMake(facebookLoginButton.frame.minX, agreeLabel.frame.maxY + 5, 95, 50)
         yesButton.setTitle("Yes", forState: .Normal)
         yesButton.backgroundColor = redColor
         yesButton.addTarget(self, action: "agreed:", forControlEvents: .TouchUpInside)
@@ -90,7 +90,7 @@ class ViewController: UIViewController{
         yesButton.layer.cornerRadius = 3
         
         
-        viewAgreementButton.frame = CGRectMake(yesButton.frame.maxX + 10, agreeLabel.frame.maxY + 10, 95, 50)
+        viewAgreementButton.frame = CGRectMake(yesButton.frame.maxX + 10, agreeLabel.frame.maxY + 5, 95, 50)
         viewAgreementButton.setTitle("View Agreement", forState: .Normal)
         viewAgreementButton.backgroundColor = oneFiftyGrayColor
         viewAgreementButton.addTarget(self, action: "viewAgreement:", forControlEvents: .TouchUpInside)
