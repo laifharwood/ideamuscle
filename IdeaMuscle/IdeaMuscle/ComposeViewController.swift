@@ -439,7 +439,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     
     func setHasPosted(user: PFUser){
         user["hasPosted"] = true
-        user.saveInBackground()
+        user.saveEventually()
         
         let query = PFQuery(className: "LastPosted")
         query.whereKey("userPointer", equalTo: user)
@@ -447,7 +447,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             if error == nil{
                 let lastPostedObject = object as PFObject!
                 lastPostedObject.incrementKey("update")
-                lastPostedObject.saveInBackground()
+                lastPostedObject.saveEventually()
             }
         })
     }
@@ -505,13 +505,14 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         
         ideaObject.incrementKey("numberOfUpvotes")
         //ideaObject.addObject(user, forKey: "usersWhoUpvoted")
-        ideaObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+        
+        ideaObject.saveEventually ({ (success, error) -> Void in
             if success{
                 
                 var upvoteObject = PFObject(className: "Upvote")
                 upvoteObject["userWhoUpvoted"] = user
                 upvoteObject["ideaUpvoted"] = ideaObject
-                upvoteObject.saveInBackground()
+                upvoteObject.saveEventually()
                 
                 if let currentUser = PFUser.currentUser(){
                     if let ideaId = ideaObject.objectId{
@@ -523,7 +524,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                 
                 if isPublic == true{
                     self.activeComposeTopicObject.incrementKey("numberOfIdeas")
-                    self.activeComposeTopicObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                    self.activeComposeTopicObject.saveEventually({ (success, error) -> Void in
                         if success{
                             if self.hasAddedTopic == false{
                                 self.addTopicsComposedFor(user)
@@ -539,13 +540,14 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                 }
             }
         })
+        
         if isPublic == true{
             if publicAlreadyEncountered == false{
                 
                 activeComposeTopicObject["isPublic"] = true
                 activeComposeTopicObject.ACL?.setPublicReadAccess(true)
                 activeComposeTopicObject.ACL?.setPublicWriteAccess(true)
-                activeComposeTopicObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                activeComposeTopicObject.saveEventually({ (success, error) -> Void in
                     if success{
                         self.publicAlreadyEncountered = true
                     }

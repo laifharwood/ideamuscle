@@ -190,7 +190,7 @@ class ViewController: UIViewController{
                     let imageFile: PFFile = PFFile(name: (PFUser.currentUser()!.objectId! + "profileImage.png"), data: imageData!)
                     imageFile.saveInBackground()
                     user.setObject(imageFile, forKey: "avatar")
-                    user.saveInBackground()
+                    user.saveEventually()
                 }
                 
             }
@@ -350,7 +350,7 @@ class ViewController: UIViewController{
                     leaderboardObject["userPointer"] = currentUser
                     leaderboardObject["numberOfUpvotes"] = 0
                     leaderboardObject.ACL?.setPublicWriteAccess(true)
-                    leaderboardObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                    leaderboardObject.saveEventually({ (success, error) -> Void in
                         if success{
                             currentUser["isOnLeaderboard"] = true
                             currentUser.saveEventually()
@@ -362,7 +362,7 @@ class ViewController: UIViewController{
                 leaderboardObject["userPointer"] = currentUser
                 leaderboardObject["numberOfUpvotes"] = 0
                 leaderboardObject.ACL?.setPublicWriteAccess(true)
-                leaderboardObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                leaderboardObject.saveEventually({ (success, error) -> Void in
                     if success{
                         currentUser["isOnLeaderboard"] = true
                         currentUser.saveEventually()
@@ -374,7 +374,7 @@ class ViewController: UIViewController{
                 if hasIncUserTotal == false{
                     let totalUsers = PFObject(withoutDataWithClassName: "TotalUsers", objectId: "RjDIi23LNW")
                     totalUsers.incrementKey("numberOfUsers")
-                    totalUsers.saveInBackgroundWithBlock({ (success, error) -> Void in
+                    totalUsers.saveEventually({ (success, error) -> Void in
                         if success{
                             currentUser["hasIncTotalUserCount"] = true
                             currentUser.saveEventually()
@@ -385,7 +385,7 @@ class ViewController: UIViewController{
             }else{
                 let totalUsers = PFObject(withoutDataWithClassName: "TotalUsers", objectId: "RjDIi23LNW")
                 totalUsers.incrementKey("numberOfUsers")
-                totalUsers.saveInBackgroundWithBlock({ (success, error) -> Void in
+                totalUsers.saveEventually({ (success, error) -> Void in
                     if success{
                         currentUser["hasIncTotalUserCount"] = true
                         currentUser.saveEventually()
@@ -398,7 +398,7 @@ class ViewController: UIViewController{
                     var lastPostedObject = PFObject(className: "LastPosted")
                     lastPostedObject["userPointer"] = currentUser
                     lastPostedObject["update"] = 0
-                    lastPostedObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                    lastPostedObject.saveEventually({ (success, error) -> Void in
                         if success{
                             currentUser["isInLastPosted"] = true
                             currentUser.saveEventually()
@@ -410,7 +410,7 @@ class ViewController: UIViewController{
                 var lastPostedObject = PFObject(className: "LastPosted")
                 lastPostedObject["userPointer"] = currentUser
                 lastPostedObject["update"] = 0
-                lastPostedObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                lastPostedObject.saveEventually({ (success, error) -> Void in
                 if success{
                     currentUser["isInLastPosted"] = true
                     currentUser.saveEventually()
@@ -437,7 +437,7 @@ class ViewController: UIViewController{
                 numberOfFollowersObject["userPointer"] = currentUser
                 numberOfFollowersObject["numberOfFollowers"] = 0
                 numberOfFollowersObject.ACL?.setPublicWriteAccess(true)
-                numberOfFollowersObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                numberOfFollowersObject.saveEventually({ (success, error) -> Void in
                     if success{
                         currentUser["isInNumberOfFollowers"] = true
                         currentUser.saveEventually()
@@ -499,7 +499,7 @@ class ViewController: UIViewController{
             nowQuery.getObjectInBackgroundWithId("yhUEKpyRSg", block: { (nowObject, error) -> Void in
                 let nowDateObject = nowObject as PFObject!
                 nowDateObject.incrementKey("update")
-                nowDateObject.saveInBackgroundWithBlock({(success, error) -> Void in
+                nowDateObject.saveEventually({(success, error) -> Void in
                     if success{
                         nowDateObject.fetchInBackgroundWithBlock({(nowDateObject, error) -> Void in
                             if nowDateObject != nil{
@@ -549,7 +549,7 @@ class ViewController: UIViewController{
             imageFile.saveInBackground()
             if let user = PFUser.currentUser(){
                 user.setObject(imageFile, forKey: "avatar")
-                user.saveInBackground()
+                user.saveEventually()
             }
             
         }
@@ -586,14 +586,14 @@ class ViewController: UIViewController{
                 if error == nil{
                     timeNowObject = object!
                     timeNowObject.incrementKey("update")
-                    timeNowObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                    timeNowObject.saveEventually({ (success, error) -> Void in
                         if success{
                             timeNowObject.fetchInBackgroundWithBlock({ (object, error) -> Void in
                                 let timeNow = timeNowObject.updatedAt
                                 let expiration = user["proExpiration"] as! NSDate
                                 if timeNow!.isGreaterThanDate(expiration){
                                     user["isPro"] = false
-                                    user.saveInBackground()
+                                    user.saveEventually()
                                 }
                             })
                         }

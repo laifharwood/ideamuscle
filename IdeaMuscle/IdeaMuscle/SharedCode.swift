@@ -264,7 +264,7 @@ func followGlobal(userToFollow: PFUser, shouldFollow: Bool, sender: AnyObject!){
             let relation = currentUser.relationForKey("following")
             relation.removeObject(userToFollow)
             currentUser.incrementKey("numberFollowing", byAmount: -1)
-            currentUser.saveInBackground()
+            currentUser.saveEventually()
             queryNumberOfFollowers(-1, userToFollow)
         }
     }else{
@@ -275,7 +275,7 @@ func followGlobal(userToFollow: PFUser, shouldFollow: Bool, sender: AnyObject!){
                     let relation = currentUser.relationForKey("following")
                     relation.addObject(userToFollow)
                     currentUser.incrementKey("numberFollowing", byAmount: 1)
-                    currentUser.saveInBackground()
+                    currentUser.saveEventually()
                     queryNumberOfFollowers(1, userToFollow)
                 }else{
                     followLimitAlert(sender)
@@ -286,7 +286,7 @@ func followGlobal(userToFollow: PFUser, shouldFollow: Bool, sender: AnyObject!){
                 let relation = currentUser.relationForKey("following")
                 relation.addObject(userToFollow)
                 currentUser.incrementKey("numberFollowing", byAmount: 1)
-                currentUser.saveInBackground()
+                currentUser.saveEventually()
                 queryNumberOfFollowers(1, userToFollow)
                 
             }

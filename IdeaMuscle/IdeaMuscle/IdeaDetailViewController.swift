@@ -570,8 +570,17 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
             if PFUser.currentUser() != nil{
             comment["owner"] = PFUser.currentUser()
             }
-            comment.saveInBackgroundWithTarget(self, selector: "commentSave:error:")
             
+            
+            comment.saveEventually({ (success, error) -> Void in
+                if error == nil{
+                    
+                    self.commentsQuery()
+                }else{
+                    println("Error: \(error!.userInfo)")
+                    
+                }
+            })
         }
         
         commentTextField.resignFirstResponder()
@@ -583,17 +592,6 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
 
         
         commentTextFieldContainter.frame = CGRectMake(0, composeButton.frame.minY - 40, self.view.frame.width, 40)
-    }
-    
-    func commentSave(wasSuccesful: Bool, error: NSError?){
-        
-        if error == nil{
-            
-            commentsQuery()
-        }else{
-            println("Error: \(error!.userInfo)")
-            
-        }
     }
     
     var characterCount = 0

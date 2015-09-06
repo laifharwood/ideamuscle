@@ -360,7 +360,7 @@ func notProCheckIfCanPostFromDetail(user: PFUser, sender: AnyObject!, activeTopi
             nowQuery.getObjectInBackgroundWithId("yhUEKpyRSg", block: { (nowObject, error) -> Void in
                 let nowDateObject = nowObject as PFObject!
                 nowDateObject.incrementKey("update")
-                nowDateObject.saveInBackgroundWithBlock({(success, error) -> Void in
+                nowDateObject.saveEventually{(success, error) -> Void in
                     if success{
                         nowDateObject.fetchInBackgroundWithBlock({(nowDateObject, error) -> Void in
                             if nowDateObject != nil{
@@ -392,7 +392,7 @@ func notProCheckIfCanPostFromDetail(user: PFUser, sender: AnyObject!, activeTopi
                             }
                         })
                     }
-                })
+                }
             })
         }
     })

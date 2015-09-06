@@ -241,7 +241,7 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
                 newTopic.ACL?.setPublicReadAccess(false)
                 newTopic.ACL?.setPublicWriteAccess(false)
             }
-            newTopic.saveInBackground()
+            newTopic.saveEventually()
         }
         
     }
