@@ -164,7 +164,7 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
         let leaderboardQuery = PFQuery(className: "Leaderboard")
         leaderboardQuery.orderByDescending("numberOfUpvotes")
         leaderboardQuery.limit = 1000
-        leaderboardQuery.cachePolicy = PFCachePolicy.NetworkElseCache
+        //leaderboardQuery.cachePolicy = PFCachePolicy.NetworkElseCache
         leaderboardQuery.includeKey("userPointer")
         leaderboardQuery.findObjectsInBackgroundWithTarget(self, selector: "leaderboardSelector:error:")
         

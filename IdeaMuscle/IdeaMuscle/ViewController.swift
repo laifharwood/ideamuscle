@@ -203,6 +203,7 @@ class ViewController: UIViewController{
                 
                 if (error != nil){
                   //No Twitter Account Setup On Phone. Show Alert
+                    println(error)
                     self.stopActivityIndicator()
                     let noTwitterAccountController: UIAlertController = UIAlertController(title: "No Twitter Account Linked", message: "You must have a twitter account setup on your phone. Go to your Settings App/Twitter/Sign In or Create New Account", preferredStyle: .Alert)
                     noTwitterAccountController.view.tintColor = redColor
@@ -343,9 +344,20 @@ class ViewController: UIViewController{
     
         
         if let currentUser = PFUser.currentUser(){
-                var isOnLeaderboard = Bool()
-                if let isOnLeaderboard = currentUser["isOnLeaderboard"] as? Bool{
-                }else{
+            if let isOnLeaderboard = currentUser["isOnLeaderboard"] as? Bool{
+                if isOnLeaderboard == false{
+                    var leaderboardObject = PFObject(className: "Leaderboard")
+                    leaderboardObject["userPointer"] = currentUser
+                    leaderboardObject["numberOfUpvotes"] = 0
+                    leaderboardObject.ACL?.setPublicWriteAccess(true)
+                    leaderboardObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                        if success{
+                            currentUser["isOnLeaderboard"] = true
+                            currentUser.saveEventually()
+                        }
+                    })
+                }
+            }else{
                 var leaderboardObject = PFObject(className: "Leaderboard")
                 leaderboardObject["userPointer"] = currentUser
                 leaderboardObject["numberOfUpvotes"] = 0
@@ -356,9 +368,20 @@ class ViewController: UIViewController{
                         currentUser.saveEventually()
                     }
                 })
-                }
-            var hasIncUserTotal = Bool()
+            }
+            
             if let hasIncUserTotal = currentUser["hasIncTotalUserCount"] as? Bool{
+                if hasIncUserTotal == false{
+                    let totalUsers = PFObject(withoutDataWithClassName: "TotalUsers", objectId: "RjDIi23LNW")
+                    totalUsers.incrementKey("numberOfUsers")
+                    totalUsers.saveInBackgroundWithBlock({ (success, error) -> Void in
+                        if success{
+                            currentUser["hasIncTotalUserCount"] = true
+                            currentUser.saveEventually()
+                        }
+                    })
+                }
+                
             }else{
                 let totalUsers = PFObject(withoutDataWithClassName: "TotalUsers", objectId: "RjDIi23LNW")
                 totalUsers.incrementKey("numberOfUsers")
@@ -369,8 +392,20 @@ class ViewController: UIViewController{
                     }
                 })
             }
-            var isInLastPosted = Bool()
+            
             if let isInLastPosted = currentUser["isInLastPosted"] as? Bool{
+                if isInLastPosted == false{
+                    var lastPostedObject = PFObject(className: "LastPosted")
+                    lastPostedObject["userPointer"] = currentUser
+                    lastPostedObject["update"] = 0
+                    lastPostedObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                        if success{
+                            currentUser["isInLastPosted"] = true
+                            currentUser.saveEventually()
+                        }
+                    })
+                }
+                
             }else{
                 var lastPostedObject = PFObject(className: "LastPosted")
                 lastPostedObject["userPointer"] = currentUser
@@ -382,8 +417,21 @@ class ViewController: UIViewController{
                 }
                 })
             }
-            var isInNumberOfFollowers = Bool()
+            
             if let isInNumberOfFollowers = currentUser["isInNumberOfFollowers"] as? Bool{
+                if isInNumberOfFollowers == false{
+                    var numberOfFollowersObject = PFObject(className: "NumberOfFollowers")
+                    numberOfFollowersObject["userPointer"] = currentUser
+                    numberOfFollowersObject["numberOfFollowers"] = 0
+                    numberOfFollowersObject.ACL?.setPublicWriteAccess(true)
+                    numberOfFollowersObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+                        if success{
+                            currentUser["isInNumberOfFollowers"] = true
+                            currentUser.saveEventually()
+                        }
+                    })
+                }
+                
             }else{
                 var numberOfFollowersObject = PFObject(className: "NumberOfFollowers")
                 numberOfFollowersObject["userPointer"] = currentUser
@@ -398,12 +446,25 @@ class ViewController: UIViewController{
             }
             
             if let hasSetNotificationSettings = currentUser["hasSetNotificationSettings"] as? Bool{
-                
+                if hasSetNotificationSettings == false{
+                    currentUser["getCommentNotifications"] = true
+                    currentUser["getTopicNotifications"] = true
+                    currentUser["getUpvoteNotifications"] = true
+                    currentUser["hasSetNotificationSettings"] = true
+                }
             }else{
                 currentUser["getCommentNotifications"] = true
                 currentUser["getTopicNotifications"] = true
                 currentUser["getUpvoteNotifications"] = true
                 currentUser["hasSetNotificationSettings"] = true
+            }
+            
+            if let hasGotFreeMonthPro = currentUser["hasGotFreeMonthPro"] as? Bool{
+                if hasGotFreeMonthPro == false{
+                    setFreeMonth(currentUser)
+                }
+            }else{
+                setFreeMonth(currentUser)
             }
         }
         
@@ -420,6 +481,42 @@ class ViewController: UIViewController{
     appDelegate.window?.rootViewController = tabBarControllerK
     
 }
+    func setFreeMonth(currentUser: PFUser){
+        
+        let calendar = NSCalendar.currentCalendar()
+        let components = NSDateComponents()
+        components.month = 1
+        
+        if let oldExpiration = currentUser["proExpiration"] as? NSDate{
+            let newExpiration = calendar.dateByAddingComponents(components, toDate: oldExpiration, options: nil)
+            currentUser["proExpiration"] = newExpiration
+            currentUser["isPro"] = true
+            currentUser["hasGotFreeMonthPro"] = true
+            currentUser.saveEventually()
+            
+        }else{
+            let nowQuery = PFQuery(className: "TimeNow")
+            nowQuery.getObjectInBackgroundWithId("yhUEKpyRSg", block: { (nowObject, error) -> Void in
+                let nowDateObject = nowObject as PFObject!
+                nowDateObject.incrementKey("update")
+                nowDateObject.saveInBackgroundWithBlock({(success, error) -> Void in
+                    if success{
+                        nowDateObject.fetchInBackgroundWithBlock({(nowDateObject, error) -> Void in
+                            if nowDateObject != nil{
+                                var now = NSDate()
+                                now = nowDateObject!.updatedAt!
+                                let newExpiration = calendar.dateByAddingComponents(components, toDate: now, options: nil)
+                                currentUser["proExpiration"] = newExpiration
+                                currentUser["isPro"] = true
+                                currentUser["hasGotFreeMonthPro"] = true
+                                currentUser.saveEventually()
+                            }
+                        })
+                    }
+                })
+            })
+        }
+    }
 
     func getAvatar(){
     
