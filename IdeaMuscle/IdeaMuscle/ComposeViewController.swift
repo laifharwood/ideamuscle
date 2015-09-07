@@ -480,7 +480,6 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                     self.dismissViewControllerAnimated(true, completion: nil)
                 })
             }else{
-                println("should dismiss")
                self.dismissViewControllerAnimated(true, completion: nil)
             }
         }
