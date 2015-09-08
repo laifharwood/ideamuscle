@@ -289,60 +289,60 @@ class ViewController: UIViewController{
 
     func goToTabBar(){
         
-    checkIfPro()
-    
-    
-    
-    UITabBar.appearance().barTintColor = fiftyGrayColor
-    UITabBar.appearance().tintColor = redColor
-    
-    let topicsController = TopicAndIdeaContainerViewController()
-    let topicsNav = UINavigationController(rootViewController: topicsController)
-    
-    let feedController = FeedViewController()
-    let feedNav = UINavigationController(rootViewController: feedController)
-    
-    let leaderboardController = LeaderboardViewController()
-    let leaderboardNav = UINavigationController(rootViewController: leaderboardController)
-    
-    let moreController = MoreViewController()
-    let moreNav = UINavigationController(rootViewController: moreController)
-    
-    let controllers = [topicsNav, feedNav, leaderboardNav, moreNav]
-    tabBarControllerK.viewControllers = controllers
-    
-    
-    let offset = UIOffsetMake(0, 1)
-    
-    let bulb = UIImage(named: "bulbTabBar")
-    topicsController.tabBarItem = UITabBarItem(title: nil, image: bulb, tag: 1)
-    topicsController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
-    topicsController.tabBarItem.setTitlePositionAdjustment(offset)
-    topicsController.tabBarItem.title = "Ideas"
-    
-    
-    let feed = UIImage(named: "feed")
-    feedController.tabBarItem = UITabBarItem(title: nil, image: feed, tag: 2)
-    feedController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
-    feedController.tabBarItem.setTitlePositionAdjustment(offset)
-    feedController.tabBarItem.title = "Feed"
-    
-    let crown = UIImage(named: "crown")
-    leaderboardController.tabBarItem = UITabBarItem(title: nil, image: crown, tag: 3)
-    leaderboardController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
-    leaderboardController.tabBarItem.setTitlePositionAdjustment(offset)
-    leaderboardController.tabBarItem.title = "Leaderboard"
-    
-    let more = UIImage(named: "more")
-    moreController.tabBarItem = UITabBarItem(title: nil, image: more, tag: 4)
-    moreController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
-    moreController.tabBarItem.setTitlePositionAdjustment(offset)
-    if PFInstallation.currentInstallation().badge != 0{
-        moreController.tabBarItem.badgeValue = abbreviateNumber(PFInstallation.currentInstallation().badge) as String
-    }
-    moreController.tabBarItem.title = "More"
-    
+        checkIfPro()
         
+        
+        
+        UITabBar.appearance().barTintColor = fiftyGrayColor
+        UITabBar.appearance().tintColor = redColor
+        
+        let topicsController = TopicAndIdeaContainerViewController()
+        let topicsNav = UINavigationController(rootViewController: topicsController)
+        
+        let feedController = FeedViewController()
+        let feedNav = UINavigationController(rootViewController: feedController)
+        
+        let leaderboardController = LeaderboardViewController()
+        let leaderboardNav = UINavigationController(rootViewController: leaderboardController)
+        
+        let moreController = MoreViewController()
+        let moreNav = UINavigationController(rootViewController: moreController)
+        
+        let controllers = [topicsNav, feedNav, leaderboardNav, moreNav]
+        tabBarControllerK.viewControllers = controllers
+        
+        
+        let offset = UIOffsetMake(0, 1)
+        
+        let bulb = UIImage(named: "bulbTabBar")
+        topicsController.tabBarItem = UITabBarItem(title: nil, image: bulb, tag: 1)
+        topicsController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
+        topicsController.tabBarItem.setTitlePositionAdjustment(offset)
+        topicsController.tabBarItem.title = "Ideas"
+        
+        
+        let feed = UIImage(named: "feed")
+        feedController.tabBarItem = UITabBarItem(title: nil, image: feed, tag: 2)
+        feedController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
+        feedController.tabBarItem.setTitlePositionAdjustment(offset)
+        feedController.tabBarItem.title = "Feed"
+        
+        let crown = UIImage(named: "crown")
+        leaderboardController.tabBarItem = UITabBarItem(title: nil, image: crown, tag: 3)
+        leaderboardController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
+        leaderboardController.tabBarItem.setTitlePositionAdjustment(offset)
+        leaderboardController.tabBarItem.title = "Leaderboard"
+        
+        let more = UIImage(named: "more")
+        moreController.tabBarItem = UITabBarItem(title: nil, image: more, tag: 4)
+        moreController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
+        moreController.tabBarItem.setTitlePositionAdjustment(offset)
+        if PFInstallation.currentInstallation().badge != 0{
+            moreController.tabBarItem.badgeValue = abbreviateNumber(PFInstallation.currentInstallation().badge) as String
+        }
+        moreController.tabBarItem.title = "More"
+        
+            
         if let currentUser = PFUser.currentUser(){
             if let isOnLeaderboard = currentUser["isOnLeaderboard"] as? Bool{
                 if isOnLeaderboard == false{
@@ -369,6 +369,7 @@ class ViewController: UIViewController{
                     }
                 })
             }
+            
             
             if let hasIncUserTotal = currentUser["hasIncTotalUserCount"] as? Bool{
                 if hasIncUserTotal == false{
@@ -473,12 +474,12 @@ class ViewController: UIViewController{
             installation.setObject(user, forKey: "user")
             installation.saveEventually()
         }
-        
-        
-        
-    stopActivityIndicator()
-    let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-    appDelegate.window?.rootViewController = tabBarControllerK
+            
+            
+            
+        stopActivityIndicator()
+        let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate.window?.rootViewController = tabBarControllerK
     
 }
     func setFreeMonth(currentUser: PFUser){

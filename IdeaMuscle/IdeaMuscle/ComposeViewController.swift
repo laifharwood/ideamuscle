@@ -476,12 +476,9 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             publicAlreadyEncountered = false
         
             if isADraft == true{
-                    draftObject.deleteInBackgroundWithBlock({ (success, error) -> Void in
-                    self.dismissViewControllerAnimated(true, completion: nil)
-                })
-            }else{
-               self.dismissViewControllerAnimated(true, completion: nil)
+                draftObject.deleteEventually()
             }
+            self.dismissViewControllerAnimated(true, completion: nil)
         }
     }
     
