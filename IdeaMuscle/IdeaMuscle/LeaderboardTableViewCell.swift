@@ -38,6 +38,13 @@ class LeaderboardTableViewCell: UITableViewCell {
         // Initialization code
     }
     
+    override func prepareForReuse() {
+        usernameLabel.text = ""
+        numberOfUpvotes.setTitle("", forState: .Normal)
+        profileButton.image = nil
+        
+    }
+    
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         

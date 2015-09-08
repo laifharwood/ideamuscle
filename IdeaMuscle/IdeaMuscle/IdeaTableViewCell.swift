@@ -45,6 +45,11 @@ class IdeaTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         topicLabel.text = ""
+        ideaLabel.text = ""
+        profileButton.image = nil
+        usernameLabel.text = ""
+        numberOfUpvotesButton.setTitle("", forState: .Normal)
+        timeStamp.text = ""
     }
     
     override func setSelected(selected: Bool, animated: Bool) {

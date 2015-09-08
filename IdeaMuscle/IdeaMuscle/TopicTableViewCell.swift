@@ -51,6 +51,10 @@ class TopicTableViewCell: UITableViewCell {
         self.numberOfUpvotesButton.setImage(nil, forState: .Normal)
         self.numberOfUpvotesButton.titleEdgeInsets = UIEdgeInsetsZero
         
+        usernameLabel.text = ""
+        topicLabel.text = ""
+        profileButton.image = nil
+        timeStamp.text = ""
         
     }
 

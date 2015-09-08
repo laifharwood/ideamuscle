@@ -512,7 +512,6 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
                 
                 if let currentUser = PFUser.currentUser(){
                     if let ideaId = ideaObject.objectId{
-                        println("objectId")
                         currentUser.addObject(ideaId, forKey: "ideasUpvoted")
                         currentUser.saveEventually()
                     }
