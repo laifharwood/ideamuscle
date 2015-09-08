@@ -192,7 +192,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func openedFromNotification(userInfo: [NSObject : AnyObject]){
-        --PFInstallation.currentInstallation().badge
+        if PFInstallation.currentInstallation().badge > 0{
+            --PFInstallation.currentInstallation().badge
+        }
         if let ideaId = userInfo["ideaId"] as? String{
             let idea = PFObject(withoutDataWithClassName: "Idea", objectId: ideaId)
             idea.fetchIfNeededInBackgroundWithBlock({ (object, error) -> Void in
