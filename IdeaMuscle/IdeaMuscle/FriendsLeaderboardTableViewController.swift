@@ -25,7 +25,7 @@ class FriendsLeaderboardTableViewController: UIViewController, UITableViewDelega
         
         //MARK: - TableView Did Load
         tableView.rowHeight = 70
-        tableView.contentInset = UIEdgeInsetsMake(0, 0, 30, 0)
+        tableView.contentInset = UIEdgeInsetsMake(0, 0, 200, 0)
         tableView.registerClass(LeaderboardTableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.dataSource = self
         tableView.delegate = self

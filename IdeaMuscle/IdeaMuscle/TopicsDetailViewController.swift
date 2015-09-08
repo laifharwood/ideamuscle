@@ -54,7 +54,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         tableView.dataSource = self
         tableView.frame = CGRectMake(0, topicLabelView.frame.maxY + 5, self.view.frame.width, self.view.frame.height - navigationController!.navigationBar.frame.height - 30 - 60)
         tableView.rowHeight = 120
-        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 30, 0)
+        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 50, 0)
         self.view.addSubview(tableView)
         
         //MARK: - Share Button
