@@ -601,7 +601,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         if string == "" {
             if characterCount > 0{
                 
-                --characterCount
+                characterCount = characterCount - range.length
                 characterCountLabel.text = "\(characterCount)" + "/118"
                 if characterCount == 0{
                     postCommentButton.enabled = false

@@ -149,8 +149,8 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
             return false
         }else if text == "" {
             if characterCount > 0{
-            --characterCount
-            characterCountLabel.text = "\(characterCount)" + "/118"
+                characterCount = characterCount - range.length
+                characterCountLabel.text = "\(characterCount)" + "/118"
             if characterCount == 0{
                 changeSubmitButton(submitButton, enabled: false)
             }
