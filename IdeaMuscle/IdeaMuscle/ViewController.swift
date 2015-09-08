@@ -344,93 +344,107 @@ class ViewController: UIViewController{
         
             
         if let currentUser = PFUser.currentUser(){
+            //Leaderboard
             if let isOnLeaderboard = currentUser["isOnLeaderboard"] as? Bool{
                 if isOnLeaderboard == false{
                     var leaderboardObject = PFObject(className: "Leaderboard")
                     leaderboardObject["userPointer"] = currentUser
                     leaderboardObject["numberOfUpvotes"] = 0
                     leaderboardObject.ACL?.setPublicWriteAccess(true)
-                    leaderboardObject.saveEventually({ (success, error) -> Void in
-                        if success{
-                            currentUser["isOnLeaderboard"] = true
-                            currentUser.saveEventually()
-                        }
-                    })
+                    
+                    currentUser["isOnLeaderboard"] = leaderboardObject.save()
+                    
+//                    leaderboardObject.saveEventually({ (success, error) -> Void in
+//                        if success{
+//                            currentUser["isOnLeaderboard"] = true
+//                            currentUser.saveEventually()
+//                        }
+//                    })
                 }
             }else{
                 var leaderboardObject = PFObject(className: "Leaderboard")
                 leaderboardObject["userPointer"] = currentUser
                 leaderboardObject["numberOfUpvotes"] = 0
                 leaderboardObject.ACL?.setPublicWriteAccess(true)
-                leaderboardObject.saveEventually({ (success, error) -> Void in
-                    if success{
-                        currentUser["isOnLeaderboard"] = true
-                        currentUser.saveEventually()
-                    }
-                })
+//                leaderboardObject.saveEventually({ (success, error) -> Void in
+//                    if success{
+//                        currentUser["isOnLeaderboard"] = true
+//                        currentUser.saveEventually()
+//                    }
+//                })
+                currentUser["isOnLeaderboard"] = leaderboardObject.save()
             }
             
             
+            
+            //Increment total user count
             if let hasIncUserTotal = currentUser["hasIncTotalUserCount"] as? Bool{
                 if hasIncUserTotal == false{
                     let totalUsers = PFObject(withoutDataWithClassName: "TotalUsers", objectId: "RjDIi23LNW")
                     totalUsers.incrementKey("numberOfUsers")
-                    totalUsers.saveEventually({ (success, error) -> Void in
-                        if success{
-                            currentUser["hasIncTotalUserCount"] = true
-                            currentUser.saveEventually()
-                        }
-                    })
+//                    totalUsers.saveEventually({ (success, error) -> Void in
+//                        if success{
+//                            currentUser["hasIncTotalUserCount"] = true
+//                            currentUser.saveEventually()
+//                        }
+//                    })
+                    currentUser["hasIncTotalUserCount"] = totalUsers.save()
                 }
                 
             }else{
                 let totalUsers = PFObject(withoutDataWithClassName: "TotalUsers", objectId: "RjDIi23LNW")
                 totalUsers.incrementKey("numberOfUsers")
-                totalUsers.saveEventually({ (success, error) -> Void in
-                    if success{
-                        currentUser["hasIncTotalUserCount"] = true
-                        currentUser.saveEventually()
-                    }
-                })
+//                totalUsers.saveEventually({ (success, error) -> Void in
+//                    if success{
+//                        currentUser["hasIncTotalUserCount"] = true
+//                        currentUser.saveEventually()
+//                    }
+//                })
+                currentUser["hasIncTotalUserCount"] = totalUsers.save()
             }
             
+            //Is in last posted
             if let isInLastPosted = currentUser["isInLastPosted"] as? Bool{
                 if isInLastPosted == false{
                     var lastPostedObject = PFObject(className: "LastPosted")
                     lastPostedObject["userPointer"] = currentUser
                     lastPostedObject["update"] = 0
-                    lastPostedObject.saveEventually({ (success, error) -> Void in
-                        if success{
-                            currentUser["isInLastPosted"] = true
-                            currentUser.saveEventually()
-                        }
-                    })
+//                    lastPostedObject.saveEventually({ (success, error) -> Void in
+//                        if success{
+//                            currentUser["isInLastPosted"] = true
+//                            currentUser.saveEventually()
+//                        }
+//                    })
+                    currentUser["isInLastPosted"] = lastPostedObject.save()
                 }
                 
             }else{
                 var lastPostedObject = PFObject(className: "LastPosted")
                 lastPostedObject["userPointer"] = currentUser
                 lastPostedObject["update"] = 0
-                lastPostedObject.saveEventually({ (success, error) -> Void in
-                if success{
-                    currentUser["isInLastPosted"] = true
-                    currentUser.saveEventually()
-                }
-                })
+//                lastPostedObject.saveEventually({ (success, error) -> Void in
+//                if success{
+//                    currentUser["isInLastPosted"] = true
+//                    currentUser.saveEventually()
+//                }
+//                })
+                currentUser["isInLastPosted"] = lastPostedObject.save()
             }
             
+            //Is in Number Of Followers
             if let isInNumberOfFollowers = currentUser["isInNumberOfFollowers"] as? Bool{
                 if isInNumberOfFollowers == false{
                     var numberOfFollowersObject = PFObject(className: "NumberOfFollowers")
                     numberOfFollowersObject["userPointer"] = currentUser
                     numberOfFollowersObject["numberOfFollowers"] = 0
                     numberOfFollowersObject.ACL?.setPublicWriteAccess(true)
-                    numberOfFollowersObject.saveInBackgroundWithBlock({ (success, error) -> Void in
-                        if success{
-                            currentUser["isInNumberOfFollowers"] = true
-                            currentUser.saveEventually()
-                        }
-                    })
+//                    numberOfFollowersObject.saveInBackgroundWithBlock({ (success, error) -> Void in
+//                        if success{
+//                            currentUser["isInNumberOfFollowers"] = true
+//                            currentUser.saveEventually()
+//                        }
+//                    })
+                    currentUser["isInNumberOfFollowers"] = numberOfFollowersObject.save()
                 }
                 
             }else{
@@ -438,14 +452,16 @@ class ViewController: UIViewController{
                 numberOfFollowersObject["userPointer"] = currentUser
                 numberOfFollowersObject["numberOfFollowers"] = 0
                 numberOfFollowersObject.ACL?.setPublicWriteAccess(true)
-                numberOfFollowersObject.saveEventually({ (success, error) -> Void in
-                    if success{
-                        currentUser["isInNumberOfFollowers"] = true
-                        currentUser.saveEventually()
-                    }
-                })
+//                numberOfFollowersObject.saveEventually({ (success, error) -> Void in
+//                    if success{
+//                        currentUser["isInNumberOfFollowers"] = true
+//                        currentUser.saveEventually()
+//                    }
+//                })
+                currentUser["isInNumberOfFollowers"] = numberOfFollowersObject.save()
             }
             
+            //Has Set notification settings
             if let hasSetNotificationSettings = currentUser["hasSetNotificationSettings"] as? Bool{
                 if hasSetNotificationSettings == false{
                     currentUser["getCommentNotifications"] = true
@@ -460,6 +476,7 @@ class ViewController: UIViewController{
                 currentUser["hasSetNotificationSettings"] = true
             }
             
+            //has got free month
             if let hasGotFreeMonthPro = currentUser["hasGotFreeMonthPro"] as? Bool{
                 if hasGotFreeMonthPro == false{
                     setFreeMonth(currentUser)
@@ -467,16 +484,16 @@ class ViewController: UIViewController{
             }else{
                 setFreeMonth(currentUser)
             }
+            
+            //Set installation
+            let installation = PFInstallation.currentInstallation()
+            installation.setObject(currentUser, forKey: "user")
+            installation.saveEventually()
+            
+            currentUser.saveEventually()
+            
         }
         
-        if let user = PFUser.currentUser(){
-            let installation = PFInstallation.currentInstallation()
-            installation.setObject(user, forKey: "user")
-            installation.saveEventually()
-        }
-            
-            
-            
         stopActivityIndicator()
         let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.window?.rootViewController = tabBarControllerK
@@ -493,29 +510,51 @@ class ViewController: UIViewController{
             currentUser["proExpiration"] = newExpiration
             currentUser["isPro"] = true
             currentUser["hasGotFreeMonthPro"] = true
-            currentUser.saveEventually()
             
         }else{
             let nowQuery = PFQuery(className: "TimeNow")
-            nowQuery.getObjectInBackgroundWithId("yhUEKpyRSg", block: { (nowObject, error) -> Void in
-                let nowDateObject = nowObject as PFObject!
-                nowDateObject.incrementKey("update")
-                nowDateObject.saveEventually({(success, error) -> Void in
-                    if success{
-                        nowDateObject.fetchInBackgroundWithBlock({(nowDateObject, error) -> Void in
-                            if nowDateObject != nil{
-                                var now = NSDate()
-                                now = nowDateObject!.updatedAt!
-                                let newExpiration = calendar.dateByAddingComponents(components, toDate: now, options: nil)
-                                currentUser["proExpiration"] = newExpiration
-                                currentUser["isPro"] = true
-                                currentUser["hasGotFreeMonthPro"] = true
-                                currentUser.saveEventually()
-                            }
-                        })
-                    }
-                })
-            })
+            
+            let nowDateObject = nowQuery.getObjectWithId("yhUEKpyRSg")
+            if nowDateObject != nil{
+                nowDateObject?.incrementKey("update")
+                let success = nowDateObject?.save()
+                if success == true{
+                    nowDateObject?.fetch()
+                    var now = NSDate()
+                    now = nowDateObject!.updatedAt!
+                    let newExpiration = calendar.dateByAddingComponents(components, toDate: now, options: nil)
+                    currentUser["proExpiration"] = newExpiration
+                    currentUser["isPro"] = true
+                    currentUser["hasGotFreeMonthPro"] = true
+                }
+            }
+               // nowDateObject.incrementKey("update")
+//                let success = nowDateObject.save()
+//                if success{
+//                    nowDateObject.fetch()
+//                    
+//                }
+            
+            
+//            nowQuery.getObjectInBackgroundWithId("yhUEKpyRSg", block: { (nowObject, error) -> Void in
+//                let nowDateObject = nowObject as PFObject!
+//                nowDateObject.incrementKey("update")
+//                nowDateObject.saveEventually({(success, error) -> Void in
+//                    if success{
+//                        nowDateObject.fetchInBackgroundWithBlock({(nowDateObject, error) -> Void in
+//                            if nowDateObject != nil{
+//                                var now = NSDate()
+//                                now = nowDateObject!.updatedAt!
+//                                let newExpiration = calendar.dateByAddingComponents(components, toDate: now, options: nil)
+//                                currentUser["proExpiration"] = newExpiration
+//                                currentUser["isPro"] = true
+//                                currentUser["hasGotFreeMonthPro"] = true
+//                                currentUser.saveEventually()
+//                            }
+//                        })
+//                    }
+//                })
+//            })
         }
     }
 
