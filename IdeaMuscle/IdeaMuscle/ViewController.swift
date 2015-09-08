@@ -172,27 +172,25 @@ class ViewController: UIViewController{
             }
             else
             {
-                
-                let username = result.valueForKey("name") as! String
-                let userEmail = result.valueForKey("email") as! String
-                let userID = result.valueForKey("id") as! String
-                
                 if let user = PFUser.currentUser(){
-                    
-                    user["username"] = username
-                    user["lowercaseUsername"] = username.lowercaseString
-                    user["email"] = userEmail
-                    user["facebookID"] = userID
-                    let fid = user["facebookID"] as! String
-                    var imgURLString = "http://graph.facebook.com/" + fid + "/picture?type=large"
-                    var imgURL = NSURL(string: imgURLString)
-                    var imageData = NSData(contentsOfURL: imgURL!)
-                    let imageFile: PFFile = PFFile(name: (PFUser.currentUser()!.objectId! + "profileImage.png"), data: imageData!)
-                    imageFile.saveInBackground()
-                    user.setObject(imageFile, forKey: "avatar")
+                    if let username = result.valueForKey("name") as? String{
+                        user["username"] = username
+                        user["lowercaseUsername"] = username.lowercaseString
+                    }
+                    if let userEmail = result.valueForKey("email") as? String{
+                        user["email"] = userEmail
+                    }
+                    if let userID = result.valueForKey("id") as? String{
+                        user["facebookID"] = userID
+                        var imgURLString = "http://graph.facebook.com/" + userID + "/picture?type=large"
+                        var imgURL = NSURL(string: imgURLString)
+                        var imageData = NSData(contentsOfURL: imgURL!)
+                        let imageFile: PFFile = PFFile(name: (PFUser.currentUser()!.objectId! + "profileImage.png"), data: imageData!)
+                        imageFile.saveInBackground()
+                        user.setObject(imageFile, forKey: "avatar")
+                    }
                     user.saveEventually()
                 }
-                
             }
         })
     }
