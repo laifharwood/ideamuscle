@@ -98,7 +98,7 @@ class TopicAndIdeaContainerViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         if self.tabBarController != nil{
             self.tabBarController!.tabBar.hidden = false
-            //updateMoreBadge(self.tabBarController!)
+            updateMoreBadge(self.tabBarController!)
         }
     }
     
