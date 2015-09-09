@@ -10,6 +10,7 @@ import Bolts
 import Parse
 import FBSDKCoreKit
 import ParseCrashReporting
+//import Armchair
 
 // If you want to use any of the UI components, uncomment this line
 // import ParseUI
@@ -19,7 +20,15 @@ import ParseCrashReporting
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
+//    override class func initalize(){
+//        setupArmChair()
+//    }
+//    
+//    
+//    class func setupArmChair(){
+//        ArmChair.appId
+//    }
     var window: UIWindow?
     //var tabBarController: UITabBarController?
 
@@ -180,6 +189,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //PFPush.handlePush(userInfo)
         if application.applicationState == UIApplicationState.Inactive{
             openedFromNotification(userInfo)
+            PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
         }else if application.applicationState == UIApplicationState.Background{
             openedFromNotification(userInfo)
         }else if application.applicationState == UIApplicationState.Active{
