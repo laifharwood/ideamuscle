@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workspace
    version = "1.0">
-   <FileRef
-      location = "self:/Users/laifharwood/Documents/parse-starter-project-1.7.4/ParseSwiftStarterProject/IdeaMuscle.xcodeproj">
-   </FileRef>
+   <Group
+      location = "container:"
+      name = "New Group">
+      <FileRef
+         location = "self:">
+      </FileRef>
+   </Group>
 </Workspace>

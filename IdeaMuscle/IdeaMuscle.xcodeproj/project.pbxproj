@@ -50,6 +50,7 @@
 		EE1A7FA01B4C97B3004EBD8B /* HOKURL.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F841B4C97B3004EBD8B /* HOKURL.m */; };
 		EE1A7FA11B4C97B3004EBD8B /* HOKUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F861B4C97B3004EBD8B /* HOKUtils.m */; };
 		EE1A7FA21B4C97B3004EBD8B /* HOKVersionChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1A7F881B4C97B3004EBD8B /* HOKVersionChecker.m */; };
+		EE1F89E91BA0F51400C6A45B /* UAAppReviewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EE1F89E81BA0F51400C6A45B /* UAAppReviewManager.m */; };
 		EE3A79B01B261B2500300018 /* ComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE3A79AF1B261B2500300018 /* ComposeViewController.swift */; };
 		EE5B25C91B2F4B05006829C7 /* ComposeTopicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B25C81B2F4B05006829C7 /* ComposeTopicViewController.swift */; };
 		EE5B25CD1B30B5ED006829C7 /* TopicAndIdeaContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5B25CC1B30B5ED006829C7 /* TopicAndIdeaContainerViewController.swift */; };
@@ -193,6 +194,8 @@
 		EE1A7F861B4C97B3004EBD8B /* HOKUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKUtils.m; sourceTree = "<group>"; };
 		EE1A7F871B4C97B3004EBD8B /* HOKVersionChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HOKVersionChecker.h; sourceTree = "<group>"; };
 		EE1A7F881B4C97B3004EBD8B /* HOKVersionChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HOKVersionChecker.m; sourceTree = "<group>"; };
+		EE1F89E71BA0F51400C6A45B /* UAAppReviewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UAAppReviewManager.h; path = "../UAAppReviewManager-master/UAAppReviewManager.h"; sourceTree = "<group>"; };
+		EE1F89E81BA0F51400C6A45B /* UAAppReviewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UAAppReviewManager.m; path = "../UAAppReviewManager-master/UAAppReviewManager.m"; sourceTree = "<group>"; };
 		EE3A79AF1B261B2500300018 /* ComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeViewController.swift; sourceTree = "<group>"; };
 		EE48EF291B4B2E5300B72246 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		EE5B25C81B2F4B05006829C7 /* ComposeTopicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeTopicViewController.swift; sourceTree = "<group>"; };
@@ -296,6 +299,7 @@
 		81BA813C1A49DA1800E65899 = {
 			isa = PBXGroup;
 			children = (
+				EE1F89EA1BA0F52300C6A45B /* AppReview */,
 				EE1A7F4F1B4C97B3004EBD8B /* Hoko */,
 				81BA81471A49DA1800E65899 /* IdeaMuscle */,
 				81BA816A1A49DB5600E65899 /* Frameworks */,
@@ -447,6 +451,15 @@
 			);
 			name = Hoko;
 			path = "../../../Downloads/hoko-ios-master 2/Hoko";
+			sourceTree = "<group>";
+		};
+		EE1F89EA1BA0F52300C6A45B /* AppReview */ = {
+			isa = PBXGroup;
+			children = (
+				EE1F89E71BA0F51400C6A45B /* UAAppReviewManager.h */,
+				EE1F89E81BA0F51400C6A45B /* UAAppReviewManager.m */,
+			);
+			name = AppReview;
 			sourceTree = "<group>";
 		};
 		EEB3202D1B59798A005D1334 /* More Controllers */ = {
@@ -749,6 +762,7 @@
 				EEB3203B1B60540E005D1334 /* FollowersTableViewController.swift in Sources */,
 				EE1A7F9E1B4C97B3004EBD8B /* HOKRouting.m in Sources */,
 				EE1A7F911B4C97B3004EBD8B /* HOKHandling.m in Sources */,
+				EE1F89E91BA0F51400C6A45B /* UAAppReviewManager.m in Sources */,
 				81BA814B1A49DA1800E65899 /* AppDelegate.swift in Sources */,
 				EED08A3D1B41EC86002FAE19 /* TopicThirtyTableViewController.swift in Sources */,
 				EED08A3B1B41EC24002FAE19 /* TopicSevenTableViewController.swift in Sources */,

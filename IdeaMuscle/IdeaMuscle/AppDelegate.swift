@@ -10,25 +10,14 @@ import Bolts
 import Parse
 import FBSDKCoreKit
 import ParseCrashReporting
-//import Armchair
+import Armchair
 
-// If you want to use any of the UI components, uncomment this line
-// import ParseUI
 
-// If you want to use Crash Reporting - uncomment this line
-// import ParseCrashReporting
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-//    override class func initalize(){
-//        setupArmChair()
-//    }
-//    
-//    
-//    class func setupArmChair(){
-//        ArmChair.appId
-//    }
+
     var window: UIWindow?
     //var tabBarController: UITabBarController?
 
@@ -37,6 +26,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //--------------------------------------
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
+        UAAppReviewManager.setAppID("1018374250")
+        //UAAppReviewManager.showPromptIfNecessary()
+        UAAppReviewManager.showPrompt()
         
         Hoko.setupWithToken("e0348143635d4116ba4b3e31d6d47088376aefab")
         Hoko.deeplinking().mapRoute("ideas/:ideaId", toTarget: { (deeplink: HOKDeeplink) -> Void in
