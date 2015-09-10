@@ -822,6 +822,7 @@ static NSString * const reviewURLTemplate                   = @"macappstore://it
 											  otherButtonTitles:(self.showsRemindButton ? self.remindButtonTitle : self.rateButtonTitle),   // If we have a remind button, show it first. Otherwise show the rate button
                                                                 (self.showsRemindButton ? self.rateButtonTitle : nil),                      // If we have a remind button, show the rate button next. Otherwise stop adding buttons.
                                                                 nil];
+    
     alertView.cancelButtonIndex = -1;
 	self.ratingAlert = alertView;
     [alertView show];

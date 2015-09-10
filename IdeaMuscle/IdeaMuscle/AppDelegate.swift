@@ -10,8 +10,6 @@ import Bolts
 import Parse
 import FBSDKCoreKit
 import ParseCrashReporting
-import Armchair
-
 
 
 @UIApplicationMain
@@ -28,8 +26,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         UAAppReviewManager.setAppID("1018374250")
-        //UAAppReviewManager.showPromptIfNecessary()
-        UAAppReviewManager.showPrompt()
+        UAAppReviewManager.setReviewMessage("If you like IdeaMuscle then please rate it. If you don't like IdeaMuscle then let us know how we can make it better at support@ideamuscle.me .... or go write a scathing pointless review if you think that will make you feel better." + "😉")
+        UAAppReviewManager.setCancelButtonTitle("No way! I hate this app!")
+        UAAppReviewManager.showPromptIfNecessary()
+
+        
         
         Hoko.setupWithToken("e0348143635d4116ba4b3e31d6d47088376aefab")
         Hoko.deeplinking().mapRoute("ideas/:ideaId", toTarget: { (deeplink: HOKDeeplink) -> Void in
