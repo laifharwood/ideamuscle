@@ -363,7 +363,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             submitButton.backgroundColor = fiftyGrayColor
             submitButton.layer.cornerRadius = 2
             submitButton.addTarget(self, action: "submit:", forControlEvents: .TouchUpInside)
-            checkForSumbitActive()
+            
             
             
             cell.addSubview(submitButton)
@@ -384,29 +384,6 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     
     
     var activeTextView = 0
-    
-    
-    
-    func textViewDidEndEditing(textView: UITextView) {
-    
-        checkForSumbitActive()
-        
-    }
-    
-    func checkForSumbitActive(){
-        
-        if textViewOne.text != "" && textViewTwo.text != "" && textViewThree.text != "" && textViewFour.text != "" && textViewFive.text != "" && textViewSix.text != "" && textViewSeven.text != "" && textViewEight.text != "" && textViewNine.text != "" && textViewTen.text != ""{
-            submitButton.enabled = true
-            submitButton.alpha = 1
-        }else{
-            
-            submitButton.enabled = false
-            submitButton.alpha = 0.2
-        }
-        
-        
-        
-    }
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         if text == "\n"{
@@ -433,9 +410,6 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         
     }
     
-    func textViewDidChange(textView: UITextView) {
-        checkForSumbitActive()
-    }
     
     func setHasPosted(user: PFUser){
         user["hasPosted"] = true
@@ -483,70 +457,72 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     }
     
     func saveIdea(textV: UITextView, user: PFUser, isPublic: Bool){
-        var ideaObject = PFObject(className: "Idea")
-        ideaObject["content"] = textV.text
-        ideaObject["topicPointer"] = activeComposeTopicObject
-        ideaObject["owner"] = user
-        if isPublic == true{
-            ideaObject["isPublic"] = true
-            ideaObject.ACL?.setPublicReadAccess(true)
-            ideaObject.ACL?.setPublicWriteAccess(true)
-        }else if isPublic == false{
-            ideaObject["isPublic"] = false
-            ideaObject.ACL?.setPublicWriteAccess(false)
-            ideaObject.ACL?.setPublicReadAccess(false)
-        }
-        
+        if textV.text != ""{
+            var ideaObject = PFObject(className: "Idea")
+            ideaObject["content"] = textV.text
+            ideaObject["topicPointer"] = activeComposeTopicObject
+            ideaObject["owner"] = user
+            if isPublic == true{
+                ideaObject["isPublic"] = true
+                ideaObject.ACL?.setPublicReadAccess(true)
+                ideaObject.ACL?.setPublicWriteAccess(true)
+            }else if isPublic == false{
+                ideaObject["isPublic"] = false
+                ideaObject.ACL?.setPublicWriteAccess(false)
+                ideaObject.ACL?.setPublicReadAccess(false)
+            }
+            
 
-        
-        ideaObject.incrementKey("numberOfUpvotes")
-        //ideaObject.addObject(user, forKey: "usersWhoUpvoted")
-        
-        ideaObject.saveEventually ({ (success, error) -> Void in
-            if success{
-                
-                var upvoteObject = PFObject(className: "Upvote")
-                upvoteObject["userWhoUpvoted"] = user
-                upvoteObject["ideaUpvoted"] = ideaObject
-                upvoteObject.saveEventually()
-                
-                if let currentUser = PFUser.currentUser(){
-                    if let ideaId = ideaObject.objectId{
-                        currentUser.addObject(ideaId, forKey: "ideasUpvoted")
-                        currentUser.saveEventually()
+            
+            ideaObject.incrementKey("numberOfUpvotes")
+            //ideaObject.addObject(user, forKey: "usersWhoUpvoted")
+            
+            ideaObject.saveEventually ({ (success, error) -> Void in
+                if success{
+                    
+                    var upvoteObject = PFObject(className: "Upvote")
+                    upvoteObject["userWhoUpvoted"] = user
+                    upvoteObject["ideaUpvoted"] = ideaObject
+                    upvoteObject.saveEventually()
+                    
+                    if let currentUser = PFUser.currentUser(){
+                        if let ideaId = ideaObject.objectId{
+                            currentUser.addObject(ideaId, forKey: "ideasUpvoted")
+                            currentUser.saveEventually()
+                        }
+                    }
+                    
+                    if isPublic == true{
+                        self.activeComposeTopicObject.incrementKey("numberOfIdeas")
+                        self.activeComposeTopicObject.saveEventually({ (success, error) -> Void in
+                            if success{
+                                if self.hasAddedTopic == false{
+                                    self.addTopicsComposedFor(user)
+                                }
+                            }else{
+                                
+                            }
+                        })
+                    }else{
+                        if self.hasAddedTopic == false{
+                            self.addTopicsComposedFor(user)
+                        }
                     }
                 }
-                
-                if isPublic == true{
-                    self.activeComposeTopicObject.incrementKey("numberOfIdeas")
-                    self.activeComposeTopicObject.saveEventually({ (success, error) -> Void in
+            })
+            
+            if isPublic == true{
+                if publicAlreadyEncountered == false{
+                    
+                    activeComposeTopicObject["isPublic"] = true
+                    activeComposeTopicObject.ACL?.setPublicReadAccess(true)
+                    activeComposeTopicObject.ACL?.setPublicWriteAccess(true)
+                    activeComposeTopicObject.saveEventually({ (success, error) -> Void in
                         if success{
-                            if self.hasAddedTopic == false{
-                                self.addTopicsComposedFor(user)
-                            }
-                        }else{
-                            
+                            self.publicAlreadyEncountered = true
                         }
                     })
-                }else{
-                    if self.hasAddedTopic == false{
-                        self.addTopicsComposedFor(user)
-                    }
                 }
-            }
-        })
-        
-        if isPublic == true{
-            if publicAlreadyEncountered == false{
-                
-                activeComposeTopicObject["isPublic"] = true
-                activeComposeTopicObject.ACL?.setPublicReadAccess(true)
-                activeComposeTopicObject.ACL?.setPublicWriteAccess(true)
-                activeComposeTopicObject.saveEventually({ (success, error) -> Void in
-                    if success{
-                        self.publicAlreadyEncountered = true
-                    }
-                })
             }
         }
     }

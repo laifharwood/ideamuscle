@@ -41,7 +41,7 @@ class IdeasUserUpvotedTableViewController: UITableViewController, UITableViewDat
                 if let idea = object["ideaUpvoted"] as? PFObject{
                     if idea.objectId != nil{
                         if let ideaOwner = idea["owner"] as? PFUser{
-                            if ideaOwner != currentUser{
+                            if ideaOwner.objectId != currentUser.objectId{
                                 ideaObjects.append(idea)
                             }
                         }
