@@ -26,10 +26,37 @@ class TopicAndIdeaContainerViewController: UIViewController {
     
     let upgradeVC = UpgradeToProViewController()
     
+    
     let periodFrame = UIView()
+    let tableSelectionFrame = UIView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        ideaTodayVC.tableSelection = tableSelectionFrame
+        ideaTodayVC.periodSelection = periodFrame
+        
+        ideaSevenVC.tableSelection = tableSelectionFrame
+        ideaSevenVC.periodSelection = periodFrame
+        
+        ideaThirtyVC.tableSelection = tableSelectionFrame
+        ideaThirtyVC.periodSelection = periodFrame
+        
+        ideaAllVC.tableSelection = tableSelectionFrame
+        ideaAllVC.periodSelection = periodFrame
+        
+        topicTodayVC.tableSelection = tableSelectionFrame
+        topicTodayVC.periodSelection = periodFrame
+        
+        topicSevenVC.tableSelection = tableSelectionFrame
+        topicSevenVC.periodSelection = periodFrame
+        
+        topicThirtyVC.tableSelection = tableSelectionFrame
+        topicThirtyVC.periodSelection = periodFrame
+        
+        topicAllVC.tableSelection = tableSelectionFrame
+        topicAllVC.periodSelection = periodFrame
+        
         
         self.view.backgroundColor = UIColor.whiteColor()
         
@@ -51,8 +78,7 @@ class TopicAndIdeaContainerViewController: UIViewController {
         self.navigationItem.setLeftBarButtonItem(leftBarButtonItem, animated: false)
         
         //MARK: - Table Selection Frame Config
-        let tableSelectionFrame = UIView()
-        tableSelectionFrame.frame = CGRectMake(0, navigationController!.navigationBar.frame.maxY, self.view.frame.width, 30)
+        tableSelectionFrame.frame = CGRectMake(0, navigationController!.navigationBar.frame.maxY, self.view.frame.width, 40)
         tableSelectionFrame.backgroundColor = oneFiftyGrayColor
         self.view.addSubview(tableSelectionFrame)
         
@@ -60,7 +86,7 @@ class TopicAndIdeaContainerViewController: UIViewController {
         tableSelectionSC.insertSegmentWithTitle("Ideas", atIndex: 0, animated: false)
         tableSelectionSC.insertSegmentWithTitle("Topics", atIndex: 1, animated: false)
         tableSelectionSC.selectedSegmentIndex = 0
-        tableSelectionSC.frame = CGRectMake(5, 5, tableSelectionFrame.frame.width - 10, 20)
+        tableSelectionSC.frame = CGRectMake(5, 5, tableSelectionFrame.frame.width - 10, 30)
         tableSelectionSC.tintColor = UIColor.whiteColor()
         tableSelectionSC.backgroundColor = seventySevenGrayColor
         tableSelectionSC.layer.borderColor = UIColor.whiteColor().CGColor
@@ -71,7 +97,7 @@ class TopicAndIdeaContainerViewController: UIViewController {
         
         //MARK: - Period Frame Config
         
-        periodFrame.frame = CGRectMake(0, tableSelectionFrame.frame.maxY, self.view.frame.width, 30)
+        periodFrame.frame = CGRectMake(0, tableSelectionFrame.frame.maxY, self.view.frame.width, 40)
         periodFrame.backgroundColor = oneFiftyGrayColor
         self.view.addSubview(periodFrame)
         
@@ -81,7 +107,7 @@ class TopicAndIdeaContainerViewController: UIViewController {
         periodSC.insertSegmentWithTitle("30", atIndex: 2, animated: false)
         periodSC.insertSegmentWithTitle("All", atIndex: 3, animated: false)
         periodSC.selectedSegmentIndex = 1
-        periodSC.frame = CGRectMake(5, 5, periodFrame.frame.width - 10, 20)
+        periodSC.frame = CGRectMake(5, 5, periodFrame.frame.width - 10, 30)
         periodSC.tintColor = UIColor.whiteColor()
         periodSC.backgroundColor = seventySevenGrayColor
         periodSC.layer.borderColor = UIColor.whiteColor().CGColor
@@ -92,9 +118,12 @@ class TopicAndIdeaContainerViewController: UIViewController {
         
         activeViewController = ideaSevenVC
 
-        
-    }
     
+    
+    
+    }
+
+
     override func viewWillAppear(animated: Bool) {
         if self.tabBarController != nil{
             self.tabBarController!.tabBar.hidden = false
@@ -145,7 +174,7 @@ class TopicAndIdeaContainerViewController: UIViewController {
             // call before adding child view controller's view as subview
             addChildViewController(activeVC)
             
-            activeVC.view.frame = CGRectMake(0, periodFrame.frame.maxY, self.view.frame.width, self.view.frame.height - 143)
+            activeVC.view.frame = CGRectMake(0, periodFrame.frame.maxY, self.view.frame.width, self.view.frame.height - 163)
             
             self.view.addSubview(activeVC.view)
             

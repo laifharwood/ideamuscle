@@ -21,6 +21,12 @@ class IdeaAllTableViewController: UITableViewController, UITableViewDataSource, 
     let reportViewContainer = UIView()
     let invisibleView = UIView()
     
+    var tableSelection = UIView()
+    var periodSelection = UIView()
+    var hiddenHeight = CGFloat()
+    var shownHeight = CGFloat()
+    var pointNow = CGPoint()
+    
     
     func queryForIdeaObjects(){
         var query = PFQuery(className: "Idea")
@@ -45,6 +51,9 @@ class IdeaAllTableViewController: UITableViewController, UITableViewDataSource, 
             tableView.reloadData()
             shouldReloadTable == false
         }
+        
+        hiddenHeight = self.view.frame.height + 50
+        shownHeight = self.view.frame.height
     }
     
     override func viewDidLoad() {
@@ -153,6 +162,15 @@ class IdeaAllTableViewController: UITableViewController, UITableViewDataSource, 
                 self.navigationController?.pushViewController(ideaDetailVC, animated: true)
             })
         }
+    }
+    
+    override func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        pointNow = scrollView.contentOffset
+    }
+    
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        
+        hideFilterGlobal(scrollView, pointNow, tableSelection, periodSelection, tableView, self.view, shownHeight, self.navigationController!, hiddenHeight)
     }
     
     

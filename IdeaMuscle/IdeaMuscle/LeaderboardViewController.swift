@@ -42,7 +42,7 @@ class LeaderboardViewController: UIViewController {
         self.navigationItem.setLeftBarButtonItem(leftBarButtonItem, animated: false)
         
         //MARK: - Table Selection Frame Config
-        tableSelectionFrame.frame = CGRectMake(0, navigationController!.navigationBar.frame.maxY, self.view.frame.width, 30)
+        tableSelectionFrame.frame = CGRectMake(0, navigationController!.navigationBar.frame.maxY, self.view.frame.width, 40)
         tableSelectionFrame.backgroundColor = oneFiftyGrayColor
         self.view.addSubview(tableSelectionFrame)
         
@@ -50,7 +50,7 @@ class LeaderboardViewController: UIViewController {
         tableSelectionSC.insertSegmentWithTitle("Friends", atIndex: 0, animated: false)
         tableSelectionSC.insertSegmentWithTitle("World", atIndex: 1, animated: false)
         tableSelectionSC.selectedSegmentIndex = 0
-        tableSelectionSC.frame = CGRectMake(5, 5, tableSelectionFrame.frame.width - 10, 20)
+        tableSelectionSC.frame = CGRectMake(5, 5, tableSelectionFrame.frame.width - 10, 30)
         tableSelectionSC.tintColor = UIColor.whiteColor()
         tableSelectionSC.backgroundColor = seventySevenGrayColor
         tableSelectionSC.layer.borderColor = UIColor.whiteColor().CGColor
@@ -72,9 +72,9 @@ class LeaderboardViewController: UIViewController {
             }
         }
         
-        
-
     }
+    
+    
     
     override func viewWillAppear(animated: Bool) {
         if self.tabBarController != nil{
@@ -108,7 +108,7 @@ class LeaderboardViewController: UIViewController {
             // call before adding child view controller's view as subview
             addChildViewController(activeVC)
             
-            activeVC.view.frame = CGRectMake(0, tableSelectionFrame.frame.maxY, self.view.frame.width, self.view.frame.height - 143)
+            activeVC.view.frame = CGRectMake(0, tableSelectionFrame.frame.maxY, self.view.frame.width, self.view.frame.height - 153)
             
             self.view.addSubview(activeVC.view)
             

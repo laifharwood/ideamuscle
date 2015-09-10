@@ -19,6 +19,12 @@ class TopicThirtyTableViewController: UITableViewController, UITableViewDataSour
     let reportViewContainer = UIView()
     let invisibleView = UIView()
     
+    var tableSelection = UIView()
+    var periodSelection = UIView()
+    var hiddenHeight = CGFloat()
+    var shownHeight = CGFloat()
+    var pointNow = CGPoint()
+    
     
     func queryForTopicObjects(){
         var query = PFQuery(className: "Topic")
@@ -40,6 +46,9 @@ class TopicThirtyTableViewController: UITableViewController, UITableViewDataSour
     override func viewWillAppear(animated: Bool) {
         
         self.tabBarController!.tabBar.hidden = false
+        
+        hiddenHeight = self.view.frame.height + 50
+        shownHeight = self.view.frame.height
         
     }
     
@@ -137,6 +146,15 @@ class TopicThirtyTableViewController: UITableViewController, UITableViewDataSour
         topicDetailVC.activeTopic = topicObjects[indexPath.row]
         self.navigationController?.pushViewController(topicDetailVC, animated: true)
         
+    }
+    
+    override func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        pointNow = scrollView.contentOffset
+    }
+    
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        
+        hideFilterGlobal(scrollView, pointNow, tableSelection, periodSelection, tableView, self.view, shownHeight, self.navigationController!, hiddenHeight)
     }
     
     

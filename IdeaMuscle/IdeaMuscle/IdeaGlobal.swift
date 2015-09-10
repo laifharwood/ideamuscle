@@ -397,3 +397,20 @@ func notProCheckIfCanPostFromDetail(user: PFUser, sender: AnyObject!, activeTopi
         }
     })
 }
+
+func hideFilterGlobal(scrollView: UIScrollView, pointNow: CGPoint, tableSelection: UIView, periodSelection: UIView, tableView: UITableView, view: UIView, shownHeight: CGFloat, navigationController: UINavigationController, hiddenHeight: CGFloat){
+    if scrollView.contentOffset.y < pointNow.y{
+        UIView.animateWithDuration(0.5, animations: { () -> Void in
+            tableSelection.hidden = false
+            periodSelection.hidden = false
+            tableView.frame = CGRectMake(0, periodSelection.frame.maxY, view.frame.width, shownHeight)
+        })
+        
+    }else if scrollView.contentOffset.y > pointNow.y{
+        UIView.animateWithDuration(0.5, animations: { () -> Void in
+            tableSelection.hidden = true
+            periodSelection.hidden = true
+            tableView.frame = CGRectMake(0, navigationController.navigationBar.frame.maxY, view.frame.width, hiddenHeight)
+        })
+    }
+}

@@ -22,6 +22,12 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
     let reportViewContainer = UIView()
     let invisibleView = UIView()
     
+    var tableSelection = UIView()
+    var periodSelection = UIView()
+    var hiddenHeight = CGFloat()
+    var shownHeight = CGFloat()
+    var pointNow = CGPoint()
+    
     
     func queryForIdeaObjects(){
         var query = PFQuery(className: "Idea")
@@ -46,6 +52,9 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
             tableView.reloadData()
             shouldReloadTable == false
         }
+        
+        hiddenHeight = self.view.frame.height + 50
+        shownHeight = self.view.frame.height
     }
     
     override func viewDidLoad() {
@@ -62,6 +71,11 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
         
         longPressToTableViewGlobal(self, tableView, reportViewContainer)
     }
+    
+
+    
+
+    
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
@@ -157,6 +171,17 @@ class IdeaTodayTableViewController: UITableViewController, UITableViewDataSource
     }
     
     
+    
+    
+    override func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        pointNow = scrollView.contentOffset
+    }
+    
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        
+        hideFilterGlobal(scrollView, pointNow, tableSelection, periodSelection, tableView, self.view, shownHeight, self.navigationController!, hiddenHeight)
+    }
+
     func upvote(sender: UIButton!){
         
         let ideaObject = ideaObjects[sender.tag]

@@ -34,7 +34,7 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
         
         //MARK: - Bottom container
         bottomContainer.backgroundColor = twoHundredGrayColor
-        let y = self.view.frame.height - 213
+        let y = self.view.frame.height - 223
         bottomContainer.frame = CGRectMake(0, y, self.view.frame.width, 70)
         self.view.addSubview(bottomContainer)
         
@@ -56,7 +56,7 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
         tableView.registerClass(LeaderboardTableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height - 213)
+        tableView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height - 223)
         self.view.addSubview(tableView)
         
         refreshTable.attributedTitle = NSAttributedString(string: "")
