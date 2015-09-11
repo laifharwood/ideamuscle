@@ -33,11 +33,32 @@ class UserIdeasTableViewController: UITableViewController {
             query.whereKey("userPointer", equalTo: user)
             query.includeKey("topicPointer")
             query.limit = 1000
+            query.orderByDescending("updatedAt")
             query.cachePolicy = PFCachePolicy.NetworkElseCache
             query.findObjectsInBackgroundWithBlock({ (objects, error) -> Void in
                 if error == nil{
+                    
+                    println("error equals nil")
                     self.topicsComposedForObjects = objects as! [PFObject]
-                    self.tableView.reloadData()
+                    
+                    var encountered = Set<String>()
+                    var result = [PFObject(className: "TopicsComposedFor")]
+                    result = []
+                    
+                    for object in self.topicsComposedForObjects{
+                        if let topic = object["topicPointer"] as? PFObject{
+                            if let objectId = topic.objectId{
+                                if encountered.contains(objectId){
+                                    
+                                }else{
+                                    encountered.insert(objectId)
+                                    result.append(object)
+                                }
+                            }
+                        }
+                    }
+                    self.topicsComposedForObjects = []
+                    self.topicsComposedForObjects = result
                 }else{
                     println("\(error?.userInfo)")
                 }
