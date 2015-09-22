@@ -29,7 +29,7 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
         self.view.backgroundColor = oneFiftyGrayColor
         
         //MARK: - Topic Label
-        var topicLabel = UILabel()
+        let topicLabel = UILabel()
         topicLabelView.frame = CGRectMake(0, 69, self.view.frame.width, 70)
         topicLabelView.backgroundColor = UIColor.whiteColor()
         self.view.addSubview(topicLabelView)
@@ -41,7 +41,7 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
         if activeTopic["title"] != nil{
             topicLabel.text = activeTopic["title"] as? String
             //topicLabel.sizeToFit()
-            println(topicLabel.frame.height)
+            print(topicLabel.frame.height)
             //let height = topicLabel.frame.height
             //topicLabel.frame = CGRectMake(0, 69, self.view.frame.width, height + 5)
         }
@@ -100,7 +100,7 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func compose(sender: UIButton!){
-        composeFromDetail(self, activeTopic, false)
+        composeFromDetail(self, activeTopic: activeTopic, isNewTopic: false)
     }
     
     func ideaQuery(){
@@ -123,7 +123,7 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
             ideaObjects = objects as! [PFObject]
             stopActivityIndicator()
         }else{
-            println("Error: \(error.userInfo)")
+            print("Error: \(error.userInfo)")
         }
         
         
@@ -155,7 +155,7 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
             let idea = ideaObjects[indexPath.row]
             if let isPublic = idea["isPublic"] as? Bool{
                 if isPublic == true{
-                    hasUpvoted[indexPath.row] = getUpvotes(idea, cell.numberOfUpvotesButton, cell)
+                    hasUpvoted[indexPath.row] = getUpvotes(idea, button: cell.numberOfUpvotesButton, cell: cell)
                 }else if isPublic == false{
                     ideaIsNotPublic(cell)
                 }
@@ -170,7 +170,7 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
         //MARK: - Idea Label Config
         cell.ideaTitleLabel.numberOfLines = 0
         cell.ideaTitleLabel.frame = CGRectMake(25, 5, cell.frame.width - cell.numberOfUpvotesButton.frame.width - 40, cell.frame.height - 10)
-        cell.ideaTitleLabel.font = UIFont(name: "Avenir-Light", size: 12)
+        cell.ideaTitleLabel.font = UIFont(name: "Avenir-Light", size: 14)
         cell.ideaTitleLabel.textColor = oneFiftyGrayColor
         if ideaObjects[indexPath.row]["content"] != nil{
             cell.ideaTitleLabel.text = (ideaObjects[indexPath.row]["content"] as! String)
@@ -207,22 +207,12 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func makePublic(sender: UIButton){
-        if let user = PFUser.currentUser(){
-            if let isPro = user["isPro"] as? Bool{
-                if isPro{
-                    let idea = ideaObjects[sender.tag]
-                    idea.ACL?.setPublicReadAccess(true)
-                    idea.ACL?.setPublicWriteAccess(true)
-                    idea["isPublic"] = true
-                    idea.saveEventually()
-                    hasUpvoted[sender.tag] = getUpvotes(idea, sender, nil)
-                }else{
-                    upgradeAlert()
-                }
-            }else{
-                upgradeAlert()
-        }
-        }
+        let idea = ideaObjects[sender.tag]
+        idea.ACL?.setPublicReadAccess(true)
+        idea.ACL?.setPublicWriteAccess(true)
+        idea["isPublic"] = true
+        idea.saveEventually()
+        hasUpvoted[sender.tag] = getUpvotes(idea, button: sender, cell: nil)
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -254,11 +244,11 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
             if isPublic{
                 if hasUpvoted[sender.tag] == true{
                     //Remove Upvote
-                    upvoteGlobal(ideaObject, false, sender)
+                    upvoteGlobal(ideaObject, shouldUpvote: false, button: sender)
                     hasUpvoted[sender.tag] = false
                 }else{
                     //Add Upvote
-                    upvoteGlobal(ideaObject, true, sender)
+                    upvoteGlobal(ideaObject, shouldUpvote: true, button: sender)
                     hasUpvoted[sender.tag] = true
                 }
             }else{
@@ -270,25 +260,25 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
         
     }
     
-    func upgradeAlert(){
-        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "You must upgrade to Pro to make ideas public after posting.", preferredStyle: .Alert)
-        upgradeAlert.view.tintColor = redColor
-        upgradeAlert.view.backgroundColor = oneFiftyGrayColor
-        //Create and add the Cancel action
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
-        }
-        upgradeAlert.addAction(cancelAction)
-        
-        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
-            let storeVC = StoreViewController()
-            let navVC = UINavigationController(rootViewController: storeVC)
-            self.presentViewController(navVC, animated: true, completion: nil)
-            
-        })
-        
-        upgradeAlert.addAction(goToStore)
-        self.presentViewController(upgradeAlert, animated: true, completion: nil)
-    }
+//    func upgradeAlert(){
+//        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "You must upgrade to Pro to make ideas public after posting.", preferredStyle: .Alert)
+//        upgradeAlert.view.tintColor = redColor
+//        upgradeAlert.view.backgroundColor = oneFiftyGrayColor
+//        //Create and add the Cancel action
+//        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
+//        }
+//        upgradeAlert.addAction(cancelAction)
+//        
+//        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
+//            let storeVC = StoreViewController()
+//            let navVC = UINavigationController(rootViewController: storeVC)
+//            self.presentViewController(navVC, animated: true, completion: nil)
+//            
+//        })
+//        
+//        upgradeAlert.addAction(goToStore)
+//        self.presentViewController(upgradeAlert, animated: true, completion: nil)
+//    }
     
     func startActivityIndicator(){
         activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
@@ -321,7 +311,7 @@ class UserIdeasDetailViewController: UIViewController, UITableViewDelegate, UITa
         if editingStyle == .Delete {
             
             
-            var ideaObject = ideaObjects[indexPath.row] as PFObject
+            let ideaObject = ideaObjects[indexPath.row] as PFObject
             ideaObjects.removeAtIndex(indexPath.row)
             ideaObject.deleteEventually()
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)

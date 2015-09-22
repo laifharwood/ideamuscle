@@ -121,16 +121,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         if application.respondsToSelector("registerUserNotificationSettings:") {
-            let userNotificationTypes = UIUserNotificationType.Badge | UIUserNotificationType.Sound
+            let userNotificationTypes: UIUserNotificationType = [UIUserNotificationType.Badge, UIUserNotificationType.Sound]
             let settings = UIUserNotificationSettings(forTypes: userNotificationTypes, categories: nil)
             application.registerUserNotificationSettings(settings)
             application.registerForRemoteNotifications()
         } else {
-            let types = UIRemoteNotificationType.Badge | UIRemoteNotificationType.Alert | UIRemoteNotificationType.Sound
-            application.registerForRemoteNotificationTypes(types)
+          let types: UIUserNotificationType = [UIUserNotificationType.Badge, UIUserNotificationType.Alert, UIUserNotificationType.Sound]
+
+            let settings: UIUserNotificationSettings = UIUserNotificationSettings( forTypes: types, categories: nil )
+            application.registerUserNotificationSettings(settings)
+            application.registerForRemoteNotifications()
+
         }
         
-        var navigationBarAppearance = UINavigationBar.appearance()
+        let navigationBarAppearance = UINavigationBar.appearance()
         navigationBarAppearance.tintColor = UIColor.whiteColor()
         if let titleFont = UIFont(name: "HelveticaNeue", size: 15){
             
@@ -144,7 +148,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
         navigationBarAppearance.barTintColor = fiftyGrayColor
         
-        var navItemAppearance = UIBarButtonItem.appearance()
+        let navItemAppearance = UIBarButtonItem.appearance()
         
         navItemAppearance.setBackButtonTitlePositionAdjustment(UIOffsetMake(0, -200), forBarMetrics: UIBarMetrics.Default)
         
@@ -175,7 +179,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if error.code == 3010 {
             //println("Push notifications are not supported in the iOS Simulator.")
         } else {
-            println("application:didFailToRegisterForRemoteNotificationsWithError: %@", error)
+            print("application:didFailToRegisterForRemoteNotificationsWithError: %@", error)
         }
     }
 
@@ -239,7 +243,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ///////////////////////////////////////////////////////////
     // Uncomment this method if you are using Facebook
     ///////////////////////////////////////////////////////////
-     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
          //return FBAppCall.handleOpenURL(url, sourceApplication:sourceApplication, session:PFFacebookUtils.session())

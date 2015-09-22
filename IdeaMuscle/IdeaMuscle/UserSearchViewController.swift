@@ -87,24 +87,26 @@ class UserSearchTableViewController: UIViewController, UITableViewDelegate, UITa
         searchField.resignFirstResponder()
         startActivityIndicator()
         
-        let lowercaseSearchString = searchField.text.lowercaseString
+        if let lowercaseSearchString = searchField.text?.lowercaseString{
         
-        let query = PFQuery(className: "_User")
-        query.cachePolicy = PFCachePolicy.NetworkElseCache
-        
-        if searchTypeSelection.selectedSegmentIndex == 0{
-            query.whereKey("lowercaseUsername", equalTo: lowercaseSearchString)
-        }else if searchTypeSelection.selectedSegmentIndex == 1{
-            query.whereKey("lowercaseUsername", containsString: lowercaseSearchString)
-        }
-        
-        query.findObjectsInBackgroundWithBlock { (objects, error) -> Void in
-            if error == nil{
-                if objects?.count > 0{
-                    self.userObjects = objects as! [PFUser]
-                }
+            let query = PFQuery(className: "_User")
+            query.cachePolicy = PFCachePolicy.NetworkElseCache
+            
+            if searchTypeSelection.selectedSegmentIndex == 0{
+                query.whereKey("lowercaseUsername", equalTo: lowercaseSearchString)
+            }else if searchTypeSelection.selectedSegmentIndex == 1{
+                query.whereKey("lowercaseUsername", containsString: lowercaseSearchString)
             }
-            self.stopActivityIndicator()
+        
+        
+            query.findObjectsInBackgroundWithBlock { (objects, error) -> Void in
+                if error == nil{
+                    if objects?.count > 0{
+                        self.userObjects = objects as! [PFUser]
+                    }
+                }
+                self.stopActivityIndicator()
+            }
         }
     }
     
@@ -114,7 +116,7 @@ class UserSearchTableViewController: UIViewController, UITableViewDelegate, UITa
     
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         
-        if count(searchField.text) + count(string) > 3{
+        if (searchField.text?.characters.count)! + string.characters.count > 3{
             searchButton.enabled = true
             searchButton.backgroundColor = redColor
         }else{
@@ -123,7 +125,7 @@ class UserSearchTableViewController: UIViewController, UITableViewDelegate, UITa
         }
         
         if string == ""{
-            if count(searchField.text) - 1 < 4{
+            if searchField.text!.characters.count - 1 < 4{
                 searchButton.enabled = false
                 searchButton.backgroundColor = twoHundredGrayColor
             }
@@ -133,7 +135,7 @@ class UserSearchTableViewController: UIViewController, UITableViewDelegate, UITa
     
     
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
     }
     
@@ -156,7 +158,7 @@ class UserSearchTableViewController: UIViewController, UITableViewDelegate, UITa
     
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! LeaderboardTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! LeaderboardTableViewCell
         //cell.frame = CGRectMake(0, 0, view.frame.width, 70)
         cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
         
@@ -170,7 +172,7 @@ class UserSearchTableViewController: UIViewController, UITableViewDelegate, UITa
                 cell.profileButton.layer.borderColor = UIColor.whiteColor().CGColor
                 cell.profileButton.layer.borderWidth = 0
             }
-            getAvatar(user, nil, cell.profileButton)
+            getAvatar(user, imageView: nil, parseImageView: cell.profileButton)
             
             cell.profileButton.tag = indexPath.row
             cell.profileButton.userInteractionEnabled = true

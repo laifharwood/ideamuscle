@@ -74,7 +74,7 @@ class FollowingTableViewController: UITableViewController {
         
         let user = activeUserFollowing[indexPath.row]
         
-        getAvatar(user, nil, cell.profileButton)
+        getAvatar(user, imageView: nil, parseImageView: cell.profileButton)
         let gestureRec = UITapGestureRecognizer(target: self, action: "profileTapped:")
         cell.profileButton.addGestureRecognizer(gestureRec)
         cell.profileButton.userInteractionEnabled = true

@@ -31,13 +31,13 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
         self.view.backgroundColor = UIColor.whiteColor()
         
         // MARK: - Top Bar Config
-        var topBar = UIView()
+        let topBar = UIView()
         topBar.frame = CGRectMake(0, 0, self.view.frame.width, 64)
         topBar.backgroundColor = seventySevenGrayColor
         self.view.addSubview(topBar)
         
         // MARK: - Compose Title
-        var title = UILabel()
+        let title = UILabel()
         title.text = "New Topic"
         title.font = UIFont(name: "HelveticaNeue-Light", size: 15)
         title.textColor = UIColor.whiteColor()
@@ -46,7 +46,7 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
         title.textAlignment = NSTextAlignment.Center
         
         //MARK: - Cancel Button
-        var cancelButton = UIButton()
+        let cancelButton = UIButton()
         cancelButton.frame = CGRectMake(0, topBar.frame.height/2, 60, 16)
         cancelButton.setTitle("Cancel", forState: .Normal)
         cancelButton.titleLabel!.font = UIFont(name: "HelveticaNeue", size: 12)
@@ -55,18 +55,18 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
         topBar.addSubview(cancelButton)
         
         //MARK: - Small Logo Right
-        var logoView = UIImageView(image: smallLogo)
+        let logoView = UIImageView(image: smallLogo)
         logoView.frame = CGRectMake(topBar.frame.width - 40, topBar.frame.height/2 - 7.5, 35, 35)
         topBar.addSubview(logoView)
         
         //MARK: - Text View container
-        var textViewContainer = UIView()
+        let textViewContainer = UIView()
         textViewContainer.frame = CGRectMake(0, topBar.frame.maxY + 5, self.view.frame.width, 100)
         textViewContainer.backgroundColor = seventySevenGrayColor
         self.view.addSubview(textViewContainer)
         
             //MARK: - Description Label
-            var descriptionLabel = UILabel()
+            let descriptionLabel = UILabel()
             descriptionLabel.frame = CGRectMake(5, 5, self.view.frame.width - 10, 20)
             descriptionLabel.text = "Enter your topic."
             descriptionLabel.textColor = UIColor.whiteColor()
@@ -80,7 +80,7 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
             textView.layer.cornerRadius = 3
             textView.layer.masksToBounds = true
             textView.textColor = fiftyGrayColor
-            textView.font = UIFont(name: "Avenir", size: 10)
+            textView.font = UIFont(name: "Avenir", size: 14)
             textView.returnKeyType = UIReturnKeyType.Done
             textView.tintColor = redColor
             textViewContainer.addSubview(textView)
@@ -138,7 +138,7 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
         
     }
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         textView.endEditing(true)
     }
     
@@ -158,11 +158,11 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
             }else{
                 return false
             }
-        }else if characterCount + count(text) > 118{
+        }else if characterCount + text.characters.count > 118{
             return false
         }else if text == " "{
             if characterCount > 0{
-                characterCount = characterCount + count(text)
+                characterCount = characterCount + text.characters.count
                 characterCountLabel.text = "\(characterCount)" + "/118"
                 changeSubmitButton(submitButton, enabled: true)
                 return true
@@ -170,7 +170,7 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
                 return false
             }
         }else{
-            characterCount = characterCount + count(text)
+            characterCount = characterCount + text.characters.count
             characterCountLabel.text = "\(characterCount)" + "/118"
             changeSubmitButton(submitButton, enabled: true)
             return true
@@ -210,7 +210,7 @@ class ComposeTopicViewController: UIViewController, UITextViewDelegate {
     
     func submit(sender: UIButton!){
         
-        var newTopic = PFObject(className: "Topic")
+        let newTopic = PFObject(className: "Topic")
         
         if isPublic == true{
             saveTopic(true, newTopic: newTopic)

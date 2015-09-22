@@ -46,7 +46,7 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.view.addSubview(tableView)
     }
     
-    func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -87,7 +87,7 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
         }else if section == 1{
             return 3
         }else if section == 2{
-            return 3
+            return 2
         }else if section == 3{
             return 2
         }else{
@@ -98,14 +98,14 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
     func composeOriginal(sender: UIButton!){
         
         //composeOriginalGlobal(self)
-        composeFromDetail(self, nil, true)
+        composeFromDetail(self, activeTopic: nil, isNewTopic: true)
         
     }
 
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
          //var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! UITableViewCell
-        var cell = MoreTableViewCell()
+        let cell = MoreTableViewCell()
         
         cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
         
@@ -150,13 +150,10 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
         }else if indexPath == NSIndexPath(forRow: 2, inSection: 1){
             cell.textLabel!.text = "Search For Users"
         }else if indexPath == NSIndexPath(forRow: 0, inSection: 2){
-            cell.textLabel!.text = "Store"
-        }else if indexPath == NSIndexPath(forRow: 1, inSection: 2){
             cell.textLabel!.text = "Report An Issue / Contact Us"
-        }else if indexPath == NSIndexPath(forRow: 2, inSection: 2){
+        }else if indexPath == NSIndexPath(forRow: 1, inSection: 2){
             cell.textLabel!.text = "End User License Agreement"
-        }
-        else if indexPath == NSIndexPath(forRow: 0, inSection: 3){
+        }else if indexPath == NSIndexPath(forRow: 0, inSection: 3){
             cell.textLabel!.text = "Idea Muscle Orientation"
             cell.accessoryType = UITableViewCellAccessoryType.None
         }else if indexPath == NSIndexPath(forRow: 1, inSection: 3){
@@ -189,32 +186,12 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
             navigationController?.pushViewController(userTopicsVC, animated: true)
         }else if indexPath == NSIndexPath(forRow: 3, inSection: 0){
             //Ideas User Upvoted
-            if let user = PFUser.currentUser(){
-                if let isPro = user["isPro"] as? Bool{
-                    if isPro{
-                        let ideasUserUpvotedVC = IdeasUserUpvotedTableViewController()
-                        navigationController?.pushViewController(ideasUserUpvotedVC, animated: true)
-                    }else{
-                        upgradeUpvotedAlert()
-                    }
-                }else{
-                    upgradeUpvotedAlert()
-                }
-            }
+            let ideasUserUpvotedVC = IdeasUserUpvotedTableViewController()
+            navigationController?.pushViewController(ideasUserUpvotedVC, animated: true)
         }else if indexPath == NSIndexPath(forRow: 0, inSection: 1){
             //Drafts
-            if let user = PFUser.currentUser(){
-                if let isPro = user["isPro"] as? Bool{
-                    if isPro == true{
-                        let draftsVC = DraftsTableViewController()
-                        navigationController?.pushViewController(draftsVC, animated: true)
-                    }else{
-                        upgradeAlert()
-                    }
-                }else{
-                    upgradeAlert()
-                }
-            }
+            let draftsVC = DraftsTableViewController()
+            navigationController?.pushViewController(draftsVC, animated: true)
         }else if indexPath == NSIndexPath(forRow: 1, inSection: 1){
             //Notifications
             let notificationVC = NotificationsTableViewController()
@@ -225,10 +202,6 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
              navigationController?.pushViewController(userSearchVC, animated: true)
             
         }else if indexPath == NSIndexPath(forRow: 0, inSection: 2){
-            //Store
-            let storeVC = StoreViewController()
-            navigationController?.pushViewController(storeVC, animated: true)
-        }else if indexPath == NSIndexPath(forRow: 1, inSection: 2){
             //Report Issue
             let emailVC = MFMailComposeViewController()
             emailVC.mailComposeDelegate = self
@@ -236,7 +209,7 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
             emailVC.navigationBar.tintColor = redColor
             emailVC.setToRecipients(["support@ideamuscle.me"])
             self.presentViewController(emailVC, animated: true, completion: nil)
-        }else if indexPath == NSIndexPath(forRow: 2, inSection: 2){
+        }else if indexPath == NSIndexPath(forRow: 1, inSection: 2){
             //EULA
             let eulaVC = EulaViewController()
             self.presentViewController(eulaVC, animated: true, completion: nil)
@@ -272,27 +245,8 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
         upgradeAlert.addAction(cancelAction)
         
         let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
-            let storeVC = StoreViewController()
-            self.navigationController!.pushViewController(storeVC, animated: true)
-            
-        })
-        
-        upgradeAlert.addAction(goToStore)
-        self.presentViewController(upgradeAlert, animated: true, completion: nil)
-    }
-    
-    func upgradeUpvotedAlert(){
-        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "An upgrade to Pro is requird to view ideas you've upvoted.", preferredStyle: .Alert)
-        upgradeAlert.view.tintColor = redColor
-        upgradeAlert.view.backgroundColor = oneFiftyGrayColor
-        //Create and add the Cancel action
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
-        }
-        upgradeAlert.addAction(cancelAction)
-        
-        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
-            let storeVC = StoreViewController()
-            self.navigationController!.pushViewController(storeVC, animated: true)
+            //let storeVC = StoreViewController()
+            //self.navigationController!.pushViewController(storeVC, animated: true)
             
         })
         

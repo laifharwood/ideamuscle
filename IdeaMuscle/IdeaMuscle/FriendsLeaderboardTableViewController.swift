@@ -55,7 +55,7 @@ class FriendsLeaderboardTableViewController: UIViewController, UITableViewDelega
 
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! LeaderboardTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! LeaderboardTableViewCell
         cell.frame = CGRectMake(0, 0, view.frame.width, 70)
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         
@@ -70,7 +70,7 @@ class FriendsLeaderboardTableViewController: UIViewController, UITableViewDelega
                 cell.profileButton.layer.borderColor = UIColor.whiteColor().CGColor
                 cell.profileButton.layer.borderWidth = 0
             }
-            getAvatar(pfUser, nil, cell.profileButton)
+            getAvatar(pfUser, imageView: nil, parseImageView: cell.profileButton)
         }
         cell.profileButton.tag = indexPath.row
         cell.profileButton.userInteractionEnabled = true
@@ -147,7 +147,7 @@ class FriendsLeaderboardTableViewController: UIViewController, UITableViewDelega
             queryForLeaderboardObjects()
             
         }else{
-            println("Error: \(error.userInfo)")
+            print("Error: \(error.userInfo)")
         }
     }
     
@@ -174,7 +174,7 @@ class FriendsLeaderboardTableViewController: UIViewController, UITableViewDelega
             leaderboardObjects = objects as! [PFObject]
             tableView.reloadData()
         }else{
-            println("Error: \(error.userInfo)")
+            print("Error: \(error.userInfo)")
         }
         stopActivityIndicator()
         refreshTable.endRefreshing()

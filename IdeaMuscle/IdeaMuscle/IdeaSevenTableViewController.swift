@@ -10,7 +10,7 @@ import UIKit
 import Parse
 import ParseUI
 
-class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource, UITableViewDelegate {
+class IdeaSevenTableViewController: UITableViewController{
     
     var activityIndicator = UIActivityIndicatorView()
     var ideaObjects = [PFObject(className: "Idea")]
@@ -29,8 +29,8 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
     
     
     func queryForIdeaObjects(){
-        var query = PFQuery(className: "Idea")
-        ideaQueryGlobal(-7, query)
+        let query = PFQuery(className: "Idea")
+        ideaQueryGlobal(-7, query: query)
         query.findObjectsInBackgroundWithTarget(self, selector: "ideaSelector:error:")
     }
     
@@ -38,7 +38,7 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
         if error == nil{
             ideaObjects = objects as! [PFObject]
         }else{
-            println("Error: \(error.userInfo)")
+            print("Error: \(error.userInfo)")
         }
         stopActivityIndicator()
         refreshTable.endRefreshing()
@@ -68,7 +68,7 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
         refreshTable.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
         tableView.addSubview(refreshTable)
         
-        longPressToTableViewGlobal(self, tableView, reportViewContainer)
+        longPressToTableViewGlobal(self, tableView: tableView, reportViewContainer: reportViewContainer)
         
     }
     
@@ -83,47 +83,47 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-        var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! IdeaTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! IdeaTableViewCell
         
         //cell.frame = CGRectMake(0, 0, self.view.frame.width, 150)
-        cellFrame(cell, self.view)
+        cellFrame(cell, view: self.view)
         
         
         //MARK: - Number Of Upvotes Button Config
         if ideaObjects[indexPath.row]["numberOfUpvotes"] != nil{
             let idea = ideaObjects[indexPath.row]
-            hasUpvoted[indexPath.row] = getUpvotes(idea, cell.numberOfUpvotesButton, cell)
+            hasUpvoted[indexPath.row] = getUpvotes(idea, button: cell.numberOfUpvotesButton, cell: cell)
         }
         cell.numberOfUpvotesButton.tag = indexPath.row
         cell.numberOfUpvotesButton.addTarget(self, action: "upvote:", forControlEvents: .TouchUpInside)
         
         //MARK: - Topic Label Config
-        var labelWidth = cell.frame.width - cell.numberOfUpvotesButton.frame.width - 25
-        topicLabelGlobal(labelWidth, cell.topicLabel, ideaObjects, indexPath.row)
+        let labelWidth = cell.frame.width - cell.numberOfUpvotesButton.frame.width - 25
+        topicLabelGlobal(labelWidth, topicLabel: cell.topicLabel, ideaObjects: ideaObjects, row: indexPath.row)
         
         
         //MARK: - Idea Label Config
-        ideaLabelGlobal(labelWidth, cell.ideaLabel, ideaObjects, indexPath.row, cell.topicLabel)
+        ideaLabelGlobal(labelWidth, ideaLabel: cell.ideaLabel, ideaObjects: ideaObjects, row: indexPath.row, topicLabel: cell.topicLabel)
         
         //MARK: - Profile Button
-        profileButtonGlobal(ideaObjects, indexPath.row, cell.profileButton)
+        profileButtonGlobal(ideaObjects, row: indexPath.row, profileButton: cell.profileButton)
         let gestureRec = UITapGestureRecognizer(target: self, action: "profileTapped:")
         cell.profileButton.addGestureRecognizer(gestureRec)
         
         
         
         //MARK: - Username Label Config
-        usernameGlobal(cell.usernameLabel, indexPath.row, ideaObjects, cell.profileButton)
+        usernameGlobal(cell.usernameLabel, row: indexPath.row, ideaObjects: ideaObjects, profileButton: cell.profileButton)
         
         //MARK: - TimeStamp
-        timeStampGlobal(ideaObjects, cell.timeStamp, indexPath.row, cell.usernameLabel, cell)
+        timeStampGlobal(ideaObjects, timeStamp: cell.timeStamp, row: indexPath.row, usernameLabel: cell.usernameLabel, cell: cell)
         
         return cell
         
     }
     
     func cellLongPress(sender: UILongPressGestureRecognizer){
-        cellLongPressGlobal(sender, tableView, self, self.reportViewContainer, self.invisibleView)
+        cellLongPressGlobal(sender, tableView: tableView, senderSelf: self, reportViewContainer: self.reportViewContainer, invisibleView: self.invisibleView)
     }
     
     func hideIdea(sender: UIButton){
@@ -135,7 +135,7 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
             currentUser.saveEventually()
         }
         
-        hideInvisibleAndReportView(invisibleView, self, reportViewContainer)
+        hideInvisibleAndReportView(invisibleView, sender: self, reportViewContainer: reportViewContainer)
         ideaObjects.removeAtIndex(row)
         let indexPath = NSIndexPath(forRow: row, inSection: 0)
         let pathArray = [indexPath]
@@ -143,12 +143,12 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
     }
     
     func hideAndReport(sender: UIButton){
-        hideAndReportGlobal(ideaObjects, sender, self, self.hideIdea)
+        hideAndReportGlobal(ideaObjects, sender: sender, senderSelf: self, hideIdea: self.hideIdea)
     }
     
     func cancelHide(sender: UIButton){
         
-       hideInvisibleAndReportView(invisibleView, self, reportViewContainer)
+       hideInvisibleAndReportView(invisibleView, sender: self, reportViewContainer: reportViewContainer)
     }
     
 
@@ -174,7 +174,7 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         
-        hideFilterGlobal(scrollView, pointNow, tableSelection, periodSelection, tableView, self.view, shownHeight, self.navigationController!, hiddenHeight)
+        hideFilterGlobal(scrollView, pointNow: pointNow, tableSelection: tableSelection, periodSelection: periodSelection, tableView: tableView, view: self.view, shownHeight: shownHeight, navigationController: self.navigationController!, hiddenHeight: hiddenHeight)
     }
     
     
@@ -184,18 +184,18 @@ class IdeaSevenTableViewController: UITableViewController, UITableViewDataSource
         
         if hasUpvoted[sender.tag] == true{
             //Remove Upvote
-            upvoteGlobal(ideaObject, false, sender)
+            upvoteGlobal(ideaObject, shouldUpvote: false, button: sender)
             hasUpvoted[sender.tag] = false
         }else{
             //Add Upvote
-            upvoteGlobal(ideaObject, true, sender)
+            upvoteGlobal(ideaObject, shouldUpvote: true, button: sender)
             hasUpvoted[sender.tag] = true
         }
     }
     
     func startActivityIndicator(){
         
-        startActivityGlobal(activityIndicatorContainer, activityIndicator, self.view)
+        startActivityGlobal(activityIndicatorContainer, activityIndicator: activityIndicator, view: self.view)
         
     }
     

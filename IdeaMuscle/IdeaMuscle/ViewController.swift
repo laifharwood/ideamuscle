@@ -131,14 +131,14 @@ class ViewController: UIViewController{
             PFFacebookUtils.logInInBackgroundWithReadPermissions(permissions, block: { (user, error) -> Void in
                 
                 if user == nil {
-                    println("Uh oh. The user cancelled the Facebook login.")
+                    print("Uh oh. The user cancelled the Facebook login.")
                     self.stopActivityIndicator()
                 }else if user!.isNew {
-                    println("User signed up and logged in through Facebook!")
+                    print("User signed up and logged in through Facebook!")
                     self.getUserFacebookInfo()
                     self.goToTabBar()
                 }else{
-                    println("User logged in through Facebook!")
+                    print("User logged in through Facebook!")
                     self.getUserFacebookInfo()
                     self.goToTabBar()
                 }
@@ -168,7 +168,7 @@ class ViewController: UIViewController{
             if ((error) != nil)
             {
                 // Process error
-                println("Error: \(error)")
+                print("Error: \(error)")
             }
             else
             {
@@ -182,9 +182,9 @@ class ViewController: UIViewController{
                     }
                     if let userID = result.valueForKey("id") as? String{
                         user["facebookID"] = userID
-                        var imgURLString = "http://graph.facebook.com/" + userID + "/picture?type=large"
-                        var imgURL = NSURL(string: imgURLString)
-                        var imageData = NSData(contentsOfURL: imgURL!)
+                        let imgURLString = "http://graph.facebook.com/" + userID + "/picture?type=large"
+                        let imgURL = NSURL(string: imgURLString)
+                        let imageData = NSData(contentsOfURL: imgURL!)
                         let imageFile: PFFile = PFFile(name: (PFUser.currentUser()!.objectId! + "profileImage.png"), data: imageData!)
                         imageFile.saveInBackground()
                         user.setObject(imageFile, forKey: "avatar")
@@ -201,7 +201,7 @@ class ViewController: UIViewController{
                 
                 if (error != nil){
                   //No Twitter Account Setup On Phone. Show Alert
-                    println(error)
+                    print(error)
                     self.stopActivityIndicator()
                     let noTwitterAccountController: UIAlertController = UIAlertController(title: "No Twitter Account Linked", message: "You must have a twitter account setup on your phone. Go to your Settings App/Twitter/Sign In or Create New Account", preferredStyle: .Alert)
                     noTwitterAccountController.view.tintColor = redColor
@@ -287,10 +287,6 @@ class ViewController: UIViewController{
 
     func goToTabBar(){
         
-        checkIfPro()
-        
-        
-        
         UITabBar.appearance().barTintColor = fiftyGrayColor
         UITabBar.appearance().tintColor = redColor
         
@@ -310,31 +306,25 @@ class ViewController: UIViewController{
         tabBarControllerK.viewControllers = controllers
         
         
-        let offset = UIOffsetMake(0, 1)
-        
         let bulb = UIImage(named: "bulbTabBar")
         topicsController.tabBarItem = UITabBarItem(title: nil, image: bulb, tag: 1)
         topicsController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
-        topicsController.tabBarItem.setTitlePositionAdjustment(offset)
         topicsController.tabBarItem.title = "Ideas"
         
         
         let feed = UIImage(named: "feed")
         feedController.tabBarItem = UITabBarItem(title: nil, image: feed, tag: 2)
         feedController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
-        feedController.tabBarItem.setTitlePositionAdjustment(offset)
         feedController.tabBarItem.title = "Feed"
         
         let crown = UIImage(named: "crown")
         leaderboardController.tabBarItem = UITabBarItem(title: nil, image: crown, tag: 3)
         leaderboardController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
-        leaderboardController.tabBarItem.setTitlePositionAdjustment(offset)
         leaderboardController.tabBarItem.title = "Leaderboard"
         
         let more = UIImage(named: "more")
         moreController.tabBarItem = UITabBarItem(title: nil, image: more, tag: 4)
         moreController.tabBarItem.imageInsets = UIEdgeInsetsMake(2, 0, -2, 0)
-        moreController.tabBarItem.setTitlePositionAdjustment(offset)
         if PFInstallation.currentInstallation().badge != 0{
             moreController.tabBarItem.badgeValue = abbreviateNumber(PFInstallation.currentInstallation().badge) as String
         }
@@ -345,7 +335,7 @@ class ViewController: UIViewController{
             //Leaderboard
             if let isOnLeaderboard = currentUser["isOnLeaderboard"] as? Bool{
                 if isOnLeaderboard == false{
-                    var leaderboardObject = PFObject(className: "Leaderboard")
+                    let leaderboardObject = PFObject(className: "Leaderboard")
                     leaderboardObject["userPointer"] = currentUser
                     leaderboardObject["numberOfUpvotes"] = 0
                     leaderboardObject.ACL?.setPublicWriteAccess(true)
@@ -360,7 +350,7 @@ class ViewController: UIViewController{
 //                    })
                 }
             }else{
-                var leaderboardObject = PFObject(className: "Leaderboard")
+                let leaderboardObject = PFObject(className: "Leaderboard")
                 leaderboardObject["userPointer"] = currentUser
                 leaderboardObject["numberOfUpvotes"] = 0
                 leaderboardObject.ACL?.setPublicWriteAccess(true)
@@ -404,7 +394,7 @@ class ViewController: UIViewController{
             //Is in last posted
             if let isInLastPosted = currentUser["isInLastPosted"] as? Bool{
                 if isInLastPosted == false{
-                    var lastPostedObject = PFObject(className: "LastPosted")
+                    let lastPostedObject = PFObject(className: "LastPosted")
                     lastPostedObject["userPointer"] = currentUser
                     lastPostedObject["update"] = 0
 //                    lastPostedObject.saveEventually({ (success, error) -> Void in
@@ -417,7 +407,7 @@ class ViewController: UIViewController{
                 }
                 
             }else{
-                var lastPostedObject = PFObject(className: "LastPosted")
+                let lastPostedObject = PFObject(className: "LastPosted")
                 lastPostedObject["userPointer"] = currentUser
                 lastPostedObject["update"] = 0
 //                lastPostedObject.saveEventually({ (success, error) -> Void in
@@ -432,7 +422,7 @@ class ViewController: UIViewController{
             //Is in Number Of Followers
             if let isInNumberOfFollowers = currentUser["isInNumberOfFollowers"] as? Bool{
                 if isInNumberOfFollowers == false{
-                    var numberOfFollowersObject = PFObject(className: "NumberOfFollowers")
+                    let numberOfFollowersObject = PFObject(className: "NumberOfFollowers")
                     numberOfFollowersObject["userPointer"] = currentUser
                     numberOfFollowersObject["numberOfFollowers"] = 0
                     numberOfFollowersObject.ACL?.setPublicWriteAccess(true)
@@ -446,7 +436,7 @@ class ViewController: UIViewController{
                 }
                 
             }else{
-                var numberOfFollowersObject = PFObject(className: "NumberOfFollowers")
+                let numberOfFollowersObject = PFObject(className: "NumberOfFollowers")
                 numberOfFollowersObject["userPointer"] = currentUser
                 numberOfFollowersObject["numberOfFollowers"] = 0
                 numberOfFollowersObject.ACL?.setPublicWriteAccess(true)
@@ -474,15 +464,6 @@ class ViewController: UIViewController{
                 currentUser["hasSetNotificationSettings"] = true
             }
             
-            //has got free month
-            if let hasGotFreeMonthPro = currentUser["hasGotFreeMonthPro"] as? Bool{
-                if hasGotFreeMonthPro == false{
-                    setFreeMonth(currentUser)
-                }
-            }else{
-                setFreeMonth(currentUser)
-            }
-            
             //Set installation
             let installation = PFInstallation.currentInstallation()
             installation.setObject(currentUser, forKey: "user")
@@ -497,64 +478,6 @@ class ViewController: UIViewController{
         appDelegate.window?.rootViewController = tabBarControllerK
     
 }
-    func setFreeMonth(currentUser: PFUser){
-        
-        let calendar = NSCalendar.currentCalendar()
-        let components = NSDateComponents()
-        components.month = 1
-        
-        if let oldExpiration = currentUser["proExpiration"] as? NSDate{
-            let newExpiration = calendar.dateByAddingComponents(components, toDate: oldExpiration, options: nil)
-            currentUser["proExpiration"] = newExpiration
-            currentUser["isPro"] = true
-            currentUser["hasGotFreeMonthPro"] = true
-            
-        }else{
-            let nowQuery = PFQuery(className: "TimeNow")
-            
-            let nowDateObject = nowQuery.getObjectWithId("yhUEKpyRSg")
-            if nowDateObject != nil{
-                nowDateObject?.incrementKey("update")
-                let success = nowDateObject?.save()
-                if success == true{
-                    nowDateObject?.fetch()
-                    var now = NSDate()
-                    now = nowDateObject!.updatedAt!
-                    let newExpiration = calendar.dateByAddingComponents(components, toDate: now, options: nil)
-                    currentUser["proExpiration"] = newExpiration
-                    currentUser["isPro"] = true
-                    currentUser["hasGotFreeMonthPro"] = true
-                }
-            }
-               // nowDateObject.incrementKey("update")
-//                let success = nowDateObject.save()
-//                if success{
-//                    nowDateObject.fetch()
-//                    
-//                }
-            
-            
-//            nowQuery.getObjectInBackgroundWithId("yhUEKpyRSg", block: { (nowObject, error) -> Void in
-//                let nowDateObject = nowObject as PFObject!
-//                nowDateObject.incrementKey("update")
-//                nowDateObject.saveEventually({(success, error) -> Void in
-//                    if success{
-//                        nowDateObject.fetchInBackgroundWithBlock({(nowDateObject, error) -> Void in
-//                            if nowDateObject != nil{
-//                                var now = NSDate()
-//                                now = nowDateObject!.updatedAt!
-//                                let newExpiration = calendar.dateByAddingComponents(components, toDate: now, options: nil)
-//                                currentUser["proExpiration"] = newExpiration
-//                                currentUser["isPro"] = true
-//                                currentUser["hasGotFreeMonthPro"] = true
-//                                currentUser.saveEventually()
-//                            }
-//                        })
-//                    }
-//                })
-//            })
-        }
-    }
 
     func getAvatar(){
     
@@ -573,11 +496,18 @@ class ViewController: UIViewController{
         var response: NSURLResponse?
         var error: NSError?
         
-        if let data: NSData = NSURLConnection.sendSynchronousRequest(request, returningResponse: &response, error: &error){
+        do {
+            let data: NSData = try NSURLConnection.sendSynchronousRequest(request, returningResponse: &response)
         
         if error == nil {
             
-            let result: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: &error)
+            let result: AnyObject?
+            do {
+                result = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
+            } catch let error1 as NSError {
+                error = error1
+                result = nil
+            }
             let urlString = result?.objectForKey("profile_image_url_https") as! String
             let hiResUrlString = urlString.stringByReplacingOccurrencesOfString("_normal", withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
             let twitterPhotoUrl = NSURL(string: hiResUrlString)
@@ -591,56 +521,12 @@ class ViewController: UIViewController{
             }
             
         }
+        } catch let error1 as NSError {
+            error = error1
         }
     }
 }
     
-    func checkIfPro(){
-        
-        if let user = PFUser.currentUser(){
-            
-            user.fetchInBackgroundWithBlock({ (object, error) -> Void in
-                if let isProForever = user["isProForever"] as? Bool{
-                    
-                    if isProForever == false{
-                        self.checkProExpiration(user)
-                    }
-                }else{
-                    self.checkProExpiration(user)
-                }
-            })
-            
-        }
-    }
-    
-    func checkProExpiration(user: PFUser){
-        if let isPro = user["isPro"] as? Bool{
-        if isPro == true{
-            
-            //let timeNowObject = PFObject(withoutDataWithObjectId: "yhUEKpyRSg")
-            var timeNowObject = PFObject(className: "TimeNow")
-            let query = PFQuery(className: "TimeNow")
-            query.getObjectInBackgroundWithId("yhUEKpyRSg", block: { (object, error) -> Void in
-                if error == nil{
-                    timeNowObject = object!
-                    timeNowObject.incrementKey("update")
-                    timeNowObject.saveEventually({ (success, error) -> Void in
-                        if success{
-                            timeNowObject.fetchInBackgroundWithBlock({ (object, error) -> Void in
-                                let timeNow = timeNowObject.updatedAt
-                                let expiration = user["proExpiration"] as! NSDate
-                                if timeNow!.isGreaterThanDate(expiration){
-                                    user["isPro"] = false
-                                    user.saveEventually()
-                                }
-                            })
-                        }
-                    })
-                }
-            })
-        }
-        }
-    }
     
     func startActivityIndicator(){
         

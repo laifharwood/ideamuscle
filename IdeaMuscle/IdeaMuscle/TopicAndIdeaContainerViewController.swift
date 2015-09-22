@@ -24,7 +24,7 @@ class TopicAndIdeaContainerViewController: UIViewController {
     let topicThirtyVC = TopicThirtyTableViewController()
     let topicAllVC = TopicAllTableViewController()
     
-    let upgradeVC = UpgradeToProViewController()
+    
     
     
     let periodFrame = UIView()
@@ -186,7 +186,7 @@ class TopicAndIdeaContainerViewController: UIViewController {
     func composeOriginal(sender: UIButton!){
         
         //composeOriginalGlobal(self)
-        composeFromDetail(self, nil, true)
+        composeFromDetail(self, activeTopic: nil, isNewTopic: true)
         
     }
     
@@ -230,17 +230,7 @@ class TopicAndIdeaContainerViewController: UIViewController {
     }
     
     func checkForPro(selectedController: UIViewController){
-        if let user = PFUser.currentUser(){
-            if let isPro = user["isPro"] as? Bool{
-                if isPro == true{
-                    activeViewController = selectedController
-                }else{
-                    activeViewController = upgradeVC
-                }
-            }else{
-                activeViewController = upgradeVC
-            }
-        }
+        activeViewController = selectedController
     }
     
     func changePeriodView(sender: UISegmentedControl){

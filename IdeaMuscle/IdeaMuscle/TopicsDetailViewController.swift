@@ -32,8 +32,8 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         self.view.backgroundColor = oneFiftyGrayColor
         
         //MARK: - Topic Label
-        var topicLabel = UILabel()
-        var topicLabelView = UIView()
+        let topicLabel = UILabel()
+        let topicLabelView = UIView()
         topicLabelView.frame = CGRectMake(0, 69, self.view.frame.width, 70)
         topicLabelView.backgroundColor = UIColor.whiteColor()
         self.view.addSubview(topicLabelView)
@@ -58,9 +58,9 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         self.view.addSubview(tableView)
         
         //MARK: - Share Button
-        var shareButton = UIButton()
+        let shareButton = UIButton()
         shareButton.frame = CGRectMake(0, self.view.frame.maxY - 30, self.view.frame.width/2 - 0.5, 30)
-        if let user = PFUser.currentUser(){
+        if let _ = PFUser.currentUser(){
             if let isPublic =  activeTopic["isPublic"] as? Bool{
                 if isPublic{
                     shareButton.setTitle("Share", forState: .Normal)
@@ -73,7 +73,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         }
         
         //MARK: - Compose Button
-        var composeButton = UIButton()
+        let composeButton = UIButton()
         composeButton.frame = CGRectMake(shareButton.frame.maxX + 1, self.view.frame.maxY - 30, self.view.frame.width/2 - 0.5, 30)
         composeButton.setTitle("Compose", forState: .Normal)
         composeButton.backgroundColor = sixtyThreeGrayColor
@@ -83,7 +83,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         
 
         
-        longPressToTableViewGlobal(self, tableView, reportViewContainer)
+        longPressToTableViewGlobal(self, tableView: tableView, reportViewContainer: reportViewContainer)
     }
     
 
@@ -105,7 +105,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func compose(sender: UIButton!){
-        composeFromDetail(self, activeTopic, false)
+        composeFromDetail(self, activeTopic: activeTopic, isNewTopic: false)
     }
     
     func ideaQuery(){
@@ -128,7 +128,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         if error == nil{
             ideaObjects = objects as! [PFObject]
         }else{
-            println("Error: \(error.userInfo)")
+            print("Error: \(error.userInfo)")
         }
         stopActivityIndicator()
     }
@@ -157,7 +157,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         //MARK: - Number Of Upvotes Button Config
         if ideaObjects[indexPath.row]["numberOfUpvotes"] != nil{
             let idea = ideaObjects[indexPath.row]
-            hasUpvoted[indexPath.row] = getUpvotes(idea, cell.numberOfUpvotesButton, cell)
+            hasUpvoted[indexPath.row] = getUpvotes(idea, button: cell.numberOfUpvotesButton, cell: cell)
         }
         cell.numberOfUpvotesButton.addTarget(self, action: "upvote:", forControlEvents: .TouchUpInside)
         cell.numberOfUpvotesButton.tag = indexPath.row
@@ -165,7 +165,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         //MARK: - Idea Label Config
         cell.ideaTitleLabel.numberOfLines = 0
         cell.ideaTitleLabel.frame = CGRectMake(25, 5, cell.frame.width - cell.numberOfUpvotesButton.frame.width - 40, 70)
-        cell.ideaTitleLabel.font = UIFont(name: "Avenir-Light", size: 12)
+        cell.ideaTitleLabel.font = UIFont(name: "Avenir-Light", size: 14)
         cell.ideaTitleLabel.textColor = oneFiftyGrayColor
         if ideaObjects[indexPath.row]["content"] != nil{
             cell.ideaTitleLabel.text = (ideaObjects[indexPath.row]["content"] as! String)
@@ -183,7 +183,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
                 cell.profileButton.layer.borderWidth = 0
             }
             
-            getAvatar(pfUser, nil, cell.profileButton)
+            getAvatar(pfUser, imageView: nil, parseImageView: cell.profileButton)
             
         }
         
@@ -225,7 +225,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func cellLongPress(sender: UILongPressGestureRecognizer){
-        cellLongPressGlobal(sender, tableView, self, self.reportViewContainer, self.invisibleView)
+        cellLongPressGlobal(sender, tableView: tableView, senderSelf: self, reportViewContainer: self.reportViewContainer, invisibleView: self.invisibleView)
     }
     
     func hideIdea(sender: UIButton){
@@ -245,7 +245,7 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func hideAndReport(sender: UIButton){
-        hideAndReportGlobal(ideaObjects, sender, self, self.hideIdea)
+        hideAndReportGlobal(ideaObjects, sender: sender, senderSelf: self, hideIdea: self.hideIdea)
     }
     
     func cancelHide(sender: UIButton){
@@ -293,11 +293,11 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
         
         if hasUpvoted[sender.tag] == true{
             //Remove Upvote
-            upvoteGlobal(ideaObject, false, sender)
+            upvoteGlobal(ideaObject, shouldUpvote: false, button: sender)
             hasUpvoted[sender.tag] = false
         }else{
             //Add Upvote
-            upvoteGlobal(ideaObject, true, sender)
+            upvoteGlobal(ideaObject, shouldUpvote: true, button: sender)
             hasUpvoted[sender.tag] = true
         }
     }
@@ -320,12 +320,12 @@ class TopicsDetailViewController: UIViewController, UITableViewDelegate, UITable
     
     func share(sender: UIButton!){
         let topicString = activeTopic["title"] as! String
-        let stringCount = count(topicString)
+        let stringCount = topicString.characters.count
         let characterAllowance = 117
         var stringToShare = String()
         
         if stringCount > characterAllowance{
-            let twitterString = topicString.substringWithRange(Range<String.Index>(start: topicString.startIndex, end: advance(topicString.startIndex, characterAllowance)))
+            let twitterString = topicString.substringWithRange(Range<String.Index>(start: topicString.startIndex, end: topicString.startIndex.advancedBy(characterAllowance)))
             stringToShare = twitterString
         }else{
             stringToShare = topicString

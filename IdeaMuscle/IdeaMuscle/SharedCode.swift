@@ -39,31 +39,31 @@ let smallLogo = UIImage(named: "smallLogo.png")
 
 
 extension UIImage {
-    
-    func convertToGrayScaleNoAlpha() -> CGImageRef {
-        let colorSpace = CGColorSpaceCreateDeviceGray();
-        let bitmapInfo = CGBitmapInfo(CGImageAlphaInfo.None.rawValue)
-        let context = CGBitmapContextCreate(nil, Int(size.width), Int(size.height), 8, 0, colorSpace, bitmapInfo)
-        CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), self.CGImage)
-        return CGBitmapContextCreateImage(context)
-    }
+//    
+//    func convertToGrayScaleNoAlpha() -> CGImageRef {
+//        let colorSpace = CGColorSpaceCreateDeviceGray();
+//        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.None.rawValue)
+//        let context = CGBitmapContextCreate(nil, Int(size.width), Int(size.height), 8, 0, colorSpace, bitmapInfo)
+//        CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), self.CGImage)
+//        return CGBitmapContextCreateImage(context)
+//    }
     
     
     /**
     Return a new image in shades of gray + alpha
     */
-    func convertToGrayScale() -> UIImage {
-        let bitmapInfo = CGBitmapInfo(CGImageAlphaInfo.Only.rawValue)
-        let context = CGBitmapContextCreate(nil, Int(size.width), Int(size.height), 8, 0, nil, bitmapInfo)
-        CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), self.CGImage);
-        let mask = CGBitmapContextCreateImage(context)
-        return UIImage(CGImage: CGImageCreateWithMask(convertToGrayScaleNoAlpha(), mask), scale: scale, orientation:imageOrientation)!
-    }
+//    func convertToGrayScale() -> UIImage {
+//        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.Only.rawValue)
+//        let context = CGBitmapContextCreate(nil, Int(size.width), Int(size.height), 8, 0, nil, bitmapInfo)
+//        CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), self.CGImage);
+//        let mask = CGBitmapContextCreateImage(context)
+//        return UIImage(CGImage: CGImageCreateWithMask(convertToGrayScaleNoAlpha(), mask), scale: scale, orientation:imageOrientation)!
+//    }
 }
 
 func cropToSquare(image originalImage: UIImage) -> UIImage {
     // Create a copy of the image without the imageOrientation property so it is in its native orientation (landscape)
-    let contextImage: UIImage = UIImage(CGImage: originalImage.CGImage)!
+    let contextImage: UIImage = UIImage(CGImage: originalImage.CGImage!)
     
     // Get the size of the contextImage
     let contextSize: CGSize = contextImage.size
@@ -89,36 +89,36 @@ func cropToSquare(image originalImage: UIImage) -> UIImage {
     let rect: CGRect = CGRectMake(posX, posY, width, height)
     
     // Create bitmap image from context using the rect
-    let imageRef: CGImageRef = CGImageCreateWithImageInRect(contextImage.CGImage, rect)
+    let imageRef: CGImageRef = CGImageCreateWithImageInRect(contextImage.CGImage, rect)!
     
     // Create a new image based on the imageRef and rotate back to the original orientation
-    let image: UIImage = UIImage(CGImage: imageRef, scale: originalImage.scale, orientation: originalImage.imageOrientation)!
+    let image: UIImage = UIImage(CGImage: imageRef, scale: originalImage.scale, orientation: originalImage.imageOrientation)
     
     return image
 }
 
-func imageToGray(image: UIImage) -> UIImage{
-    
-    let imageRect = CGRectMake(0, 0, image.size.width, image.size.height)
-    
-    let colorSpace = CGColorSpaceCreateDeviceGray()
-    let bitmapInfo = CGBitmapInfo(CGImageAlphaInfo.None.rawValue)
-    let context =  CGBitmapContextCreate(nil, Int(image.size.width), Int(image.size.height), 8, 0, colorSpace, bitmapInfo)
-    
-    CGContextDrawImage(context, imageRect, image.CGImage)
-    
-    let imageRef = CGBitmapContextCreateImage(context)
-    
-    let newImage = UIImage(CGImage: CGImageCreateCopy(imageRef))
-    
-    return newImage!
-}
+//func imageToGray(image: UIImage) -> UIImage{
+//    
+//    let imageRect = CGRectMake(0, 0, image.size.width, image.size.height)
+//    
+//    let colorSpace = CGColorSpaceCreateDeviceGray()
+//    let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.None.rawValue)
+//    let context =  CGBitmapContextCreate(nil, Int(image.size.width), Int(image.size.height), 8, 0, colorSpace, bitmapInfo)
+//    
+//    CGContextDrawImage(context, imageRect, image.CGImage)
+//    
+//    let imageRef = CGBitmapContextCreateImage(context)
+//    
+//    let newImage = UIImage(CGImage: CGImageCreateCopy(imageRef))
+//    
+//    return newImage!
+//}
 
 func abbreviateNumber(num: NSNumber) -> NSString {
     var ret: NSString = ""
     let abbrve: [String] = ["K", "M", "B"]
     
-    var floatNum = num.floatValue
+    let floatNum = num.floatValue
     
     if floatNum > 1000 {
         
@@ -171,14 +171,14 @@ func upvoteGlobal(idea: PFObject, shouldUpvote: Bool, button: UIButton){
             }
             
             //Remove Upvoted Object
-            var upvoteObjectQuery = PFQuery(className: "Upvote")
+            let upvoteObjectQuery = PFQuery(className: "Upvote")
             upvoteObjectQuery.whereKey("userWhoUpvoted", equalTo: user)
             upvoteObjectQuery.whereKey("ideaUpvoted", equalTo: idea)
             var upvoteObject = PFObject(className: "Upvote")
             upvoteObjectQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
                 if error != nil{
-                    println("error in getting Upvote Object for remove upvote")
-                    println("Error: \(error!.userInfo)")
+                    print("error in getting Upvote Object for remove upvote")
+                    print("Error: \(error!.userInfo)")
                     
                 }else{
                     upvoteObject = object! as PFObject
@@ -186,7 +186,7 @@ func upvoteGlobal(idea: PFObject, shouldUpvote: Bool, button: UIButton){
                 }
                 //Decrement Leaderboard Object
                 if let ideaOwner = idea["owner"] as? PFUser{
-                var leaderboardQuery = PFQuery(className: "Leaderboard")
+                let leaderboardQuery = PFQuery(className: "Leaderboard")
                 leaderboardQuery.whereKey("userPointer", equalTo: ideaOwner)
                 leaderboardQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
                     
@@ -196,8 +196,8 @@ func upvoteGlobal(idea: PFObject, shouldUpvote: Bool, button: UIButton){
                         leaderboardObject.incrementKey("numberOfUpvotes", byAmount: -1)
                         leaderboardObject.saveEventually()
                     }else{
-                        println("error finding leaderboard object to downvote")
-                        println("Error: \(error!.userInfo)")
+                        print("error finding leaderboard object to downvote")
+                        print("Error: \(error!.userInfo)")
                     }
                 })
                 }
@@ -219,7 +219,7 @@ func upvoteGlobal(idea: PFObject, shouldUpvote: Bool, button: UIButton){
             idea.incrementKey("numberOfUpvotes")
             idea.saveEventually()
             
-            var upvoteObject = PFObject(className: "Upvote")
+            let upvoteObject = PFObject(className: "Upvote")
             upvoteObject.setObject(user, forKey: "userWhoUpvoted")
             upvoteObject.setObject(idea, forKey: "ideaUpvoted")
             upvoteObject.ACL?.setPublicWriteAccess(true)
@@ -233,7 +233,7 @@ func upvoteGlobal(idea: PFObject, shouldUpvote: Bool, button: UIButton){
             }
     
             if let ideaOwner = idea["owner"] as? PFUser{
-                var leaderboardQuery = PFQuery(className: "Leaderboard")
+                let leaderboardQuery = PFQuery(className: "Leaderboard")
                 leaderboardQuery.whereKey("userPointer", equalTo: ideaOwner)
                 leaderboardQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
                     if error == nil{
@@ -242,8 +242,8 @@ func upvoteGlobal(idea: PFObject, shouldUpvote: Bool, button: UIButton){
                         leaderboardObject.incrementKey("numberOfUpvotes", byAmount: 1)
                         leaderboardObject.saveEventually()
                     }else{
-                        println("error getting leaderboardOjbect to upvote")
-                        println("Error: \(error!.userInfo)")
+                        print("error getting leaderboardOjbect to upvote")
+                        print("Error: \(error!.userInfo)")
                     }
                 })
                 
@@ -265,7 +265,7 @@ func followGlobal(userToFollow: PFUser, shouldFollow: Bool, sender: AnyObject!){
             relation.removeObject(userToFollow)
             currentUser.incrementKey("numberFollowing", byAmount: -1)
             currentUser.saveEventually()
-            queryNumberOfFollowers(-1, userToFollow)
+            queryNumberOfFollowers(-1, userToFollow: userToFollow)
         }
     }else{
         //Follow
@@ -276,7 +276,7 @@ func followGlobal(userToFollow: PFUser, shouldFollow: Bool, sender: AnyObject!){
                     relation.addObject(userToFollow)
                     currentUser.incrementKey("numberFollowing", byAmount: 1)
                     currentUser.saveEventually()
-                    queryNumberOfFollowers(1, userToFollow)
+                    queryNumberOfFollowers(1, userToFollow: userToFollow)
                 }else{
                     followLimitAlert(sender)
                 }
@@ -287,13 +287,14 @@ func followGlobal(userToFollow: PFUser, shouldFollow: Bool, sender: AnyObject!){
                 relation.addObject(userToFollow)
                 currentUser.incrementKey("numberFollowing", byAmount: 1)
                 currentUser.saveEventually()
-                queryNumberOfFollowers(1, userToFollow)
+                queryNumberOfFollowers(1, userToFollow: userToFollow)
                 
             }
         }
     }
 }
 
+@available(iOS 8.0, *)
 func followLimitAlert(sender: AnyObject!){
     let followLimitAlert: UIAlertController = UIAlertController(title: "Limit Reached", message: "You are limited to following 1,000 people.", preferredStyle: .Alert)
     followLimitAlert.view.tintColor = redColor
@@ -326,9 +327,7 @@ func logout(){
 }
 
 func getAvatar(user: PFUser, imageView: UIImageView?, parseImageView: PFImageView?){
-    var avatarFile = PFFile()
     var image = UIImage()
-    var wasSuccessful = Bool()
     let defaultImage = UIImage(named: "defaultProfile")
     
     if let avatarFile = user["avatar"] as? PFFile{
@@ -336,16 +335,16 @@ func getAvatar(user: PFUser, imageView: UIImageView?, parseImageView: PFImageVie
             if error == nil{
                 image = UIImage(data: data!)!
                 image = cropToSquare(image: image)
-                image = image.convertToGrayScale()
+                //image = image.convertToGrayScale()
                 if imageView != nil{
-                imageView!.image = image
+                    imageView!.image = image
                 }
                 if parseImageView != nil{
                     parseImageView!.image = image
                 }
             }else{
-                println("could not get avatar")
-                println("Error: \(error!.userInfo)")
+                print("could not get avatar")
+                print("Error: \(error!.userInfo)")
                 if imageView != nil{
                     imageView!.image = defaultImage
                 }
@@ -386,7 +385,7 @@ extension NSDate
 func updateMoreBadge(tabBarController: UITabBarController){
     let tabArray = tabBarController.tabBar.items as NSArray!
     let tabItem = tabArray.objectAtIndex(3) as! UITabBarItem
-    var currentInstall = PFInstallation.currentInstallation()
+    let currentInstall = PFInstallation.currentInstallation()
     if currentInstall.badge != 0{
         tabItem.badgeValue = abbreviateNumber(currentInstall.badge) as String
     }else if currentInstall.badge == 0{

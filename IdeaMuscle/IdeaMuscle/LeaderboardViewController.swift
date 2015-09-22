@@ -15,7 +15,7 @@ class LeaderboardViewController: UIViewController {
     
     let friendsVC = FriendsLeaderboardTableViewController()
     let worldVC = WorldLeaderboardTableViewController()
-    let upgradeVC = UpgradeToProViewController()
+    
     let tableSelectionFrame = UIView()
     
     override func viewDidLoad() {
@@ -59,19 +59,8 @@ class LeaderboardViewController: UIViewController {
         tableSelectionSC.addTarget(self, action: "changeTableSelection:", forControlEvents: .ValueChanged)
         tableSelectionFrame.addSubview(tableSelectionSC)
         
-        
-        if let user = PFUser.currentUser(){
-            if let isPro = user["isPro"] as? Bool{
-                if isPro == true{
-                    activeViewController = friendsVC
-                }else{
-                    activeViewController = upgradeVC
-                }
-            }else{
-                activeViewController = upgradeVC
-            }
-        }
-        
+        activeViewController = friendsVC
+
     }
     
     
@@ -120,31 +109,16 @@ class LeaderboardViewController: UIViewController {
     func composeOriginal(sender: UIButton!){
         
         //composeOriginalGlobal(self)
-        composeFromDetail(self, nil, true)
+        composeFromDetail(self, activeTopic: nil, isNewTopic: true)
         
     }
     
     func changeTableSelection(sender: UISegmentedControl){
-        
-        if let user = PFUser.currentUser(){
-            if let isPro = user["isPro"] as? Bool{
-                if isPro == true{
-                    if sender.selectedSegmentIndex == 0{
-                        activeViewController = friendsVC
-                    }else{
-                        activeViewController = worldVC
-                    }
-                }else{
-                    activeViewController = upgradeVC
-                }
-            }else{
-                activeViewController = upgradeVC
-            }
+        if sender.selectedSegmentIndex == 0{
+            activeViewController = friendsVC
+        }else{
+            activeViewController = worldVC
         }
-        
-
-        
-
     }
     
     override func didReceiveMemoryWarning() {

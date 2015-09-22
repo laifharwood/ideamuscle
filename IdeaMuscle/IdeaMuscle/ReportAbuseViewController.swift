@@ -32,7 +32,7 @@ class ReportAbuseViewController: UIViewController, UITextViewDelegate {
         
         container.frame = CGRectMake(0, self.navigationController!.navigationBar.frame.maxY, self.view.frame.width, 5)
         
-        if let idea = activeIdea{
+        if let _ = activeIdea{
             container.frame = CGRectMake(0, self.navigationController!.navigationBar.frame.maxY, self.view.frame.width, 130)
             container.backgroundColor = twoThirtyGrayColor
             self.view.addSubview(container)
@@ -138,7 +138,7 @@ class ReportAbuseViewController: UIViewController, UITextViewDelegate {
             reportObject.ACL?.setPublicWriteAccess(false)
             reportObject["userWhoReported"] = currentUser
             reportObject["userComments"] = commentsTextView.text
-            if let idea = activeIdea{
+            if let _ = activeIdea{
                 if selectedButton == 1 || selectedButton == 3{
                     //Report Idea
                     reportObject["ideaPointer"] = activeIdea
@@ -196,7 +196,7 @@ class ReportAbuseViewController: UIViewController, UITextViewDelegate {
         self.navigationController?.popViewControllerAnimated(true)
     }
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         commentsTextView.endEditing(true)
     }
     

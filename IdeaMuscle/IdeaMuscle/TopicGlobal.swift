@@ -27,7 +27,7 @@ func topicQueryGlobal(daysInPast: Int, query: PFQuery){
         calendar.timeZone = timeZone!
         let components = NSDateComponents()
         components.day = daysInPast
-        let oneDayAgo = calendar.dateByAddingComponents(components, toDate: now, options: nil)
+        let oneDayAgo = calendar.dateByAddingComponents(components, toDate: now, options: [])
         query.whereKey("createdAt", greaterThanOrEqualTo: oneDayAgo!)
     }
 }
@@ -61,7 +61,7 @@ func cellFrameTopic(cell: UITableViewCell, view: UIView){
 }
 
 func numberOfIdeasGlobal(topicObjects: [PFObject], indexPath: NSIndexPath, ideaTotalButton: UIButton, cell: UITableViewCell){
-    var numberOfIdeas = Int()
+    _ = Int()
     
     if let numberOfIdeas = topicObjects[indexPath.row]["numberOfIdeas"] as? Int{
         let abbreviatedNumber = abbreviateNumber(numberOfIdeas) as String
@@ -70,7 +70,7 @@ func numberOfIdeasGlobal(topicObjects: [PFObject], indexPath: NSIndexPath, ideaT
         ideaTotalButton.setTitle("0", forState: .Normal)
     }
     
-    if let id = topicObjects[indexPath.row].objectId{
+    if let _ = topicObjects[indexPath.row].objectId{
     
         ideaTotalButton.frame =  CGRectMake(cell.frame.maxX - (40 + 10), 20, 40, cell.frame.height - 40)
         ideaTotalButton.layer.cornerRadius = 3.0
@@ -92,9 +92,9 @@ func ideaTitleLabelGlobal(ideaTitleLabel: UILabel, ideaTotalButton: UIButton){
 }
 
 func topicLabelForTopic(topicObjects: [PFObject], cell: UITableViewCell, ideaTotalButton: UIButton, topicLabel: UILabel, indexPath: NSIndexPath){
-    var labelWidth = cell.frame.width - ideaTotalButton.frame.width - 25
+    let labelWidth = cell.frame.width - ideaTotalButton.frame.width - 25
     topicLabel.frame = CGRectMake(10, 10, labelWidth, 40)
-    topicLabel.font = UIFont(name: "Avenir-Heavy", size: 12)
+    topicLabel.font = UIFont(name: "Avenir-Heavy", size: 14)
     topicLabel.numberOfLines = 2
     topicLabel.textColor = UIColor.blackColor()
     
@@ -120,7 +120,7 @@ func profileButtonTopicGlobal(topicObjects: [PFObject], indexPath: NSIndexPath, 
             profileButton.layer.borderWidth = 0
         }
         
-        getAvatar(pfUser, nil, profileButton)
+        getAvatar(pfUser, imageView: nil, parseImageView: profileButton)
         
     }
     profileButton.tag = indexPath.row

@@ -55,7 +55,7 @@ class DraftsTableViewController: UITableViewController {
             stopActivityIndicator()
         
         }else{
-            println("Error: \(error.userInfo)")
+            print("Error: \(error.userInfo)")
         }
     }
 
@@ -78,7 +78,7 @@ class DraftsTableViewController: UITableViewController {
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) 
         
         
         
@@ -97,7 +97,7 @@ class DraftsTableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
-        var draftObject = draftObjects[indexPath.row] as PFObject
+        let draftObject = draftObjects[indexPath.row] as PFObject
             let composeVC =  ComposeViewController()
             if let topicObject = draftObject["topicPointer"] as? PFObject{
                 if let ideaArrayToPass = draftObject["ideaArray"] as? [String]{
@@ -129,7 +129,7 @@ class DraftsTableViewController: UITableViewController {
         if editingStyle == .Delete {
             
             
-            var draftObject = draftObjects[indexPath.row] as PFObject
+            let draftObject = draftObjects[indexPath.row] as PFObject
             draftObjects.removeAtIndex(indexPath.row)
             draftObject.deleteEventually()
             

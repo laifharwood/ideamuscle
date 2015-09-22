@@ -107,13 +107,13 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         
         
         // MARK: - Top Bar Config
-        var topBar = UIView()
+        let topBar = UIView()
         topBar.frame = CGRectMake(0, 0, self.view.frame.width, 64)
         topBar.backgroundColor = seventySevenGrayColor
         self.view.addSubview(topBar)
         
             // MARK: - Compose Title
-            var title = UILabel()
+            let title = UILabel()
             title.text = "Compose 10 Ideas"
             title.font = UIFont(name: "Avenir", size: 13)
             title.textColor = UIColor.whiteColor()
@@ -122,7 +122,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             title.textAlignment = NSTextAlignment.Center
         
             //MARK: - Cancel Button
-            var cancelButton = UIButton()
+            let cancelButton = UIButton()
             cancelButton.frame = CGRectMake(0, topBar.frame.height/2, 60, 16)
             cancelButton.setTitle("Cancel", forState: .Normal)
             cancelButton.titleLabel!.font = UIFont(name: "HelveticaNeue", size: 15)
@@ -131,12 +131,12 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             topBar.addSubview(cancelButton)
         
             //MARK: - Small Logo Right
-            var logoView = UIImageView(image: smallLogo)
+            let logoView = UIImageView(image: smallLogo)
             logoView.frame = CGRectMake(topBar.frame.width - 40, topBar.frame.height/2 - 7.5, 35, 35)
             topBar.addSubview(logoView)
         
         //MARK: - Topic Title Bar
-        var topicTitleBar = UIView()
+        let topicTitleBar = UIView()
         topicTitleBar.frame = CGRectMake(0, topBar.frame.maxY + 10, self.view.frame.width, 60)
         topicTitleBar.backgroundColor = UIColor.whiteColor()
         self.view.addSubview(topicTitleBar)
@@ -210,30 +210,21 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     
     func saveDraft(sender: UIButton){
         if let user = PFUser.currentUser(){
-            if let isPro = user["isPro"] as? Bool{
-                if isPro == true{
-                    //Save the draft
-                    let draftObject = PFObject(className: "Draft")
-                    draftObject["userPointer"] = user
-                    draftObject["topicPointer"] = activeComposeTopicObject
-                    draftObject["isPublicArray"] = publicBoolArray
-                    draftObject.ACL?.setPublicReadAccess(false)
-                    var ideaArray = [String]()
-                    for textView in textViewArray{
-                        ideaArray.append(textView.text)
-                    }
-                    draftObject["ideaArray"] = ideaArray
-                    draftObject.saveEventually()
-                    
-                    self.dismissViewControllerAnimated(true, completion: nil)
-                }else{
-                    upgradeToSaveDraftAlert()
-                }
-            }else{
-                upgradeToSaveDraftAlert()
+            //Save the draft
+            let draftObject = PFObject(className: "Draft")
+            draftObject["userPointer"] = user
+            draftObject["topicPointer"] = activeComposeTopicObject
+            draftObject["isPublicArray"] = publicBoolArray
+            draftObject.ACL?.setPublicReadAccess(false)
+            var ideaArray = [String]()
+            for textView in textViewArray{
+                ideaArray.append(textView.text)
             }
+            draftObject["ideaArray"] = ideaArray
+            draftObject.saveEventually()
+            
+            self.dismissViewControllerAnimated(true, completion: nil)
         }
-
     }
     
     func cancelExit(sender: UIButton){
@@ -244,7 +235,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         invisibleView.removeFromSuperview()
     }
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
     }
     
@@ -289,7 +280,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         
         //MARK: - Number Label
         let numberArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        var numberLabel = UILabel()
+        let numberLabel = UILabel()
         numberLabel.frame = CGRectMake(5, frameArray[indexPath.row].frame.height/2 - 10, 20, 20)
         numberLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 16)
         numberLabel.textColor = UIColor.whiteColor()
@@ -314,7 +305,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             textView.layer.cornerRadius = 3
             textView.layer.masksToBounds = true
             textView.textColor = fiftyGrayColor
-            textView.font = UIFont(name: "HelveticaNeue-Light", size: 10)
+            textView.font = UIFont(name: "HelveticaNeue-Light", size: 14)
             textView.returnKeyType = UIReturnKeyType.Default
             textView.tintColor = redColor
             //textView.text = textViewValues[indexPath.row]
@@ -432,13 +423,6 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
         
         if let user = PFUser.currentUser(){
             var counter = 0
-            if let isPro = user["isPro"] as? Bool{
-                if isPro == false{
-                    setHasPosted(user)
-                }
-            }else{
-                setHasPosted(user)
-            }
             for textV in textViewArray{
                 if publicBoolArray[counter] == true{
                     saveIdea(textV, user: user, isPublic: true)
@@ -458,7 +442,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     
     func saveIdea(textV: UITextView, user: PFUser, isPublic: Bool){
         if textV.text != ""{
-            var ideaObject = PFObject(className: "Idea")
+            let ideaObject = PFObject(className: "Idea")
             ideaObject["content"] = textV.text
             ideaObject["topicPointer"] = activeComposeTopicObject
             ideaObject["owner"] = user
@@ -480,7 +464,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             ideaObject.saveEventually ({ (success, error) -> Void in
                 if success{
                     
-                    var upvoteObject = PFObject(className: "Upvote")
+                    let upvoteObject = PFObject(className: "Upvote")
                     upvoteObject["userWhoUpvoted"] = user
                     upvoteObject["ideaUpvoted"] = ideaObject
                     upvoteObject.saveEventually()
@@ -539,33 +523,14 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
     
     func makePublic(sender: UIButton){
         if publicBoolArray[sender.tag] == false{
-        if let user = PFUser.currentUser(){
-            if let isPro = user["isPro"] as? Bool{
-                if isPro{
-                    canMakePublic(sender)
-                }else if numberOfPublic < 1{
-                    canMakePublic(sender)
-                }else{
-                    //Show Alert To Upgrade
-                    println("should show alert")
-                    upgradeAlert()
-                }
-            }else{
-                if numberOfPublic < 1{
-                    canMakePublic(sender)
-                }else{
-                    //Show Alert To Upgrade
-                    println("should show alert")
-                    upgradeAlert()
-                }
+            if let _ = PFUser.currentUser(){
+                canMakePublic(sender)
             }
-        }
         }else if publicBoolArray[sender.tag] == true{
             sender.setImage(grayCheckmarkImage, forState: .Normal)
             publicBoolArray[sender.tag] = false
             --numberOfPublic
         }
-        
     }
     
     func canMakePublic(sender: UIButton){
@@ -574,49 +539,7 @@ class ComposeViewController: UIViewController, UITextViewDelegate, UITableViewDa
             ++numberOfPublic
     }
     
-    func upgradeAlert(){
-        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "As a free user you are only allowed 1 public idea per group of 10. Upgrade to Pro to post unlimited public ideas.", preferredStyle: .Alert)
-            upgradeAlert.view.tintColor = redColor
-            upgradeAlert.view.backgroundColor = oneFiftyGrayColor
-        //Create and add the Cancel action
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
-        }
-        upgradeAlert.addAction(cancelAction)
-        
-        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
-            let storeVC = StoreViewController()
-            let navVC = UINavigationController(rootViewController: storeVC)
-            self.presentViewController(navVC, animated: true, completion: nil)
-            
-        })
-        
-        upgradeAlert.addAction(goToStore)
-        self.presentViewController(upgradeAlert, animated: true, completion: nil)
-    }
-    
-    func upgradeToSaveDraftAlert(){
-        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "You must upgrade to IdeaMuscle Pro to save drafts.", preferredStyle: .Alert)
-        upgradeAlert.view.tintColor = redColor
-        upgradeAlert.view.backgroundColor = oneFiftyGrayColor
-        //Create and add the Cancel action
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
-        }
-        upgradeAlert.addAction(cancelAction)
-        
-        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
-            let storeVC = StoreViewController()
-            self.shouldStartEditing = false
-            let navVC = UINavigationController(rootViewController: storeVC)
-            self.presentViewController(navVC, animated: true, completion: nil)
-            
-        })
-        
-        upgradeAlert.addAction(goToStore)
-        self.presentViewController(upgradeAlert, animated: true, completion: nil)
-    }
-    
-    
-    
+
     func cancel(sender: UIButton!){
         
         //self.dismissViewControllerAnimated(true, completion: nil)

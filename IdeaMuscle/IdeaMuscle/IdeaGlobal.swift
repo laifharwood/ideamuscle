@@ -32,7 +32,7 @@ func ideaQueryGlobal(daysInPast: Int, query: PFQuery){
     calendar.timeZone = timeZone!
     let components = NSDateComponents()
     components.day = daysInPast
-    let dateInPast = calendar.dateByAddingComponents(components, toDate: now, options: nil)
+    let dateInPast = calendar.dateByAddingComponents(components, toDate: now, options: [])
     query.whereKey("createdAt", greaterThanOrEqualTo: dateInPast!)
     }
 }
@@ -150,7 +150,7 @@ func cellFrame(cell: UITableViewCell, view: UIView){
 
 func topicLabelGlobal(labelWidth: CGFloat, topicLabel: UILabel, ideaObjects: [PFObject], row: Int){
 topicLabel.frame = CGRectMake(10, 5, labelWidth, 20)
-topicLabel.font = UIFont(name: "Avenir-Heavy", size: 12)
+topicLabel.font = UIFont(name: "Avenir-Heavy", size: 14)
 topicLabel.numberOfLines = 1
 topicLabel.textColor = UIColor.blackColor()
     
@@ -167,7 +167,7 @@ topicLabel.tag = row
 func ideaLabelGlobal(labelWidth: CGFloat, ideaLabel: UILabel, ideaObjects: [PFObject], row: Int, topicLabel: UILabel){
     ideaLabel.numberOfLines = 0
     ideaLabel.frame = CGRectMake(25, topicLabel.frame.maxY + 2, labelWidth - 15, 70)
-    ideaLabel.font = UIFont(name: "Avenir-Light", size: 12)
+    ideaLabel.font = UIFont(name: "Avenir-Light", size: 14)
     ideaLabel.textColor = oneFiftyGrayColor
     if ideaObjects[row]["content"] != nil{
         ideaLabel.text = (ideaObjects[row]["content"] as! String)
@@ -184,7 +184,7 @@ func getUpvotes(idea: PFObject, button: UIButton, cell: UITableViewCell?) -> Boo
         if let ideasUpvoted = currentUser["ideasUpvoted"] as? [String]{
             
             if let ideaId = idea.objectId{
-                if contains(ideasUpvoted, ideaId){
+                if ideasUpvoted.contains(ideaId){
                     button.setTitleColor(redColor, forState: .Normal)
                     button.tintColor = redColor
                     hasUpvoted = true
@@ -209,7 +209,7 @@ func getUpvotes(idea: PFObject, button: UIButton, cell: UITableViewCell?) -> Boo
         let image = UIImage(named: "upvoteArrow")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         button.titleLabel?.font = UIFont(name: "HelveticaNeue", size: 10)
         button.setImage(image, forState: .Normal)
-        let spacing = CGFloat(20)
+        _ = CGFloat(20)
         let imageSize = button.imageView!.image!.size
         let titleSize = button.titleLabel!.frame.size
         button.titleEdgeInsets = UIEdgeInsetsMake(0, -imageSize.width, 0, 0)
@@ -242,7 +242,7 @@ func profileButtonGlobal(ideaObjects: [PFObject], row: Int, profileButton: PFIma
             profileButton.layer.borderWidth = 0
         }
         
-        getAvatar(pfUser, nil, profileButton)
+        getAvatar(pfUser, imageView: nil, parseImageView: profileButton)
         
     }
     profileButton.tag = row
@@ -293,22 +293,10 @@ func startActivityGlobal(activityIndicatorContainer: UIView, activityIndicator: 
 }
 
 func composeFromDetail(sender: AnyObject!, activeTopic: PFObject?, isNewTopic: Bool){
-    
-    if let user = PFUser.currentUser(){
-        
-        if let isPro = user["isPro"] as? Bool{
-            if isPro{
-                if isNewTopic == false{
-                    presentCompose(sender, activeTopic!, isNewTopic)
-                }else{
-                    presentCompose(sender, nil, isNewTopic)
-                }
-            }else{
-                checkIfHasPosted(user, sender, isNewTopic, activeTopic)
-            }
-        }else{
-            checkIfHasPosted(user, sender, isNewTopic, activeTopic)
-        }
+    if isNewTopic == false{
+        presentCompose(sender, activeTopic: activeTopic!, isNewTopic: isNewTopic)
+    }else{
+        presentCompose(sender, activeTopic: nil, isNewTopic: isNewTopic)
     }
 }
 
@@ -324,79 +312,6 @@ func presentCompose(sender: AnyObject!, activeTopic: PFObject?, isNewTopic: Bool
     }
 }
 
-func checkIfHasPosted (user: PFUser, sender: AnyObject!, isNewTopic: Bool, activeTopic: PFObject?){
-    if let hasPosted = user["hasPosted"] as? Bool{
-        if hasPosted == false{
-            if isNewTopic == false{
-                presentCompose(sender, activeTopic!, isNewTopic)
-            }else{
-                presentCompose(sender, nil, isNewTopic)
-            }
-        }else{
-            notProCheckIfCanPostFromDetail(user, sender, activeTopic, isNewTopic)
-        }
-    }else{
-        if isNewTopic == false{
-            presentCompose(sender, activeTopic!, isNewTopic)
-        }else{
-            presentCompose(sender, nil, isNewTopic)
-        }
-    }
-}
-
-func notProCheckIfCanPostFromDetail(user: PFUser, sender: AnyObject!, activeTopic: PFObject?, isNewTopic: Bool){
-    let lastPostedQuery = PFQuery(className: "LastPosted")
-    lastPostedQuery.whereKey("userPointer", equalTo: user)
-    lastPostedQuery.getFirstObjectInBackgroundWithBlock({ (object, error) -> Void in
-        if error == nil{
-            var lastPostedDate = NSDate()
-            let lastPostedObject = object as PFObject!
-            lastPostedDate = lastPostedObject.updatedAt!
-            let components = NSDateComponents()
-            components.day = 1
-            let calender = NSCalendar.currentCalendar()
-            let canPostDate = calender.dateByAddingComponents(components, toDate: lastPostedDate, options: nil)
-            let nowQuery = PFQuery(className: "TimeNow")
-            nowQuery.getObjectInBackgroundWithId("yhUEKpyRSg", block: { (nowObject, error) -> Void in
-                let nowDateObject = nowObject as PFObject!
-                nowDateObject.incrementKey("update")
-                nowDateObject.saveEventually{(success, error) -> Void in
-                    if success{
-                        nowDateObject.fetchInBackgroundWithBlock({(nowDateObject, error) -> Void in
-                            if nowDateObject != nil{
-                                var now = NSDate()
-                                now = nowDateObject!.updatedAt!
-                                if now.isGreaterThanDate(canPostDate!){
-                                    if isNewTopic == false{
-                                        presentCompose(sender, activeTopic!, isNewTopic)
-                                    }else{
-                                        presentCompose(sender, nil, isNewTopic)
-                                    }
-                                }else{
-                                    //Prompt For Upgrade
-                                    let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "As a free user you are limited to composing once every two days. Upgrade to Pro to compose unlimited ideas and topics.", preferredStyle: .Alert)
-                                    upgradeAlert.view.tintColor = redColor
-                                    upgradeAlert.view.backgroundColor = oneFiftyGrayColor
-                                    //Create and add the Cancel action
-                                    let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
-                                    }
-                                    upgradeAlert.addAction(cancelAction)
-                                    
-                                    let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
-                                        let storeVC = StoreViewController()
-                                        sender.navigationController??.pushViewController(storeVC, animated: true)
-                                    })
-                                    upgradeAlert.addAction(goToStore)
-                                    sender.presentViewController(upgradeAlert, animated: true, completion: nil)
-                                }
-                            }
-                        })
-                    }
-                }
-            })
-        }
-    })
-}
 
 func hideFilterGlobal(scrollView: UIScrollView, pointNow: CGPoint, tableSelection: UIView, periodSelection: UIView, tableView: UITableView, view: UIView, shownHeight: CGFloat, navigationController: UINavigationController, hiddenHeight: CGFloat){
     if scrollView.contentOffset.y < pointNow.y{

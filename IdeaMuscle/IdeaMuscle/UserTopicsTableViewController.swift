@@ -10,7 +10,7 @@ import UIKit
 import Parse
 import ParseUI
 
-class UserTopicsTableViewController: UITableViewController, UITableViewDataSource, UITableViewDelegate {
+class UserTopicsTableViewController: UITableViewController{
     
     var activityIndicator = UIActivityIndicatorView()
     var topicObjects = [PFObject(className: "Topic")]
@@ -19,7 +19,7 @@ class UserTopicsTableViewController: UITableViewController, UITableViewDataSourc
     
     func queryForTopicObjects(){
         if let user = PFUser.currentUser(){
-            var query = PFQuery(className: "Topic")
+            let query = PFQuery(className: "Topic")
             query.cachePolicy = PFCachePolicy.NetworkElseCache
             query.whereKey("creator", equalTo: user)
             query.orderByDescending("createdAt")
@@ -33,7 +33,7 @@ class UserTopicsTableViewController: UITableViewController, UITableViewDataSourc
             //topicObjects = []
             topicObjects = objects as! [PFObject]
         }else{
-            println("Error: \(error.userInfo)")
+            print("Error: \(error.userInfo)")
         }
         stopActivityIndicator()
     }
@@ -63,9 +63,9 @@ class UserTopicsTableViewController: UITableViewController, UITableViewDataSourc
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-        var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! TopicTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! TopicTableViewCell
         
-        cellFrameTopic(cell, self.view)
+        cellFrameTopic(cell, view: self.view)
         
         
         let topic = topicObjects[indexPath.row]
@@ -104,13 +104,13 @@ class UserTopicsTableViewController: UITableViewController, UITableViewDataSourc
         
         
         //MARK: - Topic Label Config
-        topicLabelForTopic(topicObjects, cell, cell.ideaTotalButton, cell.topicLabel, indexPath)
-        var labelWidth = cell.frame.width - cell.ideaTotalButton.frame.width - 25
+        topicLabelForTopic(topicObjects, cell: cell, ideaTotalButton: cell.ideaTotalButton, topicLabel: cell.topicLabel, indexPath: indexPath)
+        let labelWidth = cell.frame.width - cell.ideaTotalButton.frame.width - 25
         cell.topicLabel.frame = CGRectMake(10, 5, labelWidth, cell.frame.height - 10)
         cell.topicLabel.numberOfLines = 0
         
         //MARK: - Time Stamp
-        timeStampTopicGlobal(topicObjects, cell.timeStamp, cell.ideaTotalButton, indexPath, cell)
+        timeStampTopicGlobal(topicObjects, timeStamp: cell.timeStamp, ideaTotalButton: cell.ideaTotalButton, indexPath: indexPath, cell: cell)
         
         return cell
         
@@ -165,48 +165,17 @@ class UserTopicsTableViewController: UITableViewController, UITableViewDataSourc
     }
     
     func makePublic(topic: PFObject, sender: UIButton){
-        if let user = PFUser.currentUser(){
-            if let isPro = user["isPro"] as? Bool{
-                if isPro{
-                    topic.ACL?.setPublicWriteAccess(true)
-                    topic.ACL?.setPublicReadAccess(true)
-                    topic["isPublic"] = true
-//                    sender.setTitle("0", forState: .Normal)
-//                    sender.titleLabel!.font = UIFont(name: "HelveticaNeue", size: 15)
-                    tableView.reloadData()
-                    topic.saveEventually()
-                }else{
-                    upgradeAlert()
-                }
-            }else{
-                upgradeAlert()
-            }
-        }
+        topic.ACL?.setPublicWriteAccess(true)
+        topic.ACL?.setPublicReadAccess(true)
+        topic["isPublic"] = true
+        tableView.reloadData()
+        topic.saveEventually()
     }
     
-    func upgradeAlert(){
-        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "You must upgrade to Pro to make Topics public after posting.", preferredStyle: .Alert)
-        upgradeAlert.view.tintColor = redColor
-        upgradeAlert.view.backgroundColor = oneFiftyGrayColor
-        //Create and add the Cancel action
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
-        }
-        upgradeAlert.addAction(cancelAction)
-        
-        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
-            let storeVC = StoreViewController()
-            let navVC = UINavigationController(rootViewController: storeVC)
-            self.presentViewController(navVC, animated: true, completion: nil)
-            
-        })
-        
-        upgradeAlert.addAction(goToStore)
-        self.presentViewController(upgradeAlert, animated: true, completion: nil)
-    }
     
     func startActivityIndicator(){
         
-        startActivityGlobal(activityIndicatorContainer, activityIndicator, self.view)
+        startActivityGlobal(activityIndicatorContainer, activityIndicator: activityIndicator, view: self.view)
         
     }
     

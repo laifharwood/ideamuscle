@@ -61,7 +61,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let leftBarButtonItem: UIBarButtonItem = UIBarButtonItem(customView: leftLogoView)
         self.navigationItem.setLeftBarButtonItem(leftBarButtonItem, animated: false)
         
-        longPressToTableViewGlobal(self, tableView, reportViewContainer)
+        longPressToTableViewGlobal(self, tableView: tableView, reportViewContainer: reportViewContainer)
         
     }
     
@@ -97,39 +97,39 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! IdeaTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! IdeaTableViewCell
         
-        cellFrame(cell, self.view)
+        cellFrame(cell, view: self.view)
         
         //MARK: - Number Of Upvotes Button Config
         if ideaObjects[indexPath.row]["numberOfUpvotes"] != nil{
             let idea = ideaObjects[indexPath.row]
-            hasUpvoted[indexPath.row] = getUpvotes(idea, cell.numberOfUpvotesButton, cell)
+            hasUpvoted[indexPath.row] = getUpvotes(idea, button: cell.numberOfUpvotesButton, cell: cell)
         }
         cell.numberOfUpvotesButton.tag = indexPath.row
         cell.numberOfUpvotesButton.addTarget(self, action: "upvote:", forControlEvents: .TouchUpInside)
         
         //MARK: - Topic Label Config
-        var labelWidth = cell.frame.width - cell.numberOfUpvotesButton.frame.width - 25
-        topicLabelGlobal(labelWidth, cell.topicLabel, ideaObjects, indexPath.row)
+        let labelWidth = cell.frame.width - cell.numberOfUpvotesButton.frame.width - 25
+        topicLabelGlobal(labelWidth, topicLabel: cell.topicLabel, ideaObjects: ideaObjects, row: indexPath.row)
         
         
         
         //MARK: - Idea Label Config
-        ideaLabelGlobal(labelWidth, cell.ideaLabel, ideaObjects, indexPath.row, cell.topicLabel)
+        ideaLabelGlobal(labelWidth, ideaLabel: cell.ideaLabel, ideaObjects: ideaObjects, row: indexPath.row, topicLabel: cell.topicLabel)
         
         //MARK: - Profile Button
-        profileButtonGlobal(ideaObjects, indexPath.row, cell.profileButton)
+        profileButtonGlobal(ideaObjects, row: indexPath.row, profileButton: cell.profileButton)
         let gestureRec = UITapGestureRecognizer(target: self, action: "profileTapped:")
         cell.profileButton.addGestureRecognizer(gestureRec)
         
         
         
         //MARK: - Username Label Config
-        usernameGlobal(cell.usernameLabel, indexPath.row, ideaObjects, cell.profileButton)
+        usernameGlobal(cell.usernameLabel, row: indexPath.row, ideaObjects: ideaObjects, profileButton: cell.profileButton)
         
         //MARK: - TimeStamp
-        timeStampGlobal(ideaObjects, cell.timeStamp, indexPath.row, cell.usernameLabel, cell)
+        timeStampGlobal(ideaObjects, timeStamp: cell.timeStamp, row: indexPath.row, usernameLabel: cell.usernameLabel, cell: cell)
         
         
         
@@ -137,7 +137,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func cellLongPress(sender: UILongPressGestureRecognizer){
-        cellLongPressGlobal(sender, tableView, self, self.reportViewContainer, self.invisibleView)
+        cellLongPressGlobal(sender, tableView: tableView, senderSelf: self, reportViewContainer: self.reportViewContainer, invisibleView: self.invisibleView)
     }
     
     func hideIdea(sender: UIButton){
@@ -149,7 +149,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
             currentUser.saveEventually()
         }
         
-        hideInvisibleAndReportView(invisibleView, self, reportViewContainer)
+        hideInvisibleAndReportView(invisibleView, sender: self, reportViewContainer: reportViewContainer)
         ideaObjects.removeAtIndex(row)
         let indexPath = NSIndexPath(forRow: row, inSection: 0)
         let pathArray = [indexPath]
@@ -157,12 +157,12 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func hideAndReport(sender: UIButton){
-        hideAndReportGlobal(ideaObjects, sender, self, self.hideIdea)
+        hideAndReportGlobal(ideaObjects, sender: sender, senderSelf: self, hideIdea: self.hideIdea)
     }
     
     func cancelHide(sender: UIButton){
         
-        hideInvisibleAndReportView(invisibleView, self, reportViewContainer)
+        hideInvisibleAndReportView(invisibleView, sender: self, reportViewContainer: reportViewContainer)
     }
 
     
@@ -207,7 +207,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
             queryForIdeaObjects()
             
         }else{
-            println("Error: \(error.userInfo)")
+            print("Error: \(error.userInfo)")
         }
     }
     
@@ -230,7 +230,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if error == nil{
             ideaObjects = objects as! [PFObject]
         }else{
-            println("Error: \(error.userInfo)")
+            print("Error: \(error.userInfo)")
         }
         stopActivityIndicator()
         refreshTable.endRefreshing()
@@ -247,11 +247,11 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         if hasUpvoted[sender.tag] == true{
             //Remove Upvote
-            upvoteGlobal(ideaObject, false, sender)
+            upvoteGlobal(ideaObject, shouldUpvote: false, button: sender)
             hasUpvoted[sender.tag] = false
         }else{
             //Add Upvote
-            upvoteGlobal(ideaObject, true, sender)
+            upvoteGlobal(ideaObject, shouldUpvote: true, button: sender)
             hasUpvoted[sender.tag] = true
         }
     }
@@ -284,7 +284,7 @@ class FeedViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func composeOriginal(sender: UIButton!){
         
         //composeOriginalGlobal(self)
-        composeFromDetail(self, nil, true)
+        composeFromDetail(self, activeTopic: nil, isNewTopic: true)
     }
     
     

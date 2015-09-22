@@ -38,7 +38,7 @@ class UserIdeasTableViewController: UITableViewController {
             query.findObjectsInBackgroundWithBlock({ (objects, error) -> Void in
                 if error == nil{
                     
-                    println("error equals nil")
+                    print("error equals nil")
                     self.topicsComposedForObjects = objects as! [PFObject]
                     
                     var encountered = Set<String>()
@@ -60,7 +60,7 @@ class UserIdeasTableViewController: UITableViewController {
                     self.topicsComposedForObjects = []
                     self.topicsComposedForObjects = result
                 }else{
-                    println("\(error?.userInfo)")
+                    print("\(error?.userInfo)")
                 }
                 self.stopActivityIndicator()
             })
@@ -86,14 +86,14 @@ class UserIdeasTableViewController: UITableViewController {
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) 
         cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
         
         if let topic = topicsComposedForObjects[indexPath.row]["topicPointer"] as? PFObject{
             if let title = topic["title"] as? String{
                 cell.textLabel!.text = title
                 cell.textLabel!.textColor = UIColor.blackColor()
-                cell.textLabel!.font = UIFont(name: "Avenir", size: 12)
+                cell.textLabel!.font = UIFont(name: "Avenir", size: 14)
                 cell.textLabel!.frame = CGRectMake(5, 5, self.view.frame.width - 40 - 5, cell.frame.height - 10)
                 cell.textLabel!.numberOfLines = 0
             }

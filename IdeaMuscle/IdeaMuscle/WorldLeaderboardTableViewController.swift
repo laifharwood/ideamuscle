@@ -42,7 +42,7 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
         let imageView = UIImageView()
         imageView.frame = CGRectMake(5, 15, 40, 40)
         if PFUser.currentUser() != nil{
-            getAvatar(PFUser.currentUser()!, imageView, nil)
+            getAvatar(PFUser.currentUser()!, imageView: imageView, parseImageView: nil)
         }
         imageView.layer.cornerRadius = 20
         imageView.layer.masksToBounds = true
@@ -83,7 +83,7 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
     
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! LeaderboardTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! LeaderboardTableViewCell
         cell.frame = CGRectMake(0, 0, view.frame.width, 70)
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         
@@ -98,7 +98,7 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
                 cell.profileButton.layer.borderColor = UIColor.whiteColor().CGColor
                 cell.profileButton.layer.borderWidth = 0
             }
-            getAvatar(pfUser, nil, cell.profileButton)
+            getAvatar(pfUser, imageView: nil, parseImageView: cell.profileButton)
         }
         cell.profileButton.tag = indexPath.row
         cell.profileButton.userInteractionEnabled = true
@@ -176,7 +176,7 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
             leaderboardObjects = objects as! [PFObject]
             tableView.reloadData()
         }else{
-            println("Error: \(error.userInfo)")
+            print("Error: \(error.userInfo)")
         }
         stopActivityIndicator()
         currentUserLeaderboardQuery()
@@ -198,7 +198,7 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
             currenUserLeaderBoard = object as! PFObject
             if currenUserLeaderBoard["numberOfUpvotes"] != nil{
                 let currentNumUpvotes = currenUserLeaderBoard["numberOfUpvotes"] as! Int
-                let abNum = abbreviateNumber(currentNumUpvotes) as! String
+                let abNum = abbreviateNumber(currentNumUpvotes) as String
                 currentUserNumberOfUpvotesButton.setTitle(abNum, forState: .Normal)
                 
                 currentUserNumberOfUpvotesButton.frame = CGRectMake(bottomContainer.frame.maxX - 45, 5, 40, 60)
@@ -218,7 +218,7 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
                 bottomContainer.addSubview(upvotesLabel)
             }
         }else{
-            println("Error: \(error.userInfo)")
+            print("Error: \(error.userInfo)")
         }
         
         totalUsersQuery()
@@ -303,7 +303,7 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
     func worldRankQuery(){
         
         if PFUser.currentUser() != nil{
-        var leaderboardObjectQuery = PFQuery(className: "Leaderboard")
+        let leaderboardObjectQuery = PFQuery(className: "Leaderboard")
         var leaderboardOjbect = PFObject(className: "LeaderBoard")
         leaderboardObjectQuery.whereKey("userPointer", equalTo: PFUser.currentUser()!)
         leaderboardObjectQuery.getFirstObjectInBackgroundWithBlock { (object, error) -> Void in
@@ -315,7 +315,7 @@ class WorldLeaderboardTableViewController: UIViewController, UITableViewDelegate
                 }else{
                     numberOfUpvotes = 0
                 }
-                var worldRankQuery = PFQuery(className: "Leaderboard")
+                let worldRankQuery = PFQuery(className: "Leaderboard")
                 worldRankQuery.cachePolicy = PFCachePolicy.NetworkElseCache
                 worldRankQuery.whereKey("numberOfUpvotes", greaterThan: numberOfUpvotes)
                 worldRankQuery.countObjectsInBackgroundWithBlock({ (rank, error) -> Void in

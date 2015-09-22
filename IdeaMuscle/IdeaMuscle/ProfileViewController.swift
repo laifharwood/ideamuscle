@@ -51,7 +51,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         ideaTableView.contentInset = UIEdgeInsetsMake(0, 0, 50, 0)
         
         //MARK: - Top Background Container
-        var topBackgroundContainer = UIView(frame: CGRectMake(0, 0, self.view.frame.width, 250))
+        let topBackgroundContainer = UIView(frame: CGRectMake(0, 0, self.view.frame.width, 250))
         topBackgroundContainer.backgroundColor = twoHundredGrayColor
         self.view.addSubview(topBackgroundContainer)
         
@@ -59,9 +59,9 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         
         
         //MARK: - Avatar
-        var imageView = UIImageView()
+        let imageView = UIImageView()
         imageView.frame = CGRectMake(self.view.frame.width/2 - 50, 80, 100, 100)
-        getAvatar(activeUser, imageView, nil)
+        getAvatar(activeUser, imageView: imageView, parseImageView: nil)
         imageView.layer.cornerRadius = 50
         imageView.layer.masksToBounds = true
         topBackgroundContainer.addSubview(imageView)
@@ -195,28 +195,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
             if activeUser.objectId != currentUser.objectId{
                 followButtonContainer.addSubview(followButton)
             }else{
-                if let activeUserIsPro = activeUser["isPro"] as? Bool{
-                    if activeUserIsPro{
-                        if let isProForever = activeUser["isProForever"] as? Bool{
-                            if isProForever{
-                                //Never Expiration
-                                expirationDateLabel(true, followButtonContainer: followButtonContainer)
-                            }else{
-                                //Expiration Date
-                                expirationDateLabel(false, followButtonContainer: followButtonContainer)
-                            }
-                        }else{
-                            //expiration Date
-                            expirationDateLabel(false, followButtonContainer: followButtonContainer)
-                        }
-                    }else{
-                        //Upgrade To Pro Button
-                        upgradeToProButton(followButtonContainer)
-                    }
-                }else{
-                    //Upgrade To Pro Button
-                    upgradeToProButton(followButtonContainer)
-                }
+                //Fix - Maybe number of Ideas
             }
         }
         
@@ -229,7 +208,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func expirationDateLabel(isForever: Bool, followButtonContainer: UIView){
-        var label = UILabel(frame: CGRectMake(5, 5, followButtonContainer.frame.width - 10, followButtonContainer.frame.height - 10))
+        let label = UILabel(frame: CGRectMake(5, 5, followButtonContainer.frame.width - 10, followButtonContainer.frame.height - 10))
         label.font = UIFont(name: "HelveticaNeue", size: 15)
         label.numberOfLines = 0
         label.textAlignment = NSTextAlignment.Center
@@ -257,11 +236,11 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         followButtonContainer.addSubview(upgradeButton)
     }
     
-    func goToStore(sender: UIButton?){
-        let storeVC = StoreViewController()
-        //let navVC = UINavigationController(rootViewController: storeVC)
-        self.navigationController?.pushViewController(storeVC, animated: true)
-    }
+//    func goToStore(sender: UIButton?){
+//        let storeVC = StoreViewController()
+//        //let navVC = UINavigationController(rootViewController: storeVC)
+//        self.navigationController?.pushViewController(storeVC, animated: true)
+//    }
     
     func queryNumberOfUpvotes(){
         let query = PFQuery(className: "Leaderboard")
@@ -272,7 +251,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 var leaderboardObject = PFObject(className: "Leaderboard")
                 leaderboardObject = object!
                 if let numberOfUpvotes = leaderboardObject["numberOfUpvotes"] as? Int{
-                    let string = abbreviateNumber(numberOfUpvotes) as! String
+                    let string = abbreviateNumber(numberOfUpvotes) as String
                     self.numberOfUpvotes.text = string
                 }else{
                     self.numberOfUpvotes.text = "0"
@@ -283,7 +262,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func queryNumberFollowing(){
         if let numberFollowingNumber = activeUser["numberFollowing"] as? Int{
-            let string = abbreviateNumber(numberFollowingNumber) as! String
+            let string = abbreviateNumber(numberFollowingNumber) as String
             numberFollowing.text = string
         }else{
             numberFollowing.text = "0"
@@ -299,7 +278,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 var numberOfFollowersObject = PFObject(className: "NumberOfFollowers")
                 numberOfFollowersObject = object!
                 if let numberOfFollowers = numberOfFollowersObject["numberOfFollowers"] as? Int{
-                    let string = abbreviateNumber(numberOfFollowers) as! String
+                    let string = abbreviateNumber(numberOfFollowers) as String
                     self.numberOfFollowers.text = string
                 }else{
                     self.numberOfFollowers.text = "0"
@@ -331,47 +310,18 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func viewRank(sender: AnyObject){
-        if let user = PFUser.currentUser(){
-            if let isPro = user["isPro"] as? Bool{
-                if isPro == true{
-                    self.worldRankLabel.backgroundColor = twoHundredGrayColor
-                    worldRankLabel.text = ""
-                    startActivityIndicator()
-                    worldRankQuery()
-                }else{
-                    upgradeAlert()
-                }
-            }else{
-                upgradeAlert()
-            }
-        }
-        
-        
-    }
-    
-    func upgradeAlert(){
-        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "An upgrade to IdeaMuscle Pro is required to view World Rankings", preferredStyle: .Alert)
-        upgradeAlert.view.tintColor = redColor
-        upgradeAlert.view.backgroundColor = oneFiftyGrayColor
-        //Create and add the Cancel action
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
-        }
-        upgradeAlert.addAction(cancelAction)
-        
-        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
-            self.goToStore(nil)
-        })
-        
-        upgradeAlert.addAction(goToStore)
-        self.presentViewController(upgradeAlert, animated: true, completion: nil)
+        self.worldRankLabel.backgroundColor = twoHundredGrayColor
+        worldRankLabel.text = ""
+        startActivityIndicator()
+        worldRankQuery()
     }
     
     func follow(sender: UIButton!){
         
         if isFollowing == true{
             //Unfollow
-            if let user = PFUser.currentUser(){
-                followGlobal(activeUser, false, self)
+            if let _ = PFUser.currentUser(){
+                followGlobal(activeUser, shouldFollow: false, sender: self)
                 self.followButton.setTitle("Follow", forState: .Normal)
                 self.followButton.backgroundColor = redColor
                 self.isFollowing = false
@@ -379,7 +329,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         }else{
             //Follow
             if let user = PFUser.currentUser(){
-                followGlobal(activeUser, true, self)
+                followGlobal(activeUser, shouldFollow: true, sender: self)
                 if let numberFollowing = user["numberFollowing"] as? Int{
                     if numberFollowing < 1000{
                         self.followButton.setTitle("Following", forState: .Normal)
@@ -393,7 +343,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func worldRankQuery(){
         
-        var leaderboardObjectQuery = PFQuery(className: "Leaderboard")
+        let leaderboardObjectQuery = PFQuery(className: "Leaderboard")
         var leaderboardOjbect = PFObject(className: "LeaderBoard")
         leaderboardObjectQuery.whereKey("userPointer", equalTo: activeUser)
         leaderboardObjectQuery.cachePolicy = PFCachePolicy.NetworkElseCache
@@ -406,7 +356,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 }else{
                     numberOfUpvotes = 0
                 }
-                var worldRankQuery = PFQuery(className: "Leaderboard")
+                let worldRankQuery = PFQuery(className: "Leaderboard")
                 worldRankQuery.whereKey("numberOfUpvotes", greaterThan: numberOfUpvotes)
                 worldRankQuery.cachePolicy = PFCachePolicy.NetworkElseCache
                 worldRankQuery.countObjectsInBackgroundWithBlock({ (rank, error) -> Void in
@@ -446,7 +396,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                     }
                 }
                 
-                if contains(ids, self.activeUser.objectId!){
+                if ids.contains((self.activeUser.objectId!)){
                     self.followButton.setTitle("Following", forState: .Normal)
                     self.followButton.backgroundColor = oneFiftyGrayColor
                     self.isFollowing = true
@@ -469,13 +419,13 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
                 let totalUsersObject = object!
                 var totalUsersInt = Int()
                 totalUsersInt = totalUsersObject["numberOfUsers"] as! Int
-                self.totalUsersLabel.text = "out of " + (abbreviateNumber(totalUsersInt) as! String) + " users"
+                self.totalUsersLabel.text = "out of " + (abbreviateNumber(totalUsersInt) as String) + " users"
             }
         })
     }
     
     func queryForIdeaObjects(){
-        var query = PFQuery(className: "Idea")
+        let query = PFQuery(className: "Idea")
         query.orderByDescending("numberOfUpvotes")
         query.limit = 100
         query.cachePolicy = PFCachePolicy.NetworkElseCache
@@ -490,7 +440,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         if error == nil{
             ideaObjects = objects as! [PFObject]
         }else{
-            println("Error: \(error.userInfo)")
+            print("Error: \(error.userInfo)")
             
         }
         stopActivityIndicatorTable()
@@ -521,22 +471,22 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! ProfileIdeaCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! ProfileIdeaCell
         cell.frame = CGRectMake(0, 0, self.view.frame.width, 100)
         
         //MARK: - Number Of Upvotes Button Config
         if ideaObjects[indexPath.row]["numberOfUpvotes"] != nil{
             let idea = ideaObjects[indexPath.row]
-            hasUpvoted[indexPath.row] = getUpvotes(idea, cell.numberOfUpvotesButton, cell)
+            hasUpvoted[indexPath.row] = getUpvotes(idea, button: cell.numberOfUpvotesButton, cell: cell)
         }
         
         cell.numberOfUpvotesButton.addTarget(self, action: "upvote:", forControlEvents: .TouchUpInside)
         cell.numberOfUpvotesButton.tag = indexPath.row
         
         //MARK: - Topic Label
-        var labelWidth = cell.frame.width - cell.numberOfUpvotesButton.frame.width - 25
+        let labelWidth = cell.frame.width - cell.numberOfUpvotesButton.frame.width - 25
         cell.topicLabel.frame = CGRectMake(10, 5, labelWidth, 20)
-        cell.topicLabel.font = UIFont(name: "Avenir-Heavy", size: 12)
+        cell.topicLabel.font = UIFont(name: "Avenir-Heavy", size: 14)
         cell.topicLabel.numberOfLines = 1
         cell.topicLabel.textColor = UIColor.blackColor()
         
@@ -549,7 +499,7 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         //MARK: - Idea Label
         cell.ideaLabel.numberOfLines = 0
         cell.ideaLabel.frame = CGRectMake(25, cell.topicLabel.frame.maxY + 2, labelWidth - 15, 70)
-        cell.ideaLabel.font = UIFont(name: "Avenir-Light", size: 10)
+        cell.ideaLabel.font = UIFont(name: "Avenir-Light", size: 14)
         cell.ideaLabel.textColor = fiftyGrayColor
         if ideaObjects[indexPath.row]["content"] != nil{
             cell.ideaLabel.text = (ideaObjects[indexPath.row]["content"] as! String)
@@ -581,11 +531,11 @@ class ProfileViewController: UIViewController, UITableViewDataSource, UITableVie
         
         if hasUpvoted[sender.tag] == true{
             //Remove Upvote
-            upvoteGlobal(ideaObject, false, sender)
+            upvoteGlobal(ideaObject, shouldUpvote: false, button: sender)
             hasUpvoted[sender.tag] = false
         }else{
             //Add Upvote
-            upvoteGlobal(ideaObject, true, sender)
+            upvoteGlobal(ideaObject, shouldUpvote: true, button: sender)
             hasUpvoted[sender.tag] = true
         }
     }

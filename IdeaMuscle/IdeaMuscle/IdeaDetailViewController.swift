@@ -26,7 +26,6 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     var postCommentButton = UIButton()
     var characterCountLabel = UILabel()
     var ideaOwner = PFUser()
-    let gestureRecTextField = UITapGestureRecognizer()
     var ideaIsPublic = Bool()
     
     
@@ -39,7 +38,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if var isPublic = activeIdea["isPublic"] as? Bool{
+        if let isPublic = activeIdea["isPublic"] as? Bool{
             if isPublic{
                 ideaIsPublic = true
             }else{
@@ -74,7 +73,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         let topicContainerY = self.navigationController?.navigationBar.frame.maxY
         
         
-        var disclosureButton = UIButton()
+        let disclosureButton = UIButton()
         disclosureButton.frame = CGRectMake(self.view.frame.maxX - 15, topicContainerY! + 22.5, 10, 20)
         let disclosureImage = UIImage(named: "disclosure")
         disclosureButton.setImage(disclosureImage, forState: .Normal)
@@ -82,12 +81,12 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         self.view.addSubview(disclosureButton)
         
         //MARK: - Topic Label
-        var topicLabel = UIButton()
+        let topicLabel = UIButton()
         if activeTopic["title"] != nil{
             let title = activeTopic["title"] as? String
             topicLabel.setTitle(title, forState: .Normal)
         }
-        topicLabel.titleLabel!.font = UIFont(name: "Avenir-Heavy", size: 12)
+        topicLabel.titleLabel!.font = UIFont(name: "Avenir-Heavy", size: 14)
         topicLabel.setTitleColor(UIColor.blackColor(), forState: .Normal)
         topicLabel.titleLabel?.numberOfLines = 0
         //topicLabel.titleLabel?.textAlignment = NSTextAlignment.Center
@@ -98,13 +97,13 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         
         
         //MARK: - Upvote Button
-        var numberOfUpvotesButton = UIButton()
+        let numberOfUpvotesButton = UIButton()
         numberOfUpvotesButton.addTarget(self, action: "upvote:", forControlEvents: .TouchUpInside)
         numberOfUpvotesButton.frame =  CGRectMake(5, topicLabel.frame.maxY + 5, 40, 60)
         if activeIdea["numberOfUpvotes"] != nil{
             
             if ideaIsPublic{
-                hasUpvoted = getUpvotes(activeIdea, numberOfUpvotesButton, nil)
+                hasUpvoted = getUpvotes(activeIdea, button: numberOfUpvotesButton, cell: nil)
             }else{
                 ideaIsNotPublic(numberOfUpvotesButton)
             }
@@ -113,12 +112,12 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         self.view.addSubview(numberOfUpvotesButton)
         
         //MARK: - Avatar Button
-        var avatarButton = UIImageView()
+        let avatarButton = UIImageView()
         
         if let ideaOwner = activeIdea["owner"] as? PFUser{
             ideaOwner.fetchIfNeededInBackgroundWithBlock({ (object, error) -> Void in
                 if error == nil{
-                   getAvatar(ideaOwner, avatarButton, nil)
+                   getAvatar(ideaOwner, imageView: avatarButton, parseImageView: nil)
                 }
             })
         }
@@ -131,7 +130,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         self.view.addSubview(avatarButton)
         
         //MARK: - Username Label
-        var usernameLabel = UILabel(frame: CGRectMake(5, avatarButton.frame.maxY + 5, 40, 20))
+        let usernameLabel = UILabel(frame: CGRectMake(5, avatarButton.frame.maxY + 5, 40, 20))
         if ideaOwner["username"] != nil{
             usernameLabel.text = ideaOwner["username"] as? String
         }
@@ -144,7 +143,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         if activeIdea["content"] != nil{
             ideaTextView.text = activeIdea["content"] as! String
         }
-        ideaTextView.font = UIFont(name: "Avenir-Light", size: 12)
+        ideaTextView.font = UIFont(name: "Avenir-Light", size: 14)
         ideaTextView.layer.borderColor = oneFiftyGrayColor.CGColor
         ideaTextView.layer.borderWidth = 1
         ideaTextView.layer.cornerRadius = 3
@@ -166,7 +165,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         
         
         //MARK: - Share Button
-        var shareButton = UIButton()
+        let shareButton = UIButton()
         shareButton.frame = CGRectMake(0, self.view.frame.maxY - 30, self.view.frame.width/2 - 0.5, 30)
         if ideaIsPublic{
             shareButton.setTitle("Share", forState: .Normal)
@@ -201,16 +200,6 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
             commentTextField.rightView = paddingView
             commentTextField.rightViewMode = UITextFieldViewMode.Always
             //commentTextField.returnKeyType = UIReturnKeyType.Done
-            if let user = PFUser.currentUser(){
-                if let isPro = user["isPro"] as? Bool{
-                    if isPro == false{
-                        
-                        gestureRecTextField.addTarget(self, action: "upgradeAlert:")
-                        gestureRecTextField.delegate = self
-                        commentTextField.addGestureRecognizer(gestureRecTextField)
-                    }
-                }
-            }
             
             
             commentTextFieldContainter.addSubview(commentTextField)
@@ -252,102 +241,25 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     }
     
     func makePublic(button: UIButton){
-        if let user = PFUser.currentUser(){
-            if let isPro = user["isPro"] as? Bool{
-                if isPro{
-                    let idea = activeIdea
-                    idea.ACL?.setPublicReadAccess(true)
-                    idea.ACL?.setPublicWriteAccess(true)
-                    idea["isPublic"] = true
-                    ideaIsPublic = true
-                    idea.saveEventually()
-                    hasUpvoted = getUpvotes(idea, button, nil)
-                    reloadView()
-                }else{
-                    upgradeAlertMakePublic()
-                }
-            }else{
-                upgradeAlertMakePublic()
-            }
-        }
+        let idea = activeIdea
+        idea.ACL?.setPublicReadAccess(true)
+        idea.ACL?.setPublicWriteAccess(true)
+        idea["isPublic"] = true
+        ideaIsPublic = true
+        idea.saveEventually()
+        hasUpvoted = getUpvotes(idea, button: button, cell: nil)
+        reloadView()
     }
-    
-    func upgradeAlertMakePublic(){
-        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "You must upgrade to Pro to make ideas public after posting", preferredStyle: .Alert)
-        upgradeAlert.view.tintColor = redColor
-        upgradeAlert.view.backgroundColor = oneFiftyGrayColor
-        //Create and add the Cancel action
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
-        }
-        upgradeAlert.addAction(cancelAction)
-        
-        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
-            let storeVC = StoreViewController()
-            let navVC = UINavigationController(rootViewController: storeVC)
-            self.presentViewController(navVC, animated: true, completion: nil)
-            
-        })
-        
-        upgradeAlert.addAction(goToStore)
-        self.presentViewController(upgradeAlert, animated: true, completion: nil)
-    }
-    
-    func upgradeAlert(sender: UITextField){
-        upgradeAlertShow()
-    }
-    
-    func upgradeAlertShow(){
-        let upgradeAlert: UIAlertController = UIAlertController(title: "Upgrade Required", message: "You must upgrade to Pro to comment on ideas.", preferredStyle: .Alert)
-        upgradeAlert.view.tintColor = redColor
-        upgradeAlert.view.backgroundColor = oneFiftyGrayColor
-        //Create and add the Cancel action
-        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .Cancel) { action -> Void in
-        }
-        upgradeAlert.addAction(cancelAction)
-        
-        let goToStore: UIAlertAction = UIAlertAction(title: "Go To Store", style: .Default, handler: { (action) -> Void in
-            let storeVC = StoreViewController()
-            let navVC = UINavigationController(rootViewController: storeVC)
-            self.presentViewController(navVC, animated: true, completion: nil)
-            
-        })
-        
-        upgradeAlert.addAction(goToStore)
-        self.presentViewController(upgradeAlert, animated: true, completion: nil)
-    }
-    
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-        if let user = PFUser.currentUser(){
-            if let isPro = user["isPro"] as? Bool{
-                if isPro == false{
-                    upgradeAlertShow()
-                    return false
-            }else{
-                    return true
-                }
-            }else{
-                upgradeAlertShow()
-                return false
-            }
-        }else{
-            upgradeAlertShow()
-            return false
-        }
-    }
-    
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        
-        return true
-    }
+
     
     func shareTwitter(sender: UIButton!){
         let twitterComposeVC = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
         
         let ideaString = activeIdea["content"] as! String
-        let stringCount = count(ideaString)
+        let stringCount = ideaString.characters.count
         let characterAllowance = 117
         if stringCount > characterAllowance{
-            let twitterString = ideaString.substringWithRange(Range<String.Index>(start: ideaString.startIndex, end: advance(ideaString.startIndex, characterAllowance)))
+            let twitterString = ideaString.substringWithRange(Range<String.Index>(start: ideaString.startIndex, end: ideaString.startIndex.advancedBy(characterAllowance)))
             twitterComposeVC.setInitialText(twitterString)
         }else{
             twitterComposeVC.setInitialText(ideaString)
@@ -376,7 +288,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! IdeaDetailTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! IdeaDetailTableViewCell
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         cell.frame = CGRectMake(0, 0, tableView.frame.width, 85)
         
@@ -426,7 +338,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     
     func commentsQuery(){
         
-        var query = PFQuery(className: "Comment")
+        let query = PFQuery(className: "Comment")
         query.whereKey("ideaPointer", equalTo: activeIdea)
         query.orderByAscending("createdAt")
         query.includeKey("owner")
@@ -441,7 +353,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
             commentObjects = objects as! [PFObject]
             commentsTableView.reloadData()
         }else{
-            println("Error: \(error.userInfo)")
+            print("Error: \(error.userInfo)")
         }
         //stopActivityIndicator()
         //refreshTable.endRefreshing()
@@ -463,7 +375,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         }
     }
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         self.view.endEditing(true)
         commentTextFieldContainter.frame = CGRectMake(0, composeButton.frame.minY - 40, self.view.frame.width, 40)
     }
@@ -479,17 +391,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         self.tabBarController!.tabBar.hidden = true
         }
         
-        if let user = PFUser.currentUser(){
-            if let isPro = user["isPro"] as? Bool{
-                if isPro == true{
-                    gestureRecTextField.enabled = false
-                }
-            }
-        }
-        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-        
-        //activeTopic.fetchIfNeededInBackground()
         
     }
     
@@ -515,7 +417,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     
     func compose(sender: UIButton!){
 
-        composeFromDetail(self, activeTopic, false)
+        composeFromDetail(self, activeTopic: activeTopic, isNewTopic: false)
     }
     
     func upvote(sender: UIButton!){
@@ -523,11 +425,11 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
         if ideaIsPublic == true{
             if hasUpvoted == true{
                 //Remove Upvote
-                        upvoteGlobal(activeIdea, false, sender)
+                        upvoteGlobal(activeIdea, shouldUpvote: false, button: sender)
                         hasUpvoted = false
             }else{
                 //Add Upvote
-                    upvoteGlobal(activeIdea, true, sender)
+                    upvoteGlobal(activeIdea, shouldUpvote: true, button: sender)
                     hasUpvoted = true
             }
         }else{
@@ -538,12 +440,12 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     
     func share(sender: UIButton!){
         let ideaString = activeIdea["content"] as! String
-        let stringCount = count(ideaString)
+        let stringCount = ideaString.characters.count
         let characterAllowance = 117
         var stringToShare = String()
         
         if stringCount > characterAllowance{
-            let twitterString = ideaString.substringWithRange(Range<String.Index>(start: ideaString.startIndex, end: advance(ideaString.startIndex, characterAllowance)))
+            let twitterString = ideaString.substringWithRange(Range<String.Index>(start: ideaString.startIndex, end: ideaString.startIndex.advancedBy(characterAllowance)))
                 stringToShare = twitterString
         }else{
             stringToShare = ideaString
@@ -564,7 +466,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
     func postComment(sender: UIButton!){
         if commentTextField != ""{
             
-            var comment = PFObject(className: "Comment")
+            let comment = PFObject(className: "Comment")
             comment["content"] = commentTextField.text
             comment["ideaPointer"] = activeIdea
             if PFUser.currentUser() != nil{
@@ -577,7 +479,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
                     
                     self.commentsQuery()
                 }else{
-                    println("Error: \(error!.userInfo)")
+                    print("Error: \(error!.userInfo)")
                     
                 }
             })
@@ -612,12 +514,12 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
                 return false
             }
     
-        }else if characterCount + count(string) > 118{
+        }else if characterCount + string.characters.count > 118{
             return false
         }else if string == " "{
             if characterCount > 0{
                 
-                characterCount = characterCount + count(string)
+                characterCount = characterCount + string.characters.count
                 characterCountLabel.text = "\(characterCount)" + "/118"
                 postCommentButton.enabled = true
                 postCommentButton.setTitleColor(redColor, forState: .Normal)
@@ -629,7 +531,7 @@ class IdeaDetailViewController: UIViewController, UITextFieldDelegate, UITextVie
             
             
         }else{
-            characterCount = characterCount + count(string)
+            characterCount = characterCount + string.characters.count
             characterCountLabel.text = "\(characterCount)" + "/118"
             postCommentButton.enabled = true
             postCommentButton.setTitleColor(redColor, forState: .Normal)

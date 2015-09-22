@@ -16,14 +16,14 @@ class EulaViewController: UIViewController {
         super.viewDidLoad()
         
         // MARK: - Top Bar Config
-        var topBar = UIView()
+        let topBar = UIView()
         topBar.frame = CGRectMake(0, 0, self.view.frame.width, 64)
         topBar.backgroundColor = seventySevenGrayColor
         self.view.addSubview(topBar)
         
         
         //MARK: - Close Button
-        var cancelButton = UIButton()
+        let cancelButton = UIButton()
         cancelButton.frame = CGRectMake(0, topBar.frame.height/2, 60, 16)
         cancelButton.setTitle("Close", forState: .Normal)
         cancelButton.titleLabel!.font = UIFont(name: "HelveticaNeue", size: 15)

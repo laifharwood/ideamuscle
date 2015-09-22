@@ -11,7 +11,7 @@ import Parse
 import ParseUI
 
 
-class IdeasUserUpvotedTableViewController: UITableViewController, UITableViewDataSource, UITableViewDelegate {
+class IdeasUserUpvotedTableViewController: UITableViewController {
     
     var activityIndicator = UIActivityIndicatorView()
     var upvoteObjects = [PFObject(className: "Upvote")]
@@ -37,7 +37,7 @@ class IdeasUserUpvotedTableViewController: UITableViewController, UITableViewDat
         if let currentUser = PFUser.currentUser(){
             ideaObjects = []
             for object in upvoteObjects{
-                var idea = PFObject(className: "Idea")
+                _ = PFObject(className: "Idea")
                 if let idea = object["ideaUpvoted"] as? PFObject{
                     if idea.objectId != nil{
                         if let ideaOwner = idea["owner"] as? PFUser{
@@ -57,7 +57,7 @@ class IdeasUserUpvotedTableViewController: UITableViewController, UITableViewDat
             self.upvoteObjects = objects as! [PFObject]
             self.queryIdeaObjects()
         }else{
-            println("Error: \(error.userInfo)")
+            print("Error: \(error.userInfo)")
         }
         //stopActivityIndicator()
     }
@@ -93,37 +93,37 @@ class IdeasUserUpvotedTableViewController: UITableViewController, UITableViewDat
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-        var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! IdeaTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! IdeaTableViewCell
         
         //cell.frame = CGRectMake(0, 0, self.view.frame.width, 150)
-        cellFrame(cell, self.view)
+        cellFrame(cell, view: self.view)
         
         //MARK: - Number Of Upvotes Button Config
         if ideaObjects[indexPath.row]["numberOfUpvotes"] != nil{
             let idea = ideaObjects[indexPath.row]
-            hasUpvoted[indexPath.row] = getUpvotes(idea, cell.numberOfUpvotesButton, cell)
+            hasUpvoted[indexPath.row] = getUpvotes(idea, button: cell.numberOfUpvotesButton, cell: cell)
         }
         cell.numberOfUpvotesButton.tag = indexPath.row
         cell.numberOfUpvotesButton.addTarget(self, action: "upvote:", forControlEvents: .TouchUpInside)
         
         //MARK: - Topic Label Config
-        var labelWidth = cell.frame.width - cell.numberOfUpvotesButton.frame.width - 25
-        topicLabelGlobal(labelWidth, cell.topicLabel, ideaObjects, indexPath.row)
+        let labelWidth = cell.frame.width - cell.numberOfUpvotesButton.frame.width - 25
+        topicLabelGlobal(labelWidth, topicLabel: cell.topicLabel, ideaObjects: ideaObjects, row: indexPath.row)
         
         
         //MARK: - Idea Label Config
-        ideaLabelGlobal(labelWidth, cell.ideaLabel, ideaObjects, indexPath.row, cell.topicLabel)
+        ideaLabelGlobal(labelWidth, ideaLabel: cell.ideaLabel, ideaObjects: ideaObjects, row: indexPath.row, topicLabel: cell.topicLabel)
         
         //MARK: - Profile Button
-        profileButtonGlobal(ideaObjects, indexPath.row, cell.profileButton)
+        profileButtonGlobal(ideaObjects, row: indexPath.row, profileButton: cell.profileButton)
         let gestureRec = UITapGestureRecognizer(target: self, action: "profileTapped:")
         cell.profileButton.addGestureRecognizer(gestureRec)
         
         //MARK: - Username Label Config
-        usernameGlobal(cell.usernameLabel, indexPath.row, ideaObjects, cell.profileButton)
+        usernameGlobal(cell.usernameLabel, row: indexPath.row, ideaObjects: ideaObjects, profileButton: cell.profileButton)
         
         //MARK: - TimeStamp
-        timeStampGlobal(ideaObjects, cell.timeStamp, indexPath.row, cell.usernameLabel, cell)
+        timeStampGlobal(ideaObjects, timeStamp: cell.timeStamp, row: indexPath.row, usernameLabel: cell.usernameLabel, cell: cell)
         
         return cell
         
@@ -153,11 +153,11 @@ class IdeasUserUpvotedTableViewController: UITableViewController, UITableViewDat
         
         if hasUpvoted[sender.tag] == true{
             //Remove Upvote
-            upvoteGlobal(ideaObject, false, sender)
+            upvoteGlobal(ideaObject, shouldUpvote: false, button: sender)
             hasUpvoted[sender.tag] = false
         }else{
             //Add Upvote
-            upvoteGlobal(ideaObject, true, sender)
+            upvoteGlobal(ideaObject, shouldUpvote: true, button: sender)
             hasUpvoted[sender.tag] = true
         }
     }

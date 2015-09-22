@@ -10,7 +10,7 @@ import UIKit
 import Parse
 import ParseUI
 
-class TopicTodayTableViewController: UITableViewController, UITableViewDataSource, UITableViewDelegate {
+class TopicTodayTableViewController: UITableViewController{
     
     var activityIndicator = UIActivityIndicatorView()
     var topicObjects = [PFObject(className: "Topic")]
@@ -27,8 +27,8 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
     
     
     func queryForTopicObjects(){
-        var query = PFQuery(className: "Topic")
-        topicQueryGlobal(-1, query)
+        let query = PFQuery(className: "Topic")
+        topicQueryGlobal(-1, query: query)
         query.findObjectsInBackgroundWithTarget(self, selector: "topicSelector:error:")
     }
     
@@ -37,7 +37,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
             //topicObjects = []
             topicObjects = objects as! [PFObject]
         }else{
-            println("Error: \(error.userInfo)")
+            print("Error: \(error.userInfo)")
         }
         stopActivityIndicator()
         refreshTable.endRefreshing()
@@ -66,7 +66,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
         refreshTable.addTarget(self, action: "refresh:", forControlEvents: UIControlEvents.ValueChanged)
         tableView.addSubview(refreshTable)
         
-        longPressToTableViewGlobal(self, tableView, reportViewContainer)
+        longPressToTableViewGlobal(self, tableView: tableView, reportViewContainer: reportViewContainer)
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -80,37 +80,37 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-        var cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! TopicTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! TopicTableViewCell
 
-        cellFrameTopic(cell, self.view)
+        cellFrameTopic(cell, view: self.view)
         
         //MARK: - Idea Total Button Config
-        numberOfIdeasGlobal(topicObjects, indexPath, cell.ideaTotalButton, cell)
+        numberOfIdeasGlobal(topicObjects, indexPath: indexPath, ideaTotalButton: cell.ideaTotalButton, cell: cell)
         cell.ideaTotalButton.addTarget(self, action: "viewIdeas:", forControlEvents: .TouchUpInside)
 
         //MARK: - Idea Title Label
-        ideaTitleLabelGlobal(cell.ideaTitleLabel, cell.ideaTotalButton)
+        ideaTitleLabelGlobal(cell.ideaTitleLabel, ideaTotalButton: cell.ideaTotalButton)
 
         //MARK: - Topic Label Config
-        topicLabelForTopic(topicObjects, cell, cell.ideaTotalButton, cell.topicLabel, indexPath)
+        topicLabelForTopic(topicObjects, cell: cell, ideaTotalButton: cell.ideaTotalButton, topicLabel: cell.topicLabel, indexPath: indexPath)
         
         //MARK: - Profile Button
-        profileButtonTopicGlobal(topicObjects, indexPath, cell.profileButton)
+        profileButtonTopicGlobal(topicObjects, indexPath: indexPath, profileButton: cell.profileButton)
         let gestureRec = UITapGestureRecognizer(target: self, action: "profileTapped:")
         cell.profileButton.addGestureRecognizer(gestureRec)
         
         //MARK: - Username Label Config
-        usernameTopicGlobal(cell.usernameLabel, indexPath, topicObjects, cell.profileButton)
+        usernameTopicGlobal(cell.usernameLabel, indexPath: indexPath, topicObjects: topicObjects, profileButton: cell.profileButton)
         
         //MARK: - Time Stamp
-        timeStampTopicGlobal(topicObjects, cell.timeStamp, cell.ideaTotalButton, indexPath, cell)
+        timeStampTopicGlobal(topicObjects, timeStamp: cell.timeStamp, ideaTotalButton: cell.ideaTotalButton, indexPath: indexPath, cell: cell)
 
         return cell
         
     }
     
     func cellLongPress(sender: UILongPressGestureRecognizer){
-        cellLongPressGlobal(sender, tableView, self, self.reportViewContainer, self.invisibleView)
+        cellLongPressGlobal(sender, tableView: tableView, senderSelf: self, reportViewContainer: self.reportViewContainer, invisibleView: self.invisibleView)
     }
     
     func hideIdea(sender: UIButton){
@@ -123,7 +123,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
             currentUser.saveEventually()
         }
         
-        hideInvisibleAndReportView(invisibleView, self, reportViewContainer)
+        hideInvisibleAndReportView(invisibleView, sender: self, reportViewContainer: reportViewContainer)
         topicObjects.removeAtIndex(row)
         let indexPath = NSIndexPath(forRow: row, inSection: 0)
         let pathArray = [indexPath]
@@ -131,12 +131,12 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
     }
     
     func hideAndReport(sender: UIButton){
-        hideAndReportTopicGlobal(topicObjects, sender, self, self.hideIdea)
+        hideAndReportTopicGlobal(topicObjects, sender: sender, senderSelf: self, hideTopic: self.hideIdea)
     }
     
     func cancelHide(sender: UIButton){
         
-        hideInvisibleAndReportView(invisibleView, self, reportViewContainer)
+        hideInvisibleAndReportView(invisibleView, sender: self, reportViewContainer: reportViewContainer)
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -154,7 +154,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         
-        hideFilterGlobal(scrollView, pointNow, tableSelection, periodSelection, tableView, self.view, shownHeight, self.navigationController!, hiddenHeight)
+        hideFilterGlobal(scrollView, pointNow: pointNow, tableSelection: tableSelection, periodSelection: periodSelection, tableView: tableView, view: self.view, shownHeight: shownHeight, navigationController: self.navigationController!, hiddenHeight: hiddenHeight)
     }
     
     
@@ -166,7 +166,7 @@ class TopicTodayTableViewController: UITableViewController, UITableViewDataSourc
     
     func startActivityIndicator(){
 
-        startActivityGlobal(activityIndicatorContainer, activityIndicator, self.view)
+        startActivityGlobal(activityIndicatorContainer, activityIndicator: activityIndicator, view: self.view)
         
     }
     
