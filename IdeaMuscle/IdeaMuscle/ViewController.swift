@@ -25,6 +25,7 @@ class ViewController: UIViewController{
     let agreeLabel = UILabel()
     let yesButton = UIButton()
     let viewAgreementButton = UIButton()
+    var gotEmail = false
     
 
     override func viewDidLoad() {
@@ -161,7 +162,7 @@ class ViewController: UIViewController{
     }
     
     func getUserFacebookInfo(){
-        
+        gotEmail = true
         let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: nil)
         //let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: nil, HTTPMethod: "Get")
         graphRequest.startWithCompletionHandler({ (connection, result, error) -> Void in
@@ -175,11 +176,18 @@ class ViewController: UIViewController{
             {
                 if let user = PFUser.currentUser(){
                     if let username = result.valueForKey("name") as? String{
-                        user["username"] = username
+                        user.username = username
                         user["lowercaseUsername"] = username.lowercaseString
+                        user.saveEventually()
                     }
                     if let userEmail = result.valueForKey("email") as? String{
-                        user["email"] = userEmail
+                        user.email = userEmail
+                        user.saveEventually()
+                        ChimpKit.sharedKit().apiKey = "8598112544a3f6cec59a750ad9c5f549-us8"
+                        let params:NSDictionary = ["id": "8970262ef3", "email": ["email": user.email!], "merge_vars": ["NAME": user.username!], "double_optin": false]
+                        ChimpKit.sharedKit().callApiMethod("lists/subscribe", withApiKey: "8598112544a3f6cec59a750ad9c5f549-us8", params: params as [NSObject : AnyObject], andCompletionHandler: { (response, data, error) -> Void in
+                            //print(response)
+                        })
                     }
                     if let userID = result.valueForKey("id") as? String{
                         user["facebookID"] = userID
@@ -189,8 +197,8 @@ class ViewController: UIViewController{
                         let imageFile: PFFile = PFFile(name: (PFUser.currentUser()!.objectId! + "profileImage.png"), data: imageData!)
                         imageFile.saveInBackground()
                         user.setObject(imageFile, forKey: "avatar")
+                        user.saveEventually()
                     }
-                    user.saveEventually()
                 }
             }
         })
@@ -340,7 +348,7 @@ class ViewController: UIViewController{
             currentUser.fetch()
 
             var email = String()
-            if currentUser.email == nil{
+            if currentUser.email == nil && gotEmail == false{
                 print("No Email")
                 
                 let noEmailAlert = UIAlertController(title: "Please Enter Email", message: "We couldn't get your email, please enter it to continue.", preferredStyle: UIAlertControllerStyle.Alert)
@@ -353,9 +361,6 @@ class ViewController: UIViewController{
                     
                     ChimpKit.sharedKit().apiKey = "8598112544a3f6cec59a750ad9c5f549-us8"
                     let params:NSDictionary = ["id": "8970262ef3", "email": ["email": currentUser.email!], "merge_vars": ["NAME": currentUser.username!], "double_optin": false]
-                    
-                    
-                    
                     ChimpKit.sharedKit().callApiMethod("lists/subscribe", withApiKey: "8598112544a3f6cec59a750ad9c5f549-us8", params: params as [NSObject : AnyObject], andCompletionHandler: { (response, data, error) -> Void in
                         print(response)
                     })
