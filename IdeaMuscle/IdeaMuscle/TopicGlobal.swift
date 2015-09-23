@@ -50,7 +50,7 @@ func hideAndReportTopicGlobal(topicObjects: [PFObject], sender: UIButton, sender
 
 func tableViewTopicConfig(tableView: UITableView){
     tableView.rowHeight = 100
-    tableView.contentInset = UIEdgeInsetsMake(0, 0, 30, 0)
+    tableView.contentInset = UIEdgeInsetsMake(0, 0, 80, 0)
     tableView.registerClass(TopicTableViewCell.self, forCellReuseIdentifier: "Cell")
 }
 

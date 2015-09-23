@@ -11,6 +11,7 @@ import FBSDKCoreKit
 import FBSDKLoginKit
 import FBSDKShareKit
 
+
 let tabBarControllerK = UITabBarController()
 
 class ViewController: UIViewController{
@@ -287,6 +288,8 @@ class ViewController: UIViewController{
 
     func goToTabBar(){
         
+        
+        
         UITabBar.appearance().barTintColor = fiftyGrayColor
         UITabBar.appearance().tintColor = redColor
         
@@ -332,6 +335,66 @@ class ViewController: UIViewController{
         
             
         if let currentUser = PFUser.currentUser(){
+            
+            
+            currentUser.fetch()
+
+            var email = String()
+            if currentUser.email == nil{
+                print("No Email")
+                
+                let noEmailAlert = UIAlertController(title: "Please Enter Email", message: "We couldn't get your email, please enter it to continue.", preferredStyle: UIAlertControllerStyle.Alert)
+                
+                let action = UIAlertAction(title: "Let's Go!", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
+                    //Save Email
+                    
+                    currentUser.email = email
+                    currentUser.saveEventually()
+                    
+                    ChimpKit.sharedKit().apiKey = "8598112544a3f6cec59a750ad9c5f549-us8"
+                    let params:NSDictionary = ["id": "8970262ef3", "email": ["email": currentUser.email!], "merge_vars": ["NAME": currentUser.username!], "double_optin": false]
+                    
+                    
+                    
+                    ChimpKit.sharedKit().callApiMethod("lists/subscribe", withApiKey: "8598112544a3f6cec59a750ad9c5f549-us8", params: params as [NSObject : AnyObject], andCompletionHandler: { (response, data, error) -> Void in
+                        print(response)
+                    })
+                })
+                action.enabled = false
+                
+                noEmailAlert.addTextFieldWithConfigurationHandler { (textField) in
+                    textField.placeholder = "Email"
+                    textField.keyboardType = .EmailAddress
+                    textField.layer.cornerRadius = 3
+                    
+                    NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: textField, queue: NSOperationQueue.mainQueue()) { (notification) in
+                        //Validate Email Address
+                        
+                        let emailRegEx = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+                        
+                        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+                        let isValid = emailTest.evaluateWithObject(textField.text)
+                        if isValid{
+                            email = textField.text!
+                            action.enabled = true
+                        }else{
+                            action.enabled = false
+                        }
+                    }
+                }
+                
+                noEmailAlert.addAction(action)
+                self.presentViewController(noEmailAlert, animated: true, completion: nil)
+                
+                
+            }else{
+                print(currentUser.email)    
+            }
+            
+            
+            
+            
+            
             //Leaderboard
             if let isOnLeaderboard = currentUser["isOnLeaderboard"] as? Bool{
                 if isOnLeaderboard == false{
@@ -497,13 +560,13 @@ class ViewController: UIViewController{
         var error: NSError?
         
         do {
-            let data: NSData = try NSURLConnection.sendSynchronousRequest(request, returningResponse: &response)
+            let data: NSData = try! NSURLConnection.sendSynchronousRequest(request, returningResponse: &response)
         
         if error == nil {
             
             let result: AnyObject?
             do {
-                result = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
+                result = try! NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)
             } catch let error1 as NSError {
                 error = error1
                 result = nil

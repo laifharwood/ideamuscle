@@ -13,6 +13,7 @@
 #import "Hoko.h"
 #import "HOKNavigation.h"
 #import "UAAppReviewManager.h"
+#import "ChimpKit.h"
 //#import <ParseFacebookUtils/PFFacebookUtils.h>
 
 

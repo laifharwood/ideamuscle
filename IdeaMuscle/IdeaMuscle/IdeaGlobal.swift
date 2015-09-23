@@ -53,7 +53,7 @@ func getIdeasToHideGlobal(query: PFQuery){
 func tableViewIdeaConfig(tableView: UITableView){
     
     tableView.rowHeight = 150
-    tableView.contentInset = UIEdgeInsetsMake(0, 0, 30, 0)
+    tableView.contentInset = UIEdgeInsetsMake(0, 0, 80, 0)
     tableView.registerClass(IdeaTableViewCell.self, forCellReuseIdentifier: "Cell")
     
 }
