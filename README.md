@@ -14,10 +14,10 @@ Despite my poor choice in a back end solution, I highly enjoyed making this app 
 
 * World/Friend rankings based on number of up votes.
 
-    * Browse top ideas and topics with different time filters.
+* Browse top ideas and topics with different time filters.
 
-    * Drafts.
+* Drafts.
 
-    * User Search.
+* User Search.
 
-    * Smart links for sharing to other social networks.
+* Smart links for sharing to other social networks.
