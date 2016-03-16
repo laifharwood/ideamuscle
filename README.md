@@ -4,15 +4,15 @@ This app was on the app store for a short time but unfortunately I used Parse.co
 
 Despite my poor choice in a back end solution, I highly enjoyed making this app and this is the project that I have spent the most time on in my short coding experience.  Some of the features implemented in this app include:
 
-    * Social features such as the ability to follow other users, up vote ideas, comment on ideas, and share ideas to other social networks.
+* Social features such as the ability to follow other users, up vote ideas, comment on ideas, and share ideas to other social networks.
 
-    * In App Purchases to upgrade to pro version.  This was later removed and the full version of the app was free for everyone.
+* In App Purchases to upgrade to pro version.  This was later removed and the full version of the app was free for everyone.
 
-    * Push notifications.
+* Push notifications.
 
-    * Post private or public ideas.
+* Post private or public ideas.
 
-    * World/Friend rankings based on number of up votes.
+* World/Friend rankings based on number of up votes.
 
     * Browse top ideas and topics with different time filters.
 
