@@ -1,0 +1,1 @@
+IdeaMuscle is an IOS Swift app I made that is a Social Network built on the idea of coming up with 10 ideas a day on a certain topic 
