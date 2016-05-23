@@ -1,3 +1,5 @@
+[Gif of it in action](http://gph.is/1YTk6c9)
+
 IdeaMuscle is an IOS Swift app I made that is a Social Network built on the idea of coming up with 10 ideas a day on a certain topic in order to exercise your mind and get better at having good ideas about anything.
 
 This app was on the app store for a short time but unfortunately I used Parse.com as a back end and when Facebook announced they were shutting down Parse.com, I decided to remove the app from the app store since it hadn't gained very much traction and also found the underlying DBMS(MongoDB) to be flawed for this type of application due to its lack of ACID compliance which caused data corruption in my database.
