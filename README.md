@@ -1,4 +1,4 @@
-[Gif of it in action](http://gph.is/1YTk6c9)
+[gif of it in action](http://gph.is/1YTk6c9)
 
 IdeaMuscle is an IOS Swift app I made that is a Social Network built on the idea of coming up with 10 ideas a day on a certain topic in order to exercise your mind and get better at having good ideas about anything.
 
